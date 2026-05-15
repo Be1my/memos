@@ -5,7 +5,8 @@
   "scripts": {
     "build": "vite build",
     "serve": "vite preview",
-    "dev:bare": "vite dev"
+    "dev:bare": "vite dev",
+    "machine-translate": "inlang machine translate --project project.inlang"
   },
   "dependencies": {
     "@memos/auth": "workspace:*",
@@ -40,6 +41,8 @@
     "typescript": "catalog:",
     "vite": "^8.0.8",
     "web-vitals": "^5.2.0",
-    "wrangler": "^4.77.0"
+    "wrangler": "^4.77.0",
+    "@inlang/paraglide-js": "^2.18.0",
+    "@inlang/cli": "^3.0.0"
   }
 }

@@ -16,16 +16,15 @@
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
-    "@memos/env": "workspace:*",
-    "dotenv": "catalog:",
-    "drizzle-orm": "^0.45.1",
-    "pg": "^8.17.1",
-    "zod": "catalog:"
-  },
-  "devDependencies": {
-    "@memos/config": "workspace:*",
-    "@types/pg": "^8.16.0",
-    "drizzle-kit": "^0.31.8",
-    "typescript": "catalog:"
+		"@memos/env": "workspace:*",
+		"@neondatabase/serverless": "^1.0.2",
+		"dotenv": "catalog:",
+		"drizzle-orm": "^1.0.0-rc.2",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@memos/config": "workspace:*",
+		"drizzle-kit": "^1.0.0-rc.2",
+	"typescript": "catalog:"
   }
 }

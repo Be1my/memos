@@ -1,12 +1,18 @@
 import { Toaster } from "@memos/ui/components/sonner";
-import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
+import type { QueryClient } from "@tanstack/react-query";
+import {
+  createRootRouteWithContext,
+  HeadContent,
+  Outlet,
+  Scripts,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-
-import Header from "../components/header";
-
+import { ThemeProvider } from "@/lib/theme-provider";
 import appCss from "../index.css?url";
 
-export interface RouterAppContext {}
+export interface RouterAppContext {
+  queryClient: QueryClient;
+}
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
   head: () => ({
@@ -35,17 +41,18 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 
 function RootDocument() {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body>
         <div className="grid h-svh grid-rows-[auto_1fr]">
-          <Header />
-          <Outlet />
+          <ThemeProvider>
+            <Outlet />
+          </ThemeProvider>
         </div>
         <Toaster richColors />
-        <TanStackRouterDevtools position="bottom-left" />
+        <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
       </body>
     </html>

@@ -1,0 +1,13 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"auth_create_your_account": "Create your account",
+	"auth_host_tip": "You are registering as the Site Host.",
+	"auth_sign_in_tip": "Already have an account?",
+	"auth_sign_up_tip": "Don't have an account yet?",
+	"common_username": "Username",
+	"common_password": "Password",
+	"common_sign_in": "Sign In",
+	"common_sign_up": "Sign Up",
+	"common_email": "Email",
+	"common_confirm_password": "Confirm Password"
+}
