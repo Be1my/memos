@@ -11,6 +11,7 @@ import { type SignUpValues, signUpSchema } from "../schemas";
 
 interface SignUpFormProps {
 	redirectPath?: string;
+	isFirstUser?: boolean;
 }
 
 const defaultValues: SignUpValues = {
@@ -20,7 +21,10 @@ const defaultValues: SignUpValues = {
 	confirmPassword: "",
 };
 
-export default function SignUpForm({ redirectPath }: SignUpFormProps) {
+export default function SignUpForm({
+	redirectPath,
+	isFirstUser,
+}: SignUpFormProps) {
 	const navigate = useNavigate();
 	const [error, setError] = useState<string | null>(null);
 	const form = useForm({
@@ -192,15 +196,19 @@ export default function SignUpForm({ redirectPath }: SignUpFormProps) {
 				</form.Subscribe>
 			</div>
 			<div className="mt-4 flex w-full flex-row items-center justify-center">
-				<p className="text-muted-foreground text-sm">
-					{m.auth_sign_in_tip()}
-					<Link
-						to="/sign-in"
-						className="ml-1 text-foreground underline underline-offset-2 hover:opacity-70"
-					>
-						{m.common_sign_in()}
-					</Link>
-				</p>
+				{isFirstUser ? (
+					<p className="text-muted-foreground text-sm">{m.auth_host_tip()}</p>
+				) : (
+					<p className="text-muted-foreground text-sm">
+						{m.auth_sign_in_tip()}
+						<Link
+							to="/sign-in"
+							className="ml-1 text-foreground underline underline-offset-2 hover:opacity-70"
+						>
+							{m.common_sign_in()}
+						</Link>
+					</p>
+				)}
 			</div>
 		</form>
 	);
