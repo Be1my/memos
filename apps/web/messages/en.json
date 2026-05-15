@@ -9,5 +9,22 @@
 	"common_sign_in": "Sign In",
 	"common_sign_up": "Sign Up",
 	"common_email": "Email",
-	"common_confirm_password": "Confirm Password"
+	"common_confirm_password": "Confirm Password",
+	"sidebar_memos": "Memos",
+	"sidebar_explore": "Explore",
+	"sidebar_about": "About",
+	"sidebar_sign_in": "Sign in",
+	"sidebar_attachments": "Attachments",
+	"sidebar_inbox": "Inbox",
+	"sidebar_my_account": "My Account",
+	"sidebar_profile": "Profile",
+	"sidebar_archived": "Archived",
+	"sidebar_settings": "Settings",
+	"sidebar_sign_out": "Sign Out",
+	"sidebar_theme": "Theme",
+	"sidebar_language": "Language",
+	"sidebar_light": "Light",
+	"sidebar_dark": "Dark",
+	"sidebar_paper": "Paper",
+	"sidebar_system": "System"
 }

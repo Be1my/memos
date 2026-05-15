@@ -9,5 +9,22 @@
 	"common_sign_in": "登录",
 	"common_sign_up": "注册",
 	"common_email": "邮箱",
-	"common_confirm_password": "确认密码"
+	"common_confirm_password": "确认密码",
+	"sidebar_memos": "备忘录",
+	"sidebar_explore": "发现",
+	"sidebar_about": "关于",
+	"sidebar_sign_in": "登录",
+	"sidebar_attachments": "附件",
+	"sidebar_inbox": "收件箱",
+	"sidebar_my_account": "我的账户",
+	"sidebar_profile": "个人资料",
+	"sidebar_archived": "已归档",
+	"sidebar_settings": "设置",
+	"sidebar_sign_out": "退出登录",
+	"sidebar_theme": "主题",
+	"sidebar_language": "语言",
+	"sidebar_light": "浅色",
+	"sidebar_dark": "深色",
+	"sidebar_paper": "纸色",
+	"sidebar_system": "跟随系统"
 }
