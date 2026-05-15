@@ -3,16 +3,16 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
 
 export const Route = createFileRoute("/_memos")({
-    component: RouteComponent,
+	component: RouteComponent,
 });
 
 function RouteComponent() {
-    return (
-        <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-                <Outlet />
-            </SidebarInset>
-        </SidebarProvider>
-    );
+	return (
+		<SidebarProvider>
+			<AppSidebar />
+			<SidebarInset>
+				<Outlet />
+			</SidebarInset>
+		</SidebarProvider>
+	);
 }

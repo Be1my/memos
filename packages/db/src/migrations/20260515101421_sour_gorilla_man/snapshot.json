@@ -1,2661 +1,2523 @@
 {
-  "version": "8",
-  "dialect": "postgres",
-  "id": "5ffef209-d477-42d3-ab3c-f0cc230d2c0f",
-  "prevIds": [
-    "00000000-0000-0000-0000-000000000000"
-  ],
-  "ddl": [
-    {
-      "values": [
-        "OAUTH2",
-        "OIDC"
-      ],
-      "name": "idp_type",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "values": [
-        "UNREAD",
-        "READ"
-      ],
-      "name": "inbox_status",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "values": [
-        "REFERENCE",
-        "COMMENT"
-      ],
-      "name": "memo_relation_type",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "values": [
-        "PRIVATE",
-        "PUBLIC",
-        "PROTECTED"
-      ],
-      "name": "memo_visibility",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "values": [
-        "NORMAL",
-        "ARCHIVED"
-      ],
-      "name": "row_status",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "values": [
-        "S3",
-        "R2",
-        "GCS",
-        "LOCAL"
-      ],
-      "name": "storage_type",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "values": [
-        "USER",
-        "ADMIN",
-        "HOST"
-      ],
-      "name": "user_role",
-      "entityType": "enums",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "attachment",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "account",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "session",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "user",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "verification",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "idp",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "inbox",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "memo",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "memo_relation",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "memo_share",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "reaction",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "system_setting",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "user_identity",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "isRlsEnabled": false,
-      "name": "user_setting",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": {
-        "type": "always",
-        "name": "attachment_id_seq",
-        "increment": "1",
-        "startWith": "1",
-        "minValue": "1",
-        "maxValue": "2147483647",
-        "cache": 1,
-        "cycle": false
-      },
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "uid",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "creator_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "filename",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "type",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "0",
-      "generated": null,
-      "identity": null,
-      "name": "size",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "external_url",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "memo_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "storage_type",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'S3'",
-      "generated": null,
-      "identity": null,
-      "name": "storage_type",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "reference",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "jsonb",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'{}'",
-      "generated": null,
-      "identity": null,
-      "name": "payload",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "account_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "provider_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "access_token",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "refresh_token",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id_token",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "access_token_expires_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "refresh_token_expires_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "scope",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "password",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "session"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "expires_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "session"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "token",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "session"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "session"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "session"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "ip_address",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "session"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_agent",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "session"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "session"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "varchar(255)",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "username",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "display_username",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "email",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "boolean",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "false",
-      "generated": null,
-      "identity": null,
-      "name": "email_verified",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "image",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "nickname",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "description",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "row_status",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'NORMAL'",
-      "generated": null,
-      "identity": null,
-      "name": "row_status",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "user_role",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'USER'",
-      "generated": null,
-      "identity": null,
-      "name": "role",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verification"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "identifier",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verification"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "value",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verification"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "expires_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verification"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verification"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "verification"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": {
-        "type": "always",
-        "name": "idp_id_seq",
-        "increment": "1",
-        "startWith": "1",
-        "minValue": "1",
-        "maxValue": "2147483647",
-        "cache": 1,
-        "cycle": false
-      },
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "idp"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "uid",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "idp"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "idp"
-    },
-    {
-      "type": "idp_type",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'OAUTH2'",
-      "generated": null,
-      "identity": null,
-      "name": "type",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "idp"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "identifier_filter",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "idp"
-    },
-    {
-      "type": "jsonb",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'{}'",
-      "generated": null,
-      "identity": null,
-      "name": "config",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "idp"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": {
-        "type": "always",
-        "name": "inbox_id_seq",
-        "increment": "1",
-        "startWith": "1",
-        "minValue": "1",
-        "maxValue": "2147483647",
-        "cache": 1,
-        "cycle": false
-      },
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "sender_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "receiver_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "type": "inbox_status",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'UNREAD'",
-      "generated": null,
-      "identity": null,
-      "name": "status",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "message",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": {
-        "type": "always",
-        "name": "memo_id_seq",
-        "increment": "1",
-        "startWith": "1",
-        "minValue": "1",
-        "maxValue": "2147483647",
-        "cache": 1,
-        "cycle": false
-      },
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "uid",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "creator_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "type": "row_status",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'NORMAL'",
-      "generated": null,
-      "identity": null,
-      "name": "row_status",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "content",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "type": "memo_visibility",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'PRIVATE'",
-      "generated": null,
-      "identity": null,
-      "name": "visibility",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "type": "boolean",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "false",
-      "generated": null,
-      "identity": null,
-      "name": "pinned",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 1,
-      "default": "'{}'",
-      "generated": null,
-      "identity": null,
-      "name": "tags",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "type": "jsonb",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "'{}'",
-      "generated": null,
-      "identity": null,
-      "name": "payload",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "memo_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo_relation"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "related_memo_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo_relation"
-    },
-    {
-      "type": "memo_relation_type",
-      "typeSchema": "public",
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "type",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo_relation"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo_relation"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": {
-        "type": "always",
-        "name": "memo_share_id_seq",
-        "increment": "1",
-        "startWith": "1",
-        "minValue": "1",
-        "maxValue": "2147483647",
-        "cache": 1,
-        "cycle": false
-      },
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo_share"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "uid",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo_share"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "memo_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo_share"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "creator_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo_share"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo_share"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": false,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "expires_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "memo_share"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": {
-        "type": "always",
-        "name": "reaction_id_seq",
-        "increment": "1",
-        "startWith": "1",
-        "minValue": "1",
-        "maxValue": "2147483647",
-        "cache": 1,
-        "cycle": false
-      },
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "reaction"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "reaction"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "creator_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "reaction"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "content_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "reaction"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "reaction_type",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "reaction"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "system_setting"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "value",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "system_setting"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "description",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "system_setting"
-    },
-    {
-      "type": "integer",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": {
-        "type": "always",
-        "name": "user_identity_id_seq",
-        "increment": "1",
-        "startWith": "1",
-        "minValue": "1",
-        "maxValue": "2147483647",
-        "cache": 1,
-        "cycle": false
-      },
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user_identity"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user_identity"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "provider",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user_identity"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "extern_uid",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user_identity"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user_identity"
-    },
-    {
-      "type": "timestamp with time zone",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user_identity"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "user_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user_setting"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "key",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user_setting"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "''",
-      "generated": null,
-      "identity": null,
-      "name": "value",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "user_setting"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "creator_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "attachment_creator_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "memo_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "attachment_memo_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "uid",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "attachment_uid_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "user_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "account_user_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "user_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "session_user_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "session"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "identifier",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "verification_identifier_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "verification"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "type",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "idp_type_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "idp"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "name",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "idp_name_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "idp"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "receiver_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "inbox_receiver_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "sender_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "inbox_sender_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "status",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "inbox_status_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "receiver_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        },
-        {
-          "value": "status",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        },
-        {
-          "value": "created_at",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "inbox_receiver_status_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "creator_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "memo_creator_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "created_at",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "memo_created_at_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "visibility",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "memo_visibility_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "row_status",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "memo_row_status_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "creator_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        },
-        {
-          "value": "visibility",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        },
-        {
-          "value": "created_at",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "memo_creator_visibility_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "tags",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "gin",
-      "concurrently": false,
-      "name": "memo_tags_gin",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "memo_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "memo_relation_memo_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "memo_relation"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "related_memo_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "memo_relation_related_memo_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "memo_relation"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "memo_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "memo_share_memo_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "memo_share"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "creator_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "memo_share_creator_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "memo_share"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "content_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "reaction_content_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "reaction"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "creator_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "reaction_creator_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "reaction"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "content_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        },
-        {
-          "value": "reaction_type",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "reaction_content_type_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "reaction"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "user_id",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "user_identity_user_id_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "user_identity"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        {
-          "value": "provider",
-          "isExpression": false,
-          "asc": true,
-          "nullsFirst": false,
-          "opclass": null
-        }
-      ],
-      "isUnique": false,
-      "where": null,
-      "with": "",
-      "method": "btree",
-      "concurrently": false,
-      "name": "user_identity_provider_idx",
-      "entityType": "indexes",
-      "schema": "public",
-      "table": "user_identity"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "creator_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "attachment_creator_id_user_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "memo_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "memo",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "SET NULL",
-      "name": "attachment_memo_id_memo_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "attachment"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "account_user_id_user_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "account"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "session_user_id_user_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "session"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "sender_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "inbox_sender_id_user_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "receiver_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "inbox_receiver_id_user_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "inbox"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "creator_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "memo_creator_id_user_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "memo"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "memo_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "memo",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "memo_relation_memo_id_memo_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "memo_relation"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "related_memo_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "memo",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "memo_relation_related_memo_id_memo_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "memo_relation"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "memo_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "memo",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "memo_share_memo_id_memo_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "memo_share"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "creator_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "memo_share_creator_id_user_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "memo_share"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "creator_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "reaction_creator_id_user_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "reaction"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "user_identity_user_id_user_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "user_identity"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "user_id"
-      ],
-      "schemaTo": "public",
-      "tableTo": "user",
-      "columnsTo": [
-        "id"
-      ],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "user_setting_user_id_user_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "user_setting"
-    },
-    {
-      "columns": [
-        "memo_id",
-        "related_memo_id",
-        "type"
-      ],
-      "nameExplicit": false,
-      "name": "memo_relation_pkey",
-      "entityType": "pks",
-      "schema": "public",
-      "table": "memo_relation"
-    },
-    {
-      "columns": [
-        "user_id",
-        "key"
-      ],
-      "nameExplicit": false,
-      "name": "user_setting_pkey",
-      "entityType": "pks",
-      "schema": "public",
-      "table": "user_setting"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "attachment_pkey",
-      "schema": "public",
-      "table": "attachment",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "account_pkey",
-      "schema": "public",
-      "table": "account",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "session_pkey",
-      "schema": "public",
-      "table": "session",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "user_pkey",
-      "schema": "public",
-      "table": "user",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "verification_pkey",
-      "schema": "public",
-      "table": "verification",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "idp_pkey",
-      "schema": "public",
-      "table": "idp",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "inbox_pkey",
-      "schema": "public",
-      "table": "inbox",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "memo_pkey",
-      "schema": "public",
-      "table": "memo",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "memo_share_pkey",
-      "schema": "public",
-      "table": "memo_share",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "reaction_pkey",
-      "schema": "public",
-      "table": "reaction",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "name"
-      ],
-      "nameExplicit": false,
-      "name": "system_setting_pkey",
-      "schema": "public",
-      "table": "system_setting",
-      "entityType": "pks"
-    },
-    {
-      "columns": [
-        "id"
-      ],
-      "nameExplicit": false,
-      "name": "user_identity_pkey",
-      "schema": "public",
-      "table": "user_identity",
-      "entityType": "pks"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        "creator_id",
-        "content_id",
-        "reaction_type"
-      ],
-      "nullsNotDistinct": false,
-      "name": "uq_reaction",
-      "entityType": "uniques",
-      "schema": "public",
-      "table": "reaction"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        "provider",
-        "extern_uid"
-      ],
-      "nullsNotDistinct": false,
-      "name": "uq_user_identity_provider",
-      "entityType": "uniques",
-      "schema": "public",
-      "table": "user_identity"
-    },
-    {
-      "nameExplicit": true,
-      "columns": [
-        "user_id",
-        "provider"
-      ],
-      "nullsNotDistinct": false,
-      "name": "uq_user_identity_user_provider",
-      "entityType": "uniques",
-      "schema": "public",
-      "table": "user_identity"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "uid"
-      ],
-      "nullsNotDistinct": false,
-      "name": "attachment_uid_key",
-      "schema": "public",
-      "table": "attachment",
-      "entityType": "uniques"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "token"
-      ],
-      "nullsNotDistinct": false,
-      "name": "session_token_key",
-      "schema": "public",
-      "table": "session",
-      "entityType": "uniques"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "username"
-      ],
-      "nullsNotDistinct": false,
-      "name": "user_username_key",
-      "schema": "public",
-      "table": "user",
-      "entityType": "uniques"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "email"
-      ],
-      "nullsNotDistinct": false,
-      "name": "user_email_key",
-      "schema": "public",
-      "table": "user",
-      "entityType": "uniques"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "uid"
-      ],
-      "nullsNotDistinct": false,
-      "name": "idp_uid_key",
-      "schema": "public",
-      "table": "idp",
-      "entityType": "uniques"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "uid"
-      ],
-      "nullsNotDistinct": false,
-      "name": "memo_uid_key",
-      "schema": "public",
-      "table": "memo",
-      "entityType": "uniques"
-    },
-    {
-      "nameExplicit": false,
-      "columns": [
-        "uid"
-      ],
-      "nullsNotDistinct": false,
-      "name": "memo_share_uid_key",
-      "schema": "public",
-      "table": "memo_share",
-      "entityType": "uniques"
-    }
-  ],
-  "renames": []
+	"version": "8",
+	"dialect": "postgres",
+	"id": "5ffef209-d477-42d3-ab3c-f0cc230d2c0f",
+	"prevIds": ["00000000-0000-0000-0000-000000000000"],
+	"ddl": [
+		{
+			"values": ["OAUTH2", "OIDC"],
+			"name": "idp_type",
+			"entityType": "enums",
+			"schema": "public"
+		},
+		{
+			"values": ["UNREAD", "READ"],
+			"name": "inbox_status",
+			"entityType": "enums",
+			"schema": "public"
+		},
+		{
+			"values": ["REFERENCE", "COMMENT"],
+			"name": "memo_relation_type",
+			"entityType": "enums",
+			"schema": "public"
+		},
+		{
+			"values": ["PRIVATE", "PUBLIC", "PROTECTED"],
+			"name": "memo_visibility",
+			"entityType": "enums",
+			"schema": "public"
+		},
+		{
+			"values": ["NORMAL", "ARCHIVED"],
+			"name": "row_status",
+			"entityType": "enums",
+			"schema": "public"
+		},
+		{
+			"values": ["S3", "R2", "GCS", "LOCAL"],
+			"name": "storage_type",
+			"entityType": "enums",
+			"schema": "public"
+		},
+		{
+			"values": ["USER", "ADMIN", "HOST"],
+			"name": "user_role",
+			"entityType": "enums",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "attachment",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "account",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "session",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "user",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "verification",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "idp",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "inbox",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "memo",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "memo_relation",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "memo_share",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "reaction",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "system_setting",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "user_identity",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"isRlsEnabled": false,
+			"name": "user_setting",
+			"entityType": "tables",
+			"schema": "public"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": {
+				"type": "always",
+				"name": "attachment_id_seq",
+				"increment": "1",
+				"startWith": "1",
+				"minValue": "1",
+				"maxValue": "2147483647",
+				"cache": 1,
+				"cycle": false
+			},
+			"name": "id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "uid",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "creator_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "updated_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "filename",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "type",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "0",
+			"generated": null,
+			"identity": null,
+			"name": "size",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "external_url",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "memo_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "storage_type",
+			"typeSchema": "public",
+			"notNull": true,
+			"dimensions": 0,
+			"default": "'S3'",
+			"generated": null,
+			"identity": null,
+			"name": "storage_type",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "reference",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "jsonb",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "'{}'",
+			"generated": null,
+			"identity": null,
+			"name": "payload",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "account_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "provider_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "user_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "access_token",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "refresh_token",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "id_token",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "access_token_expires_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "refresh_token_expires_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "scope",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "password",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "updated_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "session"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "expires_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "session"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "token",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "session"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "session"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "updated_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "session"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "ip_address",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "session"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "user_agent",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "session"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "user_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "session"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "varchar(255)",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "username",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "display_username",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "email",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "boolean",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "false",
+			"generated": null,
+			"identity": null,
+			"name": "email_verified",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "name",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "image",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "nickname",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "description",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "row_status",
+			"typeSchema": "public",
+			"notNull": true,
+			"dimensions": 0,
+			"default": "'NORMAL'",
+			"generated": null,
+			"identity": null,
+			"name": "row_status",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "user_role",
+			"typeSchema": "public",
+			"notNull": true,
+			"dimensions": 0,
+			"default": "'USER'",
+			"generated": null,
+			"identity": null,
+			"name": "role",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "updated_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "verification"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "identifier",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "verification"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "value",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "verification"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "expires_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "verification"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "verification"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "updated_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "verification"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": {
+				"type": "always",
+				"name": "idp_id_seq",
+				"increment": "1",
+				"startWith": "1",
+				"minValue": "1",
+				"maxValue": "2147483647",
+				"cache": 1,
+				"cycle": false
+			},
+			"name": "id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "idp"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "uid",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "idp"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "name",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "idp"
+		},
+		{
+			"type": "idp_type",
+			"typeSchema": "public",
+			"notNull": true,
+			"dimensions": 0,
+			"default": "'OAUTH2'",
+			"generated": null,
+			"identity": null,
+			"name": "type",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "idp"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "identifier_filter",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "idp"
+		},
+		{
+			"type": "jsonb",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "'{}'",
+			"generated": null,
+			"identity": null,
+			"name": "config",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "idp"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": {
+				"type": "always",
+				"name": "inbox_id_seq",
+				"increment": "1",
+				"startWith": "1",
+				"minValue": "1",
+				"maxValue": "2147483647",
+				"cache": 1,
+				"cycle": false
+			},
+			"name": "id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "sender_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "receiver_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"type": "inbox_status",
+			"typeSchema": "public",
+			"notNull": true,
+			"dimensions": 0,
+			"default": "'UNREAD'",
+			"generated": null,
+			"identity": null,
+			"name": "status",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "message",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": {
+				"type": "always",
+				"name": "memo_id_seq",
+				"increment": "1",
+				"startWith": "1",
+				"minValue": "1",
+				"maxValue": "2147483647",
+				"cache": 1,
+				"cycle": false
+			},
+			"name": "id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "uid",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "creator_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "updated_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"type": "row_status",
+			"typeSchema": "public",
+			"notNull": true,
+			"dimensions": 0,
+			"default": "'NORMAL'",
+			"generated": null,
+			"identity": null,
+			"name": "row_status",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "content",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"type": "memo_visibility",
+			"typeSchema": "public",
+			"notNull": true,
+			"dimensions": 0,
+			"default": "'PRIVATE'",
+			"generated": null,
+			"identity": null,
+			"name": "visibility",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"type": "boolean",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "false",
+			"generated": null,
+			"identity": null,
+			"name": "pinned",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 1,
+			"default": "'{}'",
+			"generated": null,
+			"identity": null,
+			"name": "tags",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"type": "jsonb",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "'{}'",
+			"generated": null,
+			"identity": null,
+			"name": "payload",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "memo_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo_relation"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "related_memo_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo_relation"
+		},
+		{
+			"type": "memo_relation_type",
+			"typeSchema": "public",
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "type",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo_relation"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo_relation"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": {
+				"type": "always",
+				"name": "memo_share_id_seq",
+				"increment": "1",
+				"startWith": "1",
+				"minValue": "1",
+				"maxValue": "2147483647",
+				"cache": 1,
+				"cycle": false
+			},
+			"name": "id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo_share"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "uid",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo_share"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "memo_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo_share"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "creator_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo_share"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo_share"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": false,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "expires_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "memo_share"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": {
+				"type": "always",
+				"name": "reaction_id_seq",
+				"increment": "1",
+				"startWith": "1",
+				"minValue": "1",
+				"maxValue": "2147483647",
+				"cache": 1,
+				"cycle": false
+			},
+			"name": "id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "reaction"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "reaction"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "creator_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "reaction"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "content_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "reaction"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "reaction_type",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "reaction"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "name",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "system_setting"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "value",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "system_setting"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "description",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "system_setting"
+		},
+		{
+			"type": "integer",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": {
+				"type": "always",
+				"name": "user_identity_id_seq",
+				"increment": "1",
+				"startWith": "1",
+				"minValue": "1",
+				"maxValue": "2147483647",
+				"cache": 1,
+				"cycle": false
+			},
+			"name": "id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user_identity"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "user_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user_identity"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "provider",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user_identity"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "extern_uid",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user_identity"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "created_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user_identity"
+		},
+		{
+			"type": "timestamp with time zone",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "now()",
+			"generated": null,
+			"identity": null,
+			"name": "updated_at",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user_identity"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "user_id",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user_setting"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": null,
+			"generated": null,
+			"identity": null,
+			"name": "key",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user_setting"
+		},
+		{
+			"type": "text",
+			"typeSchema": null,
+			"notNull": true,
+			"dimensions": 0,
+			"default": "''",
+			"generated": null,
+			"identity": null,
+			"name": "value",
+			"entityType": "columns",
+			"schema": "public",
+			"table": "user_setting"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "creator_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "attachment_creator_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "memo_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "attachment_memo_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "uid",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "attachment_uid_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "user_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "account_user_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "user_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "session_user_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "session"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "identifier",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "verification_identifier_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "verification"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "type",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "idp_type_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "idp"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "name",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "idp_name_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "idp"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "receiver_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "inbox_receiver_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "sender_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "inbox_sender_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "status",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "inbox_status_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "receiver_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				},
+				{
+					"value": "status",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				},
+				{
+					"value": "created_at",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "inbox_receiver_status_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "creator_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "memo_creator_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "created_at",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "memo_created_at_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "visibility",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "memo_visibility_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "row_status",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "memo_row_status_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "creator_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				},
+				{
+					"value": "visibility",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				},
+				{
+					"value": "created_at",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "memo_creator_visibility_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "tags",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "gin",
+			"concurrently": false,
+			"name": "memo_tags_gin",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "memo_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "memo_relation_memo_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "memo_relation"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "related_memo_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "memo_relation_related_memo_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "memo_relation"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "memo_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "memo_share_memo_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "memo_share"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "creator_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "memo_share_creator_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "memo_share"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "content_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "reaction_content_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "reaction"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "creator_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "reaction_creator_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "reaction"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "content_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				},
+				{
+					"value": "reaction_type",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "reaction_content_type_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "reaction"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "user_id",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "user_identity_user_id_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "user_identity"
+		},
+		{
+			"nameExplicit": true,
+			"columns": [
+				{
+					"value": "provider",
+					"isExpression": false,
+					"asc": true,
+					"nullsFirst": false,
+					"opclass": null
+				}
+			],
+			"isUnique": false,
+			"where": null,
+			"with": "",
+			"method": "btree",
+			"concurrently": false,
+			"name": "user_identity_provider_idx",
+			"entityType": "indexes",
+			"schema": "public",
+			"table": "user_identity"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["creator_id"],
+			"schemaTo": "public",
+			"tableTo": "user",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "attachment_creator_id_user_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["memo_id"],
+			"schemaTo": "public",
+			"tableTo": "memo",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "SET NULL",
+			"name": "attachment_memo_id_memo_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "attachment"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["user_id"],
+			"schemaTo": "public",
+			"tableTo": "user",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "account_user_id_user_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "account"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["user_id"],
+			"schemaTo": "public",
+			"tableTo": "user",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "session_user_id_user_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "session"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["sender_id"],
+			"schemaTo": "public",
+			"tableTo": "user",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "inbox_sender_id_user_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["receiver_id"],
+			"schemaTo": "public",
+			"tableTo": "user",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "inbox_receiver_id_user_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "inbox"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["creator_id"],
+			"schemaTo": "public",
+			"tableTo": "user",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "memo_creator_id_user_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "memo"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["memo_id"],
+			"schemaTo": "public",
+			"tableTo": "memo",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "memo_relation_memo_id_memo_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "memo_relation"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["related_memo_id"],
+			"schemaTo": "public",
+			"tableTo": "memo",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "memo_relation_related_memo_id_memo_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "memo_relation"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["memo_id"],
+			"schemaTo": "public",
+			"tableTo": "memo",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "memo_share_memo_id_memo_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "memo_share"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["creator_id"],
+			"schemaTo": "public",
+			"tableTo": "user",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "memo_share_creator_id_user_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "memo_share"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["creator_id"],
+			"schemaTo": "public",
+			"tableTo": "user",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "reaction_creator_id_user_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "reaction"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["user_id"],
+			"schemaTo": "public",
+			"tableTo": "user",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "user_identity_user_id_user_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "user_identity"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["user_id"],
+			"schemaTo": "public",
+			"tableTo": "user",
+			"columnsTo": ["id"],
+			"onUpdate": "NO ACTION",
+			"onDelete": "CASCADE",
+			"name": "user_setting_user_id_user_id_fkey",
+			"entityType": "fks",
+			"schema": "public",
+			"table": "user_setting"
+		},
+		{
+			"columns": ["memo_id", "related_memo_id", "type"],
+			"nameExplicit": false,
+			"name": "memo_relation_pkey",
+			"entityType": "pks",
+			"schema": "public",
+			"table": "memo_relation"
+		},
+		{
+			"columns": ["user_id", "key"],
+			"nameExplicit": false,
+			"name": "user_setting_pkey",
+			"entityType": "pks",
+			"schema": "public",
+			"table": "user_setting"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "attachment_pkey",
+			"schema": "public",
+			"table": "attachment",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "account_pkey",
+			"schema": "public",
+			"table": "account",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "session_pkey",
+			"schema": "public",
+			"table": "session",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "user_pkey",
+			"schema": "public",
+			"table": "user",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "verification_pkey",
+			"schema": "public",
+			"table": "verification",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "idp_pkey",
+			"schema": "public",
+			"table": "idp",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "inbox_pkey",
+			"schema": "public",
+			"table": "inbox",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "memo_pkey",
+			"schema": "public",
+			"table": "memo",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "memo_share_pkey",
+			"schema": "public",
+			"table": "memo_share",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "reaction_pkey",
+			"schema": "public",
+			"table": "reaction",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["name"],
+			"nameExplicit": false,
+			"name": "system_setting_pkey",
+			"schema": "public",
+			"table": "system_setting",
+			"entityType": "pks"
+		},
+		{
+			"columns": ["id"],
+			"nameExplicit": false,
+			"name": "user_identity_pkey",
+			"schema": "public",
+			"table": "user_identity",
+			"entityType": "pks"
+		},
+		{
+			"nameExplicit": true,
+			"columns": ["creator_id", "content_id", "reaction_type"],
+			"nullsNotDistinct": false,
+			"name": "uq_reaction",
+			"entityType": "uniques",
+			"schema": "public",
+			"table": "reaction"
+		},
+		{
+			"nameExplicit": true,
+			"columns": ["provider", "extern_uid"],
+			"nullsNotDistinct": false,
+			"name": "uq_user_identity_provider",
+			"entityType": "uniques",
+			"schema": "public",
+			"table": "user_identity"
+		},
+		{
+			"nameExplicit": true,
+			"columns": ["user_id", "provider"],
+			"nullsNotDistinct": false,
+			"name": "uq_user_identity_user_provider",
+			"entityType": "uniques",
+			"schema": "public",
+			"table": "user_identity"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["uid"],
+			"nullsNotDistinct": false,
+			"name": "attachment_uid_key",
+			"schema": "public",
+			"table": "attachment",
+			"entityType": "uniques"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["token"],
+			"nullsNotDistinct": false,
+			"name": "session_token_key",
+			"schema": "public",
+			"table": "session",
+			"entityType": "uniques"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["username"],
+			"nullsNotDistinct": false,
+			"name": "user_username_key",
+			"schema": "public",
+			"table": "user",
+			"entityType": "uniques"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["email"],
+			"nullsNotDistinct": false,
+			"name": "user_email_key",
+			"schema": "public",
+			"table": "user",
+			"entityType": "uniques"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["uid"],
+			"nullsNotDistinct": false,
+			"name": "idp_uid_key",
+			"schema": "public",
+			"table": "idp",
+			"entityType": "uniques"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["uid"],
+			"nullsNotDistinct": false,
+			"name": "memo_uid_key",
+			"schema": "public",
+			"table": "memo",
+			"entityType": "uniques"
+		},
+		{
+			"nameExplicit": false,
+			"columns": ["uid"],
+			"nullsNotDistinct": false,
+			"name": "memo_share_uid_key",
+			"schema": "public",
+			"table": "memo_share",
+			"entityType": "uniques"
+		}
+	],
+	"renames": []
 }

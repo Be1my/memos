@@ -7,30 +7,33 @@ import { LoaderIcon } from "lucide-react";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { m } from "@/paraglide/messages";
-import { type SignInValues, signInSchema } from "../schemas";
+import { type SignUpValues, signUpSchema } from "../schemas";
 
-interface SignInFormProps {
+interface SignUpFormProps {
 	redirectPath?: string;
 }
 
-const defaultValues: SignInValues = {
+const defaultValues: SignUpValues = {
+	name: "",
 	email: "",
 	password: "",
+	confirmPassword: "",
 };
 
-export default function SignInForm({ redirectPath }: SignInFormProps) {
+export default function SignUpForm({ redirectPath }: SignUpFormProps) {
 	const navigate = useNavigate();
 	const [error, setError] = useState<string | null>(null);
 	const form = useForm({
 		defaultValues,
 		validators: {
-			onChange: signInSchema,
+			onChange: signUpSchema,
 		},
 		onSubmit: async ({ value }) => {
 			setError(null);
 
-			await authClient.signIn.email(
+			await authClient.signUp.email(
 				{
+					name: value.name,
 					email: value.email,
 					password: value.password,
 				},
@@ -55,6 +58,35 @@ export default function SignInForm({ redirectPath }: SignInFormProps) {
 			}}
 		>
 			<div className="flex w-full flex-col items-start justify-start gap-4">
+				<form.Field name="name">
+					{(field) => {
+						const isInvalid =
+							field.state.meta.isTouched && !field.state.meta.isValid;
+						return (
+							<Field data-invalid={isInvalid}>
+								<FieldLabel htmlFor={field.name}>
+									{m.common_username()}
+								</FieldLabel>
+								<Input
+									id={field.name}
+									name={field.name}
+									type="text"
+									value={field.state.value}
+									onBlur={field.handleBlur}
+									onChange={(e) => field.handleChange(e.target.value)}
+									aria-invalid={isInvalid}
+									placeholder={m.common_username()}
+									autoComplete="username"
+									autoCapitalize="off"
+									spellCheck={false}
+									required
+								/>
+								{isInvalid && <FieldError errors={field.state.meta.errors} />}
+							</Field>
+						);
+					}}
+				</form.Field>
+
 				<form.Field name="email">
 					{(field) => {
 						const isInvalid =
@@ -100,7 +132,36 @@ export default function SignInForm({ redirectPath }: SignInFormProps) {
 									onChange={(e) => field.handleChange(e.target.value)}
 									aria-invalid={isInvalid}
 									placeholder={m.common_password()}
-									autoComplete="current-password"
+									autoComplete="new-password"
+									autoCapitalize="off"
+									spellCheck={false}
+									required
+								/>
+								{isInvalid && <FieldError errors={field.state.meta.errors} />}
+							</Field>
+						);
+					}}
+				</form.Field>
+
+				<form.Field name="confirmPassword">
+					{(field) => {
+						const isInvalid =
+							field.state.meta.isTouched && !field.state.meta.isValid;
+						return (
+							<Field data-invalid={isInvalid}>
+								<FieldLabel htmlFor={field.name}>
+									{m.common_confirm_password()}
+								</FieldLabel>
+								<Input
+									id={field.name}
+									name={field.name}
+									type="password"
+									value={field.state.value}
+									onBlur={field.handleBlur}
+									onChange={(e) => field.handleChange(e.target.value)}
+									aria-invalid={isInvalid}
+									placeholder={m.common_confirm_password()}
+									autoComplete="new-password"
 									autoCapitalize="off"
 									spellCheck={false}
 									required
@@ -122,7 +183,7 @@ export default function SignInForm({ redirectPath }: SignInFormProps) {
 							className="h-10 w-full"
 							disabled={!canSubmit || isSubmitting}
 						>
-							{m.common_sign_in()}
+							{m.common_sign_up()}
 							{isSubmitting && (
 								<LoaderIcon className="ml-2 h-auto w-5 animate-spin opacity-60" />
 							)}

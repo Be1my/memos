@@ -9,12 +9,12 @@ import { Monitor, Moon, Palette, Sun } from "lucide-react";
 import { type UserTheme, useTheme } from "@/lib/theme-provider";
 
 const themeConfig: Record<UserTheme, { icon: React.ReactNode; label: string }> =
-{
-	light: { icon: <Sun className="h-auto w-4" />, label: "Light" },
-	dark: { icon: <Moon className="h-auto w-4" />, label: "Dark" },
-	paper: { icon: <Palette className="h-auto w-4" />, label: "Paper" },
-	system: { icon: <Monitor className="h-auto w-4" />, label: "System" },
-};
+	{
+		light: { icon: <Sun className="h-auto w-4" />, label: "Light" },
+		dark: { icon: <Moon className="h-auto w-4" />, label: "Dark" },
+		paper: { icon: <Palette className="h-auto w-4" />, label: "Paper" },
+		system: { icon: <Monitor className="h-auto w-4" />, label: "System" },
+	};
 
 const themeOptions = Object.keys(themeConfig) as UserTheme[];
 
