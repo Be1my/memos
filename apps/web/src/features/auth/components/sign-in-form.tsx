@@ -2,7 +2,7 @@ import { Button } from "@memos/ui/components/button";
 import { Field, FieldError, FieldLabel } from "@memos/ui/components/field";
 import { Input } from "@memos/ui/components/input";
 import { useForm } from "@tanstack/react-form";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { LoaderIcon } from "lucide-react";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
@@ -129,6 +129,17 @@ export default function SignInForm({ redirectPath }: SignInFormProps) {
 						</Button>
 					)}
 				</form.Subscribe>
+			</div>
+			<div className="mt-4 flex w-full flex-row items-center justify-center">
+				<p className="text-muted-foreground text-sm">
+					{m.auth_sign_up_tip()}
+					<Link
+						to="/sign-up"
+						className="ml-1 text-foreground underline underline-offset-2 hover:opacity-70"
+					>
+						{m.common_sign_up()}
+					</Link>
+				</p>
 			</div>
 		</form>
 	);
