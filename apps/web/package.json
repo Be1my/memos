@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@memos/auth": "workspace:*",
+		"@memos/db": "workspace:*",
 		"@memos/env": "workspace:*",
 		"@memos/ui": "workspace:*",
 		"@tailwindcss/vite": "^4.2.2",
