@@ -5,8 +5,9 @@ import { firstUserQueryOptions } from "@/features/auth/queries/auth.query";
 
 export const Route = createFileRoute("/_memos")({
 	beforeLoad: async ({ context }) => {
-		const { isFirstUser } =
-			await context.queryClient.ensureQueryData(firstUserQueryOptions());
+		const { isFirstUser } = await context.queryClient.ensureQueryData(
+			firstUserQueryOptions(),
+		);
 		if (isFirstUser) {
 			throw redirect({ to: "/sign-up" });
 		}
