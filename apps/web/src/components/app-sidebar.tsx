@@ -49,11 +49,26 @@ function SidebarLogo() {
 		</SidebarMenuButton>
 	);
 }
-export function AppSidebar() {
-	const { data } = authClient.useSession();
-	const user = data?.user;
+interface AppSidebarProps {
+	ssrSession?: {
+		user: {
+			id: string;
+			name: string;
+			email: string;
+			image?: string | null;
+		};
+		session: {
+			id: string;
+		};
+	} | null;
+}
 
-	const navItems = data ? authedNav : guestNav;
+export function AppSidebar({ ssrSession }: AppSidebarProps) {
+	const { data } = authClient.useSession();
+	const session = data ?? ssrSession;
+	const user = session?.user;
+
+	const navItems = session ? authedNav : guestNav;
 
 	return (
 		<Sidebar collapsible="icon">
