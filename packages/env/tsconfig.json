@@ -1,0 +1,3 @@
+{
+  "extends": "@memos/config/tsconfig.base.json"
+}
