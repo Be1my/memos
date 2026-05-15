@@ -4,9 +4,11 @@ import {
 	createRootRouteWithContext,
 	HeadContent,
 	Outlet,
+	redirect,
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { firstUserQueryOptions } from "@/features/auth/queries/auth.query";
 import { ThemeProvider } from "@/lib/theme-provider";
 import appCss from "../index.css?url";
 
@@ -15,6 +17,20 @@ export interface RouterAppContext {
 }
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
+	beforeLoad: async ({ context, location }) => {
+		if (
+			location.pathname === "/sign-up" ||
+			location.pathname.startsWith("/api/")
+		) {
+			return;
+		}
+		const { isFirstUser } = await context.queryClient.ensureQueryData(
+			firstUserQueryOptions(),
+		);
+		if (isFirstUser) {
+			throw redirect({ to: "/sign-up" });
+		}
+	},
 	head: () => ({
 		meta: [
 			{
