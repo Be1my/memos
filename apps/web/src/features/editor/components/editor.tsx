@@ -3,6 +3,7 @@ import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { Button } from "@memos/ui/components/button";
 import {
@@ -11,16 +12,10 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@memos/ui/components/dropdown-menu";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@memos/ui/components/select";
 import type { EditorState } from "lexical";
-import { EllipsisIcon, SaveIcon } from "lucide-react";
-import { useState } from "react";
+import { $getRoot } from "lexical";
+import { GlobeIcon, LockIcon, PlusIcon, SaveIcon, UsersIcon } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { editorTheme } from "../editor-theme";
 import { FloatingToolbar } from "./floating-toolbar";
 
@@ -28,10 +23,43 @@ const placeholder = "Write something...";
 
 function Editor({
 	onChange,
+	onSave,
 }: {
 	onChange?: (editorState: EditorState) => void;
+	onSave?: () => void;
 }) {
 	const [visibility, setVisibility] = useState("private");
+	const [hasContent, setHasContent] = useState(false);
+	const containerRef = useRef<HTMLDivElement>(null);
+
+	const visibilityOptions = [
+		{ value: "private", label: "私有", icon: LockIcon },
+		{ value: "workspace", label: "工作区", icon: UsersIcon },
+		{ value: "public", label: "公开", icon: GlobeIcon },
+	] as const;
+
+	const currentVisibility = visibilityOptions.find((o) => o.value === visibility);
+
+	const handleSave = useCallback(() => {
+		if (!hasContent) return;
+		onSave?.();
+	}, [onSave, hasContent]);
+
+	useEffect(() => {
+		const el = containerRef.current;
+		if (!el) return;
+
+		const onKeyDown = (e: KeyboardEvent) => {
+			if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+				e.preventDefault();
+				e.stopPropagation();
+				handleSave();
+			}
+		};
+
+		el.addEventListener("keydown", onKeyDown, { capture: true });
+		return () => el.removeEventListener("keydown", onKeyDown, { capture: true });
+	}, [handleSave]);
 
 	const initialConfig: InitialConfigType = {
 		namespace: "MemoEditor",
@@ -40,9 +68,9 @@ function Editor({
 	};
 
 	return (
-		<div className="rounded-xl border bg-card ring-1 ring-foreground/10 focus-within:ring-2 focus-within:ring-ring">
+		<div ref={containerRef} className="rounded-xl border bg-card ring-1 ring-foreground/10 focus-within:ring-2 focus-within:ring-ring">
 			<LexicalComposer initialConfig={initialConfig}>
-				<div className="max-h-[240px] min-h-[100px] overflow-y-auto px-3.5 py-3.5 text-sm">
+				<div className="relative max-h-[240px] min-h-[100px] overflow-y-auto px-3.5 py-3.5 text-sm">
 					<RichTextPlugin
 						contentEditable={
 							<ContentEditable className="relative outline-none" />
@@ -56,16 +84,19 @@ function Editor({
 					/>
 					<HistoryPlugin />
 					<FloatingToolbar />
+					<OnChangePlugin
+						onChange={(editorState) => {
+							editorState.read(() => {
+								setHasContent($getRoot().getTextContent().trim().length > 0);
+							});
+						}}
+					/>
 				</div>
 			</LexicalComposer>
-			<div className="flex items-center justify-between border-t px-3.5 py-2">
+			<div className="flex items-center justify-between px-3.5 py-2">
 				<DropdownMenu>
-					<DropdownMenuTrigger
-						render={
-							<Button variant="ghost" size="icon-sm">
-								<EllipsisIcon className="size-4" />
-							</Button>
-						}
+<DropdownMenuTrigger
+						render={<Button variant="secondary" size="icon-sm" className="bg-muted hover:bg-muted-foreground/20"><PlusIcon className="size-4" /></Button>}
 					/>
 					<DropdownMenuContent align="start">
 						<DropdownMenuItem>Pin to top</DropdownMenuItem>
@@ -73,17 +104,25 @@ function Editor({
 					</DropdownMenuContent>
 				</DropdownMenu>
 				<div className="flex items-center gap-2">
-					<Select value={visibility} onValueChange={setVisibility}>
-						<SelectTrigger className="w-28" size="sm">
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="private">私有</SelectItem>
-							<SelectItem value="workspace">工作区</SelectItem>
-							<SelectItem value="public">公开</SelectItem>
-						</SelectContent>
-					</Select>
-					<Button size="sm">
+					<DropdownMenu>
+						<DropdownMenuTrigger
+							render={(props: any) => (
+								<button type="button" {...props} className="flex cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground outline-none">
+									{currentVisibility && <currentVisibility.icon className="size-4" />}
+									{currentVisibility?.label}
+								</button>
+							)}
+						/>
+						<DropdownMenuContent align="end">
+							{visibilityOptions.map((opt) => (
+								<DropdownMenuItem key={opt.value} onClick={() => setVisibility(opt.value)}>
+									<opt.icon className="size-4" />
+									{opt.label}
+								</DropdownMenuItem>
+							))}
+						</DropdownMenuContent>
+					</DropdownMenu>
+					<Button size="sm" disabled={!hasContent} onClick={handleSave}>
 						<SaveIcon className="size-4" />
 						保存
 					</Button>
