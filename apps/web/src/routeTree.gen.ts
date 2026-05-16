@@ -17,6 +17,7 @@ import { Route as MemosAboutRouteImport } from './routes/_memos/about'
 import { Route as MemosProtectedRouteImport } from './routes/_memos/_protected'
 import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
+import { Route as ApiFilesSplatRouteImport } from './routes/api/files/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as MemosUUsernameRouteImport } from './routes/_memos/u/$username'
 import { Route as MemosProtectedSettingsRouteImport } from './routes/_memos/_protected/settings'
@@ -61,6 +62,11 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
   getParentRoute: () => AuthRoute,
+} as any)
+const ApiFilesSplatRoute = ApiFilesSplatRouteImport.update({
+  id: '/api/files/$',
+  path: '/api/files/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -112,6 +118,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof MemosProtectedSettingsRoute
   '/u/$username': typeof MemosUUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/files/$': typeof ApiFilesSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof MemosIndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/settings': typeof MemosProtectedSettingsRoute
   '/u/$username': typeof MemosUUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/files/$': typeof ApiFilesSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/_memos/_protected/settings': typeof MemosProtectedSettingsRoute
   '/_memos/u/$username': typeof MemosUUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/files/$': typeof ApiFilesSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/u/$username'
     | '/api/auth/$'
+    | '/api/files/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -174,6 +184,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/u/$username'
     | '/api/auth/$'
+    | '/api/files/$'
   id:
     | '__root__'
     | '/_auth'
@@ -191,12 +202,14 @@ export interface FileRouteTypes {
     | '/_memos/_protected/settings'
     | '/_memos/u/$username'
     | '/api/auth/$'
+    | '/api/files/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   MemosRoute: typeof MemosRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiFilesSplatRoute: typeof ApiFilesSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -256,6 +269,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/sign-in'
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/api/files/$': {
+      id: '/api/files/$'
+      path: '/api/files/$'
+      fullPath: '/api/files/$'
+      preLoaderRoute: typeof ApiFilesSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -363,6 +383,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   MemosRoute: MemosRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiFilesSplatRoute: ApiFilesSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
