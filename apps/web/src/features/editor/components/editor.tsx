@@ -23,10 +23,10 @@ function Editor({
 
 	return (
 		<LexicalComposer initialConfig={initialConfig}>
-			<div className="relative min-h-[120px] rounded-xl border bg-card px-3.5 py-3.5 text-sm ring-1 ring-foreground/10 focus-within:ring-2 focus-within:ring-ring">
+			<div className="relative min-h-[100px] max-h-[240px] overflow-y-auto rounded-xl border bg-card px-3.5 py-3.5 text-sm ring-1 ring-foreground/10 focus-within:ring-2 focus-within:ring-ring">
 				<RichTextPlugin
 					contentEditable={
-						<ContentEditable className="relative min-h-[80px] outline-none" />
+						<ContentEditable className="relative outline-none" />
 					}
 					placeholder={
 						<div className="pointer-events-none absolute top-3.5 left-3.5 select-none overflow-hidden text-ellipsis whitespace-nowrap text-muted-foreground">

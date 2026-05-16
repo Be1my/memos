@@ -3,7 +3,13 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
 import { getSessionFn } from "@/functions/get-session";
 
-const protectedPaths = ["/home", "/inbox", "/attachments", "/archived", "/settings"];
+const protectedPaths = [
+	"/home",
+	"/inbox",
+	"/attachments",
+	"/archived",
+	"/settings",
+];
 
 export const Route = createFileRoute("/_memos")({
 	beforeLoad: async ({ location }) => {
