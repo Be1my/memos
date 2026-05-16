@@ -15,12 +15,14 @@ export const listMemosFn = createServerFn({
 	const [
 		{ createDb },
 		{ memo },
+		{ attachment },
 		{ createAuth },
 		{ getRequestHeaders },
 		{ desc, eq, like, and, sql },
 	] = await Promise.all([
 		import("@memos/db"),
 		import("@memos/db/schema/memo.table"),
+		import("@memos/db/schema/attachment.table"),
 		import("@memos/auth"),
 		import("@tanstack/react-start/server"),
 		import("drizzle-orm"),
@@ -50,14 +52,30 @@ export const listMemosFn = createServerFn({
 		conditions.push(sql`${filter.tag} = ANY(${memo.tags})`);
 	}
 
-	const memos = await db
+	const rows = await db
 		.select()
 		.from(memo)
+		.leftJoin(attachment, eq(attachment.memoId, memo.id))
 		.where(and(...conditions))
 		.orderBy(desc(memo.createdAt))
 		.limit(20);
 
-	return memos.map((m) => ({
+	const memoMap = new Map<
+		number,
+		typeof memo.$inferSelect & {
+			attachments: typeof attachment.$inferSelect[];
+		}
+	>();
+	for (const row of rows) {
+		if (!memoMap.has(row.memo.id)) {
+			memoMap.set(row.memo.id, { ...row.memo, attachments: [] });
+		}
+		if (row.attachment) {
+			memoMap.get(row.memo.id)!.attachments.push(row.attachment);
+		}
+	}
+
+	return Array.from(memoMap.values()).map((m) => ({
 		id: m.id,
 		uid: m.uid,
 		content: m.content,
@@ -65,5 +83,14 @@ export const listMemosFn = createServerFn({
 		visibility: m.visibility,
 		tags: m.tags,
 		createdAt: m.createdAt.toISOString(),
+		attachments: m.attachments.map((a) => ({
+			id: a.id,
+			uid: a.uid,
+			filename: a.filename,
+			type: a.type,
+			size: a.size,
+			storageType: a.storageType,
+			reference: a.reference,
+		})),
 	}));
 });
