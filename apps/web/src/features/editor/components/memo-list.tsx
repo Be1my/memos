@@ -36,7 +36,11 @@ function FormattedTime({ date }: { date: string }) {
 
 function MemoList({ memos }: { memos: Memo[] }) {
 	if (!memos.length) {
-		return null;
+		return (
+			<div className="mt-8 rounded-md border border-dashed px-3 py-8 text-center text-xs text-muted-foreground">
+				没有找到数据
+			</div>
+		);
 	}
 
 	return (
