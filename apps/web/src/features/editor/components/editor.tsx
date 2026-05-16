@@ -35,6 +35,7 @@ function Editor({
 		content: string;
 		payload: Record<string, unknown>;
 		visibility: string;
+		tags?: string[];
 	}) => void;
 	isSaving?: boolean;
 }) {
@@ -64,10 +65,15 @@ function Editor({
 
 		if (!content) return;
 
+		const tags = Array.from(content.matchAll(/#([\w\u4e00-\u9fff]+)/g)).map(
+			(m) => m[1],
+		);
+
 		onSave?.({
 			content,
 			payload: state.toJSON() as unknown as Record<string, unknown>,
 			visibility,
+			tags,
 		});
 	}, [onSave, visibility, isSaving]);
 

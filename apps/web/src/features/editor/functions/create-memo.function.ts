@@ -8,10 +8,11 @@ const visibilityMap: Record<string, "PRIVATE" | "PUBLIC" | "PROTECTED"> = {
 
 export const createMemoFn = createServerFn({ method: "POST" })
 	.inputValidator((input: unknown) => {
-		const { content, payload, visibility } = input as {
+		const { content, payload, visibility, tags } = input as {
 			content: string;
 			payload: Record<string, unknown>;
 			visibility: string;
+			tags?: string[];
 		};
 
 		if (!content?.trim()) {
@@ -27,7 +28,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			throw new Error("Payload must be a plain object");
 		}
 
-		return { content, payload, visibility };
+		return { content, payload, visibility, tags };
 	})
 	.handler(async ({ data }) => {
 		const [{ createDb }, { memo }, { createAuth }, { getRequestHeaders }] =
@@ -56,6 +57,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 					content: data.content,
 					payload: data.payload ?? {},
 					visibility: visibilityMap[data.visibility] ?? "PRIVATE",
+					tags: data.tags ?? [],
 				})
 				.returning();
 		} catch (error) {

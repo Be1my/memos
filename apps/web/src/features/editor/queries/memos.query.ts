@@ -1,8 +1,10 @@
 import { queryOptions } from "@tanstack/react-query";
-import { listMemosFn } from "../functions/list-memos.function";
+import { listMemosFn, type ListMemosFilter } from "../functions/list-memos.function";
 
-export const memosQueryOptions = () =>
+const listMemos = (filter?: ListMemosFilter) => listMemosFn(filter as never);
+
+export const memosQueryOptions = (filter?: ListMemosFilter) =>
 	queryOptions({
-		queryKey: ["memos"],
-		queryFn: () => listMemosFn(),
+		queryKey: ["memos", filter],
+		queryFn: () => listMemos(filter),
 	});

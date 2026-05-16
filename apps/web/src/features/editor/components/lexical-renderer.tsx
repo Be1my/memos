@@ -19,7 +19,18 @@ type ElementNode = {
 };
 
 function renderText(node: TextNode): ReactNode {
-	let children: ReactNode = node.text;
+	const parts = node.text.split(/(#[\w\u4e00-\u9fff]+)/g);
+	let children: ReactNode = parts.map((part, i) => {
+		if (part.startsWith("#")) {
+			return (
+				<span key={i} className="text-primary font-medium">
+					{part}
+				</span>
+			);
+		}
+		return part;
+	});
+
 	if (node.format !== undefined) {
 		if (node.format & 1) children = <strong>{children}</strong>;
 		if (node.format & 2) children = <em>{children}</em>;
