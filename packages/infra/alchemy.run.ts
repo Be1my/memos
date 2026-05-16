@@ -1,11 +1,15 @@
 import alchemy from "alchemy";
-import { TanStackStart } from "alchemy/cloudflare";
+import { R2Bucket, TanStackStart } from "alchemy/cloudflare";
 import { config } from "dotenv";
 
 config({ path: "./.env" });
 config({ path: "../../apps/web/.env" });
 
 const app = await alchemy("memos");
+
+const bucket = await R2Bucket("attachments", {
+	empty: true,
+});
 
 export const web = await TanStackStart("web", {
 	cwd: "../../apps/web",
@@ -14,6 +18,7 @@ export const web = await TanStackStart("web", {
 		CORS_ORIGIN: alchemy.env.CORS_ORIGIN!,
 		BETTER_AUTH_SECRET: alchemy.secret.env.BETTER_AUTH_SECRET!,
 		BETTER_AUTH_URL: alchemy.env.BETTER_AUTH_URL!,
+		ATTACHMENTS_BUCKET: bucket,
 	},
 });
 
