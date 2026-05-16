@@ -18,7 +18,7 @@ const searchSchema = z.object({
 	tag: z.string().optional(),
 });
 
-export const Route = createFileRoute("/_memos/home")({
+export const Route = createFileRoute("/_memos/_protected/home")({
 	validateSearch: searchSchema,
 	loaderDeps: ({ search: { q, date, tag } }) => ({ q, date, tag }),
 	loader: async ({ context: { queryClient }, deps: { q, date, tag } }) => {

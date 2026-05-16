@@ -1,26 +1,16 @@
 import { SidebarInset, SidebarProvider } from "@memos/ui/components/sidebar";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SearchPanel } from "@/components/search-panel/search-panel";
 import { memosStatsQueryOptions } from "@/features/memos/queries/memos-stats.query";
 import { getSessionFn } from "@/functions/get-session";
 
-
-const protectedPaths = [
-	"/home",
-	"/inbox",
-	"/attachments",
-	"/archived",
-	"/settings",
-];
-
 export const Route = createFileRoute("/_memos")({
-	beforeLoad: async ({ context: { queryClient }, location }) => {
+	beforeLoad: async ({ context: { queryClient } }) => {
 		const session = await getSessionFn();
-		if (!session && protectedPaths.includes(location.pathname)) {
-			throw redirect({ to: "/sign-in" });
+		if (session?.user) {
+			await queryClient.prefetchQuery(memosStatsQueryOptions());
 		}
-		await queryClient.prefetchQuery(memosStatsQueryOptions());
 		return { user: session?.user ?? null };
 	},
 	component: RouteComponent,

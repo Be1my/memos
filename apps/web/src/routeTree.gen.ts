@@ -11,17 +11,19 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MemosRouteImport } from './routes/_memos'
 import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as MemosSettingsRouteImport } from './routes/_memos/settings'
-import { Route as MemosInboxRouteImport } from './routes/_memos/inbox'
-import { Route as MemosHomeRouteImport } from './routes/_memos/home'
+import { Route as MemosIndexRouteImport } from './routes/_memos/index'
 import { Route as MemosExploreRouteImport } from './routes/_memos/explore'
-import { Route as MemosAttachmentsRouteImport } from './routes/_memos/attachments'
-import { Route as MemosArchivedRouteImport } from './routes/_memos/archived'
 import { Route as MemosAboutRouteImport } from './routes/_memos/about'
+import { Route as MemosProtectedRouteImport } from './routes/_memos/_protected'
 import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as MemosUUsernameRouteImport } from './routes/_memos/u/$username'
+import { Route as MemosProtectedSettingsRouteImport } from './routes/_memos/_protected/settings'
+import { Route as MemosProtectedInboxRouteImport } from './routes/_memos/_protected/inbox'
+import { Route as MemosProtectedHomeRouteImport } from './routes/_memos/_protected/home'
+import { Route as MemosProtectedAttachmentsRouteImport } from './routes/_memos/_protected/attachments'
+import { Route as MemosProtectedArchivedRouteImport } from './routes/_memos/_protected/archived'
 
 const MemosRoute = MemosRouteImport.update({
   id: '/_memos',
@@ -31,19 +33,9 @@ const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MemosSettingsRoute = MemosSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => MemosRoute,
-} as any)
-const MemosInboxRoute = MemosInboxRouteImport.update({
-  id: '/inbox',
-  path: '/inbox',
-  getParentRoute: () => MemosRoute,
-} as any)
-const MemosHomeRoute = MemosHomeRouteImport.update({
-  id: '/home',
-  path: '/home',
+const MemosIndexRoute = MemosIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => MemosRoute,
 } as any)
 const MemosExploreRoute = MemosExploreRouteImport.update({
@@ -51,19 +43,13 @@ const MemosExploreRoute = MemosExploreRouteImport.update({
   path: '/explore',
   getParentRoute: () => MemosRoute,
 } as any)
-const MemosAttachmentsRoute = MemosAttachmentsRouteImport.update({
-  id: '/attachments',
-  path: '/attachments',
-  getParentRoute: () => MemosRoute,
-} as any)
-const MemosArchivedRoute = MemosArchivedRouteImport.update({
-  id: '/archived',
-  path: '/archived',
-  getParentRoute: () => MemosRoute,
-} as any)
 const MemosAboutRoute = MemosAboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => MemosRoute,
+} as any)
+const MemosProtectedRoute = MemosProtectedRouteImport.update({
+  id: '/_protected',
   getParentRoute: () => MemosRoute,
 } as any)
 const AuthSignUpRoute = AuthSignUpRouteImport.update({
@@ -86,32 +72,58 @@ const MemosUUsernameRoute = MemosUUsernameRouteImport.update({
   path: '/u/$username',
   getParentRoute: () => MemosRoute,
 } as any)
+const MemosProtectedSettingsRoute = MemosProtectedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => MemosProtectedRoute,
+} as any)
+const MemosProtectedInboxRoute = MemosProtectedInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => MemosProtectedRoute,
+} as any)
+const MemosProtectedHomeRoute = MemosProtectedHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => MemosProtectedRoute,
+} as any)
+const MemosProtectedAttachmentsRoute =
+  MemosProtectedAttachmentsRouteImport.update({
+    id: '/attachments',
+    path: '/attachments',
+    getParentRoute: () => MemosProtectedRoute,
+  } as any)
+const MemosProtectedArchivedRoute = MemosProtectedArchivedRouteImport.update({
+  id: '/archived',
+  path: '/archived',
+  getParentRoute: () => MemosProtectedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof MemosRouteWithChildren
+  '/': typeof MemosIndexRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/about': typeof MemosAboutRoute
-  '/archived': typeof MemosArchivedRoute
-  '/attachments': typeof MemosAttachmentsRoute
   '/explore': typeof MemosExploreRoute
-  '/home': typeof MemosHomeRoute
-  '/inbox': typeof MemosInboxRoute
-  '/settings': typeof MemosSettingsRoute
+  '/archived': typeof MemosProtectedArchivedRoute
+  '/attachments': typeof MemosProtectedAttachmentsRoute
+  '/home': typeof MemosProtectedHomeRoute
+  '/inbox': typeof MemosProtectedInboxRoute
+  '/settings': typeof MemosProtectedSettingsRoute
   '/u/$username': typeof MemosUUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof MemosRouteWithChildren
+  '/': typeof MemosIndexRoute
   '/sign-in': typeof AuthSignInRoute
   '/sign-up': typeof AuthSignUpRoute
   '/about': typeof MemosAboutRoute
-  '/archived': typeof MemosArchivedRoute
-  '/attachments': typeof MemosAttachmentsRoute
   '/explore': typeof MemosExploreRoute
-  '/home': typeof MemosHomeRoute
-  '/inbox': typeof MemosInboxRoute
-  '/settings': typeof MemosSettingsRoute
+  '/archived': typeof MemosProtectedArchivedRoute
+  '/attachments': typeof MemosProtectedAttachmentsRoute
+  '/home': typeof MemosProtectedHomeRoute
+  '/inbox': typeof MemosProtectedInboxRoute
+  '/settings': typeof MemosProtectedSettingsRoute
   '/u/$username': typeof MemosUUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -121,13 +133,15 @@ export interface FileRoutesById {
   '/_memos': typeof MemosRouteWithChildren
   '/_auth/sign-in': typeof AuthSignInRoute
   '/_auth/sign-up': typeof AuthSignUpRoute
+  '/_memos/_protected': typeof MemosProtectedRouteWithChildren
   '/_memos/about': typeof MemosAboutRoute
-  '/_memos/archived': typeof MemosArchivedRoute
-  '/_memos/attachments': typeof MemosAttachmentsRoute
   '/_memos/explore': typeof MemosExploreRoute
-  '/_memos/home': typeof MemosHomeRoute
-  '/_memos/inbox': typeof MemosInboxRoute
-  '/_memos/settings': typeof MemosSettingsRoute
+  '/_memos/': typeof MemosIndexRoute
+  '/_memos/_protected/archived': typeof MemosProtectedArchivedRoute
+  '/_memos/_protected/attachments': typeof MemosProtectedAttachmentsRoute
+  '/_memos/_protected/home': typeof MemosProtectedHomeRoute
+  '/_memos/_protected/inbox': typeof MemosProtectedInboxRoute
+  '/_memos/_protected/settings': typeof MemosProtectedSettingsRoute
   '/_memos/u/$username': typeof MemosUUsernameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -138,9 +152,9 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/about'
+    | '/explore'
     | '/archived'
     | '/attachments'
-    | '/explore'
     | '/home'
     | '/inbox'
     | '/settings'
@@ -152,9 +166,9 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/about'
+    | '/explore'
     | '/archived'
     | '/attachments'
-    | '/explore'
     | '/home'
     | '/inbox'
     | '/settings'
@@ -166,13 +180,15 @@ export interface FileRouteTypes {
     | '/_memos'
     | '/_auth/sign-in'
     | '/_auth/sign-up'
+    | '/_memos/_protected'
     | '/_memos/about'
-    | '/_memos/archived'
-    | '/_memos/attachments'
     | '/_memos/explore'
-    | '/_memos/home'
-    | '/_memos/inbox'
-    | '/_memos/settings'
+    | '/_memos/'
+    | '/_memos/_protected/archived'
+    | '/_memos/_protected/attachments'
+    | '/_memos/_protected/home'
+    | '/_memos/_protected/inbox'
+    | '/_memos/_protected/settings'
     | '/_memos/u/$username'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
@@ -199,25 +215,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_memos/settings': {
-      id: '/_memos/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof MemosSettingsRouteImport
-      parentRoute: typeof MemosRoute
-    }
-    '/_memos/inbox': {
-      id: '/_memos/inbox'
-      path: '/inbox'
-      fullPath: '/inbox'
-      preLoaderRoute: typeof MemosInboxRouteImport
-      parentRoute: typeof MemosRoute
-    }
-    '/_memos/home': {
-      id: '/_memos/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof MemosHomeRouteImport
+    '/_memos/': {
+      id: '/_memos/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof MemosIndexRouteImport
       parentRoute: typeof MemosRoute
     }
     '/_memos/explore': {
@@ -227,25 +229,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MemosExploreRouteImport
       parentRoute: typeof MemosRoute
     }
-    '/_memos/attachments': {
-      id: '/_memos/attachments'
-      path: '/attachments'
-      fullPath: '/attachments'
-      preLoaderRoute: typeof MemosAttachmentsRouteImport
-      parentRoute: typeof MemosRoute
-    }
-    '/_memos/archived': {
-      id: '/_memos/archived'
-      path: '/archived'
-      fullPath: '/archived'
-      preLoaderRoute: typeof MemosArchivedRouteImport
-      parentRoute: typeof MemosRoute
-    }
     '/_memos/about': {
       id: '/_memos/about'
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof MemosAboutRouteImport
+      parentRoute: typeof MemosRoute
+    }
+    '/_memos/_protected': {
+      id: '/_memos/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof MemosProtectedRouteImport
       parentRoute: typeof MemosRoute
     }
     '/_auth/sign-up': {
@@ -276,6 +271,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MemosUUsernameRouteImport
       parentRoute: typeof MemosRoute
     }
+    '/_memos/_protected/settings': {
+      id: '/_memos/_protected/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof MemosProtectedSettingsRouteImport
+      parentRoute: typeof MemosProtectedRoute
+    }
+    '/_memos/_protected/inbox': {
+      id: '/_memos/_protected/inbox'
+      path: '/inbox'
+      fullPath: '/inbox'
+      preLoaderRoute: typeof MemosProtectedInboxRouteImport
+      parentRoute: typeof MemosProtectedRoute
+    }
+    '/_memos/_protected/home': {
+      id: '/_memos/_protected/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof MemosProtectedHomeRouteImport
+      parentRoute: typeof MemosProtectedRoute
+    }
+    '/_memos/_protected/attachments': {
+      id: '/_memos/_protected/attachments'
+      path: '/attachments'
+      fullPath: '/attachments'
+      preLoaderRoute: typeof MemosProtectedAttachmentsRouteImport
+      parentRoute: typeof MemosProtectedRoute
+    }
+    '/_memos/_protected/archived': {
+      id: '/_memos/_protected/archived'
+      path: '/archived'
+      fullPath: '/archived'
+      preLoaderRoute: typeof MemosProtectedArchivedRouteImport
+      parentRoute: typeof MemosProtectedRoute
+    }
   }
 }
 
@@ -291,25 +321,39 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface MemosProtectedRouteChildren {
+  MemosProtectedArchivedRoute: typeof MemosProtectedArchivedRoute
+  MemosProtectedAttachmentsRoute: typeof MemosProtectedAttachmentsRoute
+  MemosProtectedHomeRoute: typeof MemosProtectedHomeRoute
+  MemosProtectedInboxRoute: typeof MemosProtectedInboxRoute
+  MemosProtectedSettingsRoute: typeof MemosProtectedSettingsRoute
+}
+
+const MemosProtectedRouteChildren: MemosProtectedRouteChildren = {
+  MemosProtectedArchivedRoute: MemosProtectedArchivedRoute,
+  MemosProtectedAttachmentsRoute: MemosProtectedAttachmentsRoute,
+  MemosProtectedHomeRoute: MemosProtectedHomeRoute,
+  MemosProtectedInboxRoute: MemosProtectedInboxRoute,
+  MemosProtectedSettingsRoute: MemosProtectedSettingsRoute,
+}
+
+const MemosProtectedRouteWithChildren = MemosProtectedRoute._addFileChildren(
+  MemosProtectedRouteChildren,
+)
+
 interface MemosRouteChildren {
+  MemosProtectedRoute: typeof MemosProtectedRouteWithChildren
   MemosAboutRoute: typeof MemosAboutRoute
-  MemosArchivedRoute: typeof MemosArchivedRoute
-  MemosAttachmentsRoute: typeof MemosAttachmentsRoute
   MemosExploreRoute: typeof MemosExploreRoute
-  MemosHomeRoute: typeof MemosHomeRoute
-  MemosInboxRoute: typeof MemosInboxRoute
-  MemosSettingsRoute: typeof MemosSettingsRoute
+  MemosIndexRoute: typeof MemosIndexRoute
   MemosUUsernameRoute: typeof MemosUUsernameRoute
 }
 
 const MemosRouteChildren: MemosRouteChildren = {
+  MemosProtectedRoute: MemosProtectedRouteWithChildren,
   MemosAboutRoute: MemosAboutRoute,
-  MemosArchivedRoute: MemosArchivedRoute,
-  MemosAttachmentsRoute: MemosAttachmentsRoute,
   MemosExploreRoute: MemosExploreRoute,
-  MemosHomeRoute: MemosHomeRoute,
-  MemosInboxRoute: MemosInboxRoute,
-  MemosSettingsRoute: MemosSettingsRoute,
+  MemosIndexRoute: MemosIndexRoute,
   MemosUUsernameRoute: MemosUUsernameRoute,
 }
 

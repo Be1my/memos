@@ -1,7 +1,14 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { getSessionFn } from "@/functions/get-session";
 import AuthFooter from "@/features/auth/components/auth-footer";
 
 export const Route = createFileRoute("/_auth")({
+	beforeLoad: async () => {
+		const session = await getSessionFn();
+		if (session) {
+			throw redirect({ to: "/home" });
+		}
+	},
 	component: RouteComponent,
 });
 
