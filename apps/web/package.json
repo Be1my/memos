@@ -13,6 +13,8 @@
 		"@memos/db": "workspace:*",
 		"@memos/env": "workspace:*",
 		"@memos/ui": "workspace:*",
+		"lexical": "^0.27.0",
+		"@lexical/react": "^0.27.0",
 		"@tailwindcss/vite": "^4.2.2",
 		"@tanstack/react-form": "^1.28.0",
 		"@tanstack/react-query": "^5.99.0",
