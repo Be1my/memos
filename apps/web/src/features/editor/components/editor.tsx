@@ -14,7 +14,13 @@ import {
 } from "@memos/ui/components/dropdown-menu";
 import type { EditorState } from "lexical";
 import { $getRoot } from "lexical";
-import { GlobeIcon, LockIcon, PlusIcon, SaveIcon, UsersIcon } from "lucide-react";
+import {
+	GlobeIcon,
+	LockIcon,
+	PlusIcon,
+	SaveIcon,
+	UsersIcon,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { editorTheme } from "../editor-theme";
 import { FloatingToolbar } from "./floating-toolbar";
@@ -25,7 +31,11 @@ function Editor({
 	onSave,
 	isSaving,
 }: {
-	onSave?: (data: { content: string; payload: Record<string, unknown>; visibility: string }) => void;
+	onSave?: (data: {
+		content: string;
+		payload: Record<string, unknown>;
+		visibility: string;
+	}) => void;
 	isSaving?: boolean;
 }) {
 	const [visibility, setVisibility] = useState("private");
@@ -39,7 +49,9 @@ function Editor({
 		{ value: "public", label: "公开", icon: GlobeIcon },
 	] as const;
 
-	const currentVisibility = visibilityOptions.find((o) => o.value === visibility);
+	const currentVisibility = visibilityOptions.find(
+		(o) => o.value === visibility,
+	);
 
 	const handleSave = useCallback(() => {
 		const state = editorStateRef.current;
@@ -52,7 +64,11 @@ function Editor({
 
 		if (!content) return;
 
-		onSave?.({ content, payload: state.toJSON() as unknown as Record<string, unknown>, visibility });
+		onSave?.({
+			content,
+			payload: state.toJSON() as unknown as Record<string, unknown>,
+			visibility,
+		});
 	}, [onSave, visibility, isSaving]);
 
 	useEffect(() => {
@@ -68,7 +84,8 @@ function Editor({
 		};
 
 		el.addEventListener("keydown", onKeyDown, { capture: true });
-		return () => el.removeEventListener("keydown", onKeyDown, { capture: true });
+		return () =>
+			el.removeEventListener("keydown", onKeyDown, { capture: true });
 	}, [handleSave]);
 
 	const initialConfig: InitialConfigType = {
@@ -78,7 +95,10 @@ function Editor({
 	};
 
 	return (
-		<div ref={containerRef} className="rounded-xl border bg-card ring-1 ring-foreground/10 focus-within:ring-2 focus-within:ring-ring">
+		<div
+			ref={containerRef}
+			className="rounded-xl border bg-card ring-1 ring-foreground/10 focus-within:ring-2 focus-within:ring-ring"
+		>
 			<LexicalComposer initialConfig={initialConfig}>
 				<div className="relative max-h-[240px] min-h-[100px] overflow-y-auto px-3.5 py-3.5 text-sm">
 					<RichTextPlugin
@@ -106,8 +126,16 @@ function Editor({
 			</LexicalComposer>
 			<div className="flex items-center justify-between px-3.5 py-2">
 				<DropdownMenu>
-<DropdownMenuTrigger
-						render={<Button variant="secondary" size="icon-sm" className="bg-muted hover:bg-muted-foreground/20"><PlusIcon className="size-4" /></Button>}
+					<DropdownMenuTrigger
+						render={
+							<Button
+								variant="secondary"
+								size="icon-sm"
+								className="bg-muted hover:bg-muted-foreground/20"
+							>
+								<PlusIcon className="size-4" />
+							</Button>
+						}
 					/>
 					<DropdownMenuContent align="start">
 						<DropdownMenuItem>Pin to top</DropdownMenuItem>
@@ -118,22 +146,35 @@ function Editor({
 					<DropdownMenu>
 						<DropdownMenuTrigger
 							render={(props: any) => (
-								<button type="button" {...props} className="flex cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground hover:text-foreground outline-none">
-									{currentVisibility && <currentVisibility.icon className="size-4" />}
+								<button
+									type="button"
+									{...props}
+									className="flex cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-muted-foreground text-sm outline-none hover:text-foreground"
+								>
+									{currentVisibility && (
+										<currentVisibility.icon className="size-4" />
+									)}
 									{currentVisibility?.label}
 								</button>
 							)}
 						/>
 						<DropdownMenuContent align="end">
 							{visibilityOptions.map((opt) => (
-								<DropdownMenuItem key={opt.value} onClick={() => setVisibility(opt.value)}>
+								<DropdownMenuItem
+									key={opt.value}
+									onClick={() => setVisibility(opt.value)}
+								>
 									<opt.icon className="size-4" />
 									{opt.label}
 								</DropdownMenuItem>
 							))}
 						</DropdownMenuContent>
 					</DropdownMenu>
-					<Button size="sm" disabled={!hasContent || isSaving} onClick={handleSave}>
+					<Button
+						size="sm"
+						disabled={!hasContent || isSaving}
+						onClick={handleSave}
+					>
 						<SaveIcon className="size-4" />
 						保存
 					</Button>

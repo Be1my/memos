@@ -18,7 +18,12 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			throw new Error("Content is required");
 		}
 
-		if (payload !== undefined && (typeof payload !== "object" || payload === null || Array.isArray(payload))) {
+		if (
+			payload !== undefined &&
+			(typeof payload !== "object" ||
+				payload === null ||
+				Array.isArray(payload))
+		) {
 			throw new Error("Payload must be a plain object");
 		}
 

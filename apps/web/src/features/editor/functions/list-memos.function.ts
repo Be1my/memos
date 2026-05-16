@@ -1,14 +1,22 @@
 import { createServerFn } from "@tanstack/react-start";
 
-export const listMemosFn = createServerFn({ method: "GET" }).handler(async () => {
-	const [{ createDb }, { memo }, { createAuth }, { getRequestHeaders }, { desc, eq }] =
-		await Promise.all([
-			import("@memos/db"),
-			import("@memos/db/schema/memo.table"),
-			import("@memos/auth"),
-			import("@tanstack/react-start/server"),
-			import("drizzle-orm"),
-		]);
+export const listMemosFn = createServerFn({
+	method: "GET",
+	strict: false,
+}).handler(async () => {
+	const [
+		{ createDb },
+		{ memo },
+		{ createAuth },
+		{ getRequestHeaders },
+		{ desc, eq },
+	] = await Promise.all([
+		import("@memos/db"),
+		import("@memos/db/schema/memo.table"),
+		import("@memos/auth"),
+		import("@tanstack/react-start/server"),
+		import("drizzle-orm"),
+	]);
 
 	const headers = getRequestHeaders();
 	const session = await createAuth().api.getSession({ headers });
@@ -26,6 +34,7 @@ export const listMemosFn = createServerFn({ method: "GET" }).handler(async () =>
 		id: m.id,
 		uid: m.uid,
 		content: m.content,
+		payload: m.payload,
 		visibility: m.visibility,
 		tags: m.tags,
 		createdAt: m.createdAt.toISOString(),

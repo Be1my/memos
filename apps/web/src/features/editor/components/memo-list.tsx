@@ -1,4 +1,7 @@
+import { Skeleton } from "@memos/ui/components/skeleton";
+import { useEffect, useState } from "react";
 import type { listMemosFn } from "../functions/list-memos.function";
+import { LexicalRenderer } from "./lexical-renderer";
 
 type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];
 
@@ -7,6 +10,29 @@ const visibilityLabel: Record<string, string> = {
 	PUBLIC: "公开",
 	PROTECTED: "工作区",
 };
+
+function FormattedTime({ date }: { date: string }) {
+	const [mounted, setMounted] = useState(false);
+	useEffect(() => setMounted(true), []);
+
+	if (!mounted) {
+		return <Skeleton className="inline-block h-3 w-24 align-middle" />;
+	}
+
+	const d = new Date(date);
+	if (Number.isNaN(d.getTime())) return <>{date}</>;
+	return (
+		<>
+			{new Intl.DateTimeFormat(undefined, {
+				year: "numeric",
+				month: "2-digit",
+				day: "2-digit",
+				hour: "2-digit",
+				minute: "2-digit",
+			}).format(d)}
+		</>
+	);
+}
 
 function MemoList({ memos }: { memos: Memo[] }) {
 	if (!memos.length) {
@@ -17,12 +43,12 @@ function MemoList({ memos }: { memos: Memo[] }) {
 		<div className="mt-8 space-y-3">
 			{memos.map((memo) => (
 				<div key={memo.uid} className="rounded-lg border bg-card p-4 text-sm">
-					<p className="whitespace-pre-wrap break-words leading-relaxed text-foreground">
-						{memo.content}
-					</p>
-					<div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+					<div className="leading-relaxed">
+						<LexicalRenderer payload={memo.payload} />
+					</div>
+					<div className="mt-2 flex items-center gap-2 text-muted-foreground text-xs">
 						<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
-						<span>{new Date(memo.createdAt).toLocaleString()}</span>
+						<FormattedTime date={memo.createdAt} />
 					</div>
 				</div>
 			))}
