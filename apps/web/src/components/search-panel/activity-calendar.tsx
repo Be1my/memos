@@ -62,11 +62,6 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 		setCurrentMonth(new Date(year, month + 1, 1));
 	}, [year, month]);
 
-	const goToMonth = useCallback((m: number) => {
-		setCurrentMonth(new Date(year, m, 1));
-		setYearView(false);
-	}, [year]);
-
 	const handleDayClick = useCallback(
 		(day: number) => {
 			const dateKey = getDayKey(year, month, day);
@@ -85,9 +80,23 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 
 	const isCurrentMonth = now.getFullYear() === year && now.getMonth() === month;
 
+	const totalCells = 35;
 	const cells: React.ReactNode[] = [];
-	for (let i = 0; i < firstDayOfWeek; i++) {
-		cells.push(<div key={`empty-${i}`} />);
+	const prevMonthDays = new Date(year, month, 0).getDate();
+
+	for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+		const d = prevMonthDays - i;
+		const date = new Date(year, month - 1, d);
+		const key = getDayKey(date.getFullYear(), date.getMonth(), date.getDate());
+		const count = heatmap.get(key) ?? 0;
+		cells.push(
+			<div
+				key={`prev-${d}`}
+				className={`flex items-center justify-center aspect-square w-full rounded-sm text-[10px] font-medium text-muted-foreground/30 ${getHeatColor(count, maxCount)}`}
+			>
+				{d}
+			</div>,
+		);
 	}
 	for (let day = 1; day <= daysInMonth; day++) {
 		const key = getDayKey(year, month, day);
@@ -119,6 +128,19 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 			</Tooltip>,
 		);
 	}
+	for (let d = 1; cells.length < totalCells; d++) {
+		const date = new Date(year, month + 1, d);
+		const key = getDayKey(date.getFullYear(), date.getMonth(), date.getDate());
+		const count = heatmap.get(key) ?? 0;
+		cells.push(
+			<div
+				key={`next-${d}`}
+				className={`flex items-center justify-center aspect-square w-full rounded-sm text-[10px] font-medium text-muted-foreground/30 ${getHeatColor(count, maxCount)}`}
+			>
+				{d}
+			</div>,
+		);
+	}
 
 	return (
 		<div className="space-y-2">
@@ -140,43 +162,117 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 				</button>
 			</div>
 
-			{yearView ? (
-				/* Year view */
-				<div className="grid grid-cols-3 gap-1">
-					{MONTHS.map((name, m) => {
-						const isSelectedMonth = m === month;
-						const isCurMonth = now.getFullYear() === year && now.getMonth() === m;
-						return (
-							<button
-								key={m}
-								type="button"
-								onClick={() => goToMonth(m)}
-								className={`rounded-md py-2 text-xs font-medium transition-colors ${
-									isSelectedMonth
-										? "bg-primary text-primary-foreground"
-										: "hover:bg-accent"
-								}`}
-							>
-								{name}
-								{isCurMonth && <span className="ml-0.5">•</span>}
-							</button>
-						);
-					})}
+			{yearView && (
+				<div
+					className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 sm:p-8"
+					onClick={() => setYearView(false)}
+				>
+					<div
+						className="flex h-full w-full max-w-5xl flex-col rounded-xl border bg-background p-4 shadow-lg sm:p-6"
+						onClick={(e) => e.stopPropagation()}
+					>
+						<div className="mb-4 text-center font-medium text-sm">
+							{year}
+						</div>
+						<div className="grid min-h-0 flex-1 grid-cols-2 gap-4 overflow-auto auto-rows-1fr sm:grid-cols-3 lg:grid-cols-4">
+							{MONTHS.map((name, m) => {
+								const daysIn = new Date(year, m + 1, 0).getDate();
+								const firstDay = new Date(year, m, 1).getDay();
+								const isCurMonth = now.getFullYear() === year && now.getMonth() === m;
+								const prevDays = new Date(year, m, 0).getDate();
+
+								const miniCells = [];
+								for (let i = firstDay - 1; i >= 0; i--) {
+									const d = prevDays - i;
+									const date = new Date(year, m - 1, d);
+									const dateKey = getDayKey(date.getFullYear(), date.getMonth(), date.getDate());
+									const count = heatmap.get(dateKey) ?? 0;
+									miniCells.push(
+										<div
+											key={`p-${m}-${d}`}
+											className={`flex items-center justify-center aspect-square w-full rounded-sm text-[10px] font-medium text-muted-foreground/30 ${getHeatColor(count, maxCount)}`}
+										>
+											{d}
+										</div>,
+									);
+								}
+								for (let d = 1; d <= daysIn; d++) {
+									const dayKey = getDayKey(year, m, d);
+									const count = heatmap.get(dayKey) ?? 0;
+									miniCells.push(
+										<Tooltip key={dayKey}>
+											<TooltipTrigger render={
+												<button
+													type="button"
+													onClick={() => {
+														navigate({
+															to: ".",
+															search: (prev: Record<string, unknown>) => ({
+																...prev,
+																date: prev.date === dayKey ? undefined : dayKey,
+																tag: undefined,
+															}),
+															replace: true,
+														});
+														setCurrentMonth(new Date(year, m, 1));
+														setYearView(false);
+													}}
+													className={`cursor-pointer aspect-square w-full rounded-sm text-[10px] font-medium transition-colors ${getHeatColor(count, maxCount)} ${
+														isCurMonth && d === now.getDate() ? "ring-1 ring-muted-foreground/50" : ""
+													} ${count === 0 ? "hover:bg-primary/[0.08]" : ""}`}
+												>
+													{d}
+												</button>
+											} />
+											<TooltipContent side="top" align="center">
+												{dayKey} · {count} 条
+											</TooltipContent>
+										</Tooltip>,
+									);
+								}
+								const padToRowEnd = (7 - ((firstDay + daysIn) % 7)) % 7;
+								for (let d = 1; d <= padToRowEnd; d++) {
+									const date = new Date(year, m + 1, d);
+									const dateKey = getDayKey(date.getFullYear(), date.getMonth(), date.getDate());
+									const count = heatmap.get(dateKey) ?? 0;
+									miniCells.push(
+										<div
+											key={`n-${m}-${d}`}
+											className={`flex items-center justify-center aspect-square w-full rounded-sm text-[10px] font-medium text-muted-foreground/30 ${getHeatColor(count, maxCount)}`}
+										>
+											{d}
+										</div>,
+									);
+								}
+								return (
+									<div key={m} className="flex h-full flex-col gap-1 rounded-lg border p-2">
+										<div className="text-center text-[10px] font-medium text-muted-foreground sm:text-xs">
+											{name}
+											{isCurMonth && <span className="ml-0.5 text-primary">•</span>}
+										</div>
+										<div className="grid grid-cols-7 gap-px text-center text-[10px] text-muted-foreground">
+											{WEEKDAYS.map((w) => (
+												<div key={w} className="py-0.5">{w}</div>
+											))}
+										</div>
+										<div className="grid grid-cols-7 gap-px">
+											{miniCells}
+										</div>
+									</div>
+								);
+							})}
+						</div>
+					</div>
 				</div>
-			) : (
-				<>
-					{/* Weekday headers */}
-					<div className="grid grid-cols-7 gap-px text-center text-[10px] text-muted-foreground">
-						{WEEKDAYS.map((w) => (
-							<div key={w} className="py-0.5">{w}</div>
-						))}
-					</div>
-					{/* Day grid */}
-					<div className="grid grid-cols-7 gap-px">
-						{cells}
-					</div>
-				</>
 			)}
+			<div className="grid grid-cols-7 gap-px text-center text-[10px] text-muted-foreground">
+				{WEEKDAYS.map((w) => (
+					<div key={w} className="py-0.5">{w}</div>
+				))}
+			</div>
+			<div className="grid grid-cols-7 gap-px">
+				{cells}
+			</div>
 		</div>
 	);
 }
