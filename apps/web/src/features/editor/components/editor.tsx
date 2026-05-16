@@ -30,19 +30,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { editorTheme } from "../editor-theme";
 import { FloatingToolbar } from "./floating-toolbar";
 import { TagAutocompletePlugin } from "./tag-autocomplete-plugin";
+import type { FilePayload } from "../functions/create-memo.function";
 
 const placeholder = "Write something...";
 
 interface PendingFile {
 	id: string;
 	file: File;
-}
-
-interface FilePayload {
-	name: string;
-	type: string;
-	size: number;
-	base64: string;
 }
 
 function formatSize(bytes: number): string {
