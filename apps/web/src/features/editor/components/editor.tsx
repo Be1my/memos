@@ -24,6 +24,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { editorTheme } from "../editor-theme";
 import { FloatingToolbar } from "./floating-toolbar";
+import { TagAutocompletePlugin } from "./tag-autocomplete-plugin";
 
 const placeholder = "Write something...";
 
@@ -119,6 +120,7 @@ function Editor({
 						ErrorBoundary={LexicalErrorBoundary}
 					/>
 					<HistoryPlugin />
+					<TagAutocompletePlugin />
 					<FloatingToolbar />
 					<OnChangePlugin
 						onChange={(editorState) => {
