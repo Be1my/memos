@@ -21,6 +21,7 @@
     "apps/web": {
       "name": "web",
       "dependencies": {
+        "@lexical/hashtag": "0.27.2",
         "@lexical/html": "^0.27.0",
         "@lexical/react": "^0.27.0",
         "@memos/auth": "workspace:*",

@@ -12,6 +12,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@memos/ui/components/dropdown-menu";
+import { HashtagNode } from "@lexical/hashtag";
+import { HashtagPlugin } from "@lexical/react/LexicalHashtagPlugin";
 import type { EditorState } from "lexical";
 import { $getRoot } from "lexical";
 import {
@@ -98,6 +100,7 @@ function Editor({
 	const initialConfig: InitialConfigType = {
 		namespace: "MemoEditor",
 		theme: editorTheme,
+		nodes: [HashtagNode],
 		onError: (error: Error) => console.error(error),
 	};
 
@@ -121,6 +124,7 @@ function Editor({
 					/>
 					<HistoryPlugin />
 					<TagAutocompletePlugin />
+					<HashtagPlugin />
 					<FloatingToolbar />
 					<OnChangePlugin
 						onChange={(editorState) => {
