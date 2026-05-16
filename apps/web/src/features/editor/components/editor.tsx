@@ -34,6 +34,7 @@ import { TagAutocompletePlugin } from "./tag-autocomplete-plugin";
 const placeholder = "Write something...";
 
 interface PendingFile {
+	id: string;
 	file: File;
 }
 
@@ -191,7 +192,10 @@ function Editor({
 				className="hidden"
 				onChange={(e) => {
 					const files = Array.from(e.target.files ?? []);
-					setPendingFiles((prev) => [...prev, ...files.map((f) => ({ file: f }))]);
+					setPendingFiles((prev) => [
+						...prev,
+						...files.map((f) => ({ id: crypto.randomUUID(), file: f })),
+					]);
 					e.target.value = "";
 				}}
 			/>
@@ -203,15 +207,18 @@ function Editor({
 				className="hidden"
 				onChange={(e) => {
 					const files = Array.from(e.target.files ?? []);
-					setPendingFiles((prev) => [...prev, ...files.map((f) => ({ file: f }))]);
+					setPendingFiles((prev) => [
+						...prev,
+						...files.map((f) => ({ id: crypto.randomUUID(), file: f })),
+					]);
 					e.target.value = "";
 				}}
 			/>
 			{pendingFiles.length > 0 && (
 				<div className="flex flex-wrap gap-2 px-3.5 py-2">
-					{pendingFiles.map((f, i) => (
+					{pendingFiles.map((f) => (
 						<div
-							key={i}
+							key={f.id}
 							className="flex items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-xs"
 						>
 							{f.file.type.startsWith("image/") || f.file.type.startsWith("video/") ? (
@@ -224,7 +231,7 @@ function Editor({
 							<button
 								type="button"
 								onClick={() =>
-									setPendingFiles((prev) => prev.filter((_, j) => j !== i))
+									setPendingFiles((prev) => prev.filter((p) => p.id !== f.id))
 								}
 								className="ml-0.5 rounded p-0.5 hover:bg-muted-foreground/20"
 							>
