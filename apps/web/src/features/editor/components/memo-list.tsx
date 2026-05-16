@@ -61,7 +61,7 @@ function MemoList({ memos }: { memos: Memo[] }) {
 									{att.type.startsWith("image/") || att.type.startsWith("video/")
 										? <ImageIcon className="size-3.5 shrink-0 text-muted-foreground" />
 										: <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />}
-									<span className="truncate text-muted-foreground">{att.filename}</span>
+									<span className="min-w-0 truncate text-muted-foreground">{att.filename}</span>
 								</div>
 							))}
 						</div>
