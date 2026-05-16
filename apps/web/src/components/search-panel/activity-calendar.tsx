@@ -109,15 +109,13 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 					<button
 						type="button"
 						onClick={() => handleDayClick(day)}
-						className={`cursor-pointer aspect-square w-full rounded-sm text-[10px] font-medium transition-colors ${getHeatColor(count, maxCount)} ${
-							isToday
+						className={`cursor-pointer aspect-square w-full rounded-sm text-[10px] font-medium transition-colors ${getHeatColor(count, maxCount)} ${isToday
 								? "ring-1 ring-muted-foreground/50"
 								: ""
-						} ${
-							count === 0
+							} ${count === 0
 								? "hover:bg-primary/[0.08]"
 								: ""
-						}`}
+							}`}
 					>
 						{day}
 					</button>
@@ -217,9 +215,8 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 														setCurrentMonth(new Date(year, m, 1));
 														setYearView(false);
 													}}
-													className={`cursor-pointer aspect-square w-full rounded-sm text-[10px] font-medium transition-colors ${getHeatColor(count, maxCount)} ${
-														isCurMonth && d === now.getDate() ? "ring-1 ring-muted-foreground/50" : ""
-													} ${count === 0 ? "hover:bg-primary/[0.08]" : ""}`}
+													className={`cursor-pointer aspect-square w-full rounded-sm text-[10px] font-medium transition-colors ${getHeatColor(count, maxCount)} ${isCurMonth && d === now.getDate() ? "ring-1 ring-muted-foreground/50" : ""
+														} ${count === 0 ? "hover:bg-primary/[0.08]" : ""}`}
 												>
 													{d}
 												</button>

@@ -30,6 +30,8 @@ export default defineConfig({
 		alias: cloudflareWorkersAlias,
 	},
 	plugins: [
+		alchemy({ configPath: alchemyConfigPath }),
+		// ...(shouldUseAlchemy ? [alchemy({ configPath: alchemyConfigPath })] : []),
 		paraglideVitePlugin({
 			project: "./project.inlang",
 			outdir: "./src/paraglide",
@@ -39,8 +41,10 @@ export default defineConfig({
 		}),
 		tailwindcss(),
 
-		tanstackStart(),
+		tanstackStart({
+			target: "cloudflare-module",
+			customViteReactPlugin: true,
+		}),
 		viteReact(),
-		...(shouldUseAlchemy ? [alchemy({ configPath: alchemyConfigPath })] : []),
 	],
 });

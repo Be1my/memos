@@ -9,6 +9,9 @@ const app = await alchemy("memos");
 
 const bucket = await R2Bucket("attachments", {
 	empty: true,
+	dev: {
+		remote: true,
+	},
 });
 
 export const web = await TanStackStart("web", {

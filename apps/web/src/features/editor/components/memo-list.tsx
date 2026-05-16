@@ -1,10 +1,14 @@
 import { Skeleton } from "@memos/ui/components/skeleton";
-import { FileIcon, ImageIcon } from "lucide-react";
+import { FileIcon, ImageIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { listMemosFn } from "../functions/list-memos.function";
 import { LexicalRenderer } from "./lexical-renderer";
 
 type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];
+
+function attachmentUrl(att: Memo["attachments"][number]) {
+	return `/api/files?key=${encodeURIComponent(att.reference)}`;
+}
 
 const visibilityLabel: Record<string, string> = {
 	PRIVATE: "私有",
@@ -35,7 +39,37 @@ function FormattedTime({ date }: { date: string }) {
 	);
 }
 
+function ImagePreview({ src, filename, onClose }: { src: string; filename: string; onClose: () => void }) {
+	useEffect(() => {
+		const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+		document.addEventListener("keydown", handler);
+		return () => document.removeEventListener("keydown", handler);
+	}, [onClose]);
+
+	return (
+		<div
+			className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+			onClick={onClose}
+		>
+			<button
+				type="button"
+				className="absolute right-4 top-4 text-white/70 hover:text-white"
+				onClick={onClose}
+			>
+				<XIcon className="size-6" />
+			</button>
+			<img
+				src={src}
+				alt={filename}
+				className="max-h-full max-w-full rounded object-contain"
+				onClick={(e) => e.stopPropagation()}
+			/>
+		</div>
+	);
+}
+
 function MemoList({ memos }: { memos: Memo[] }) {
+	const [preview, setPreview] = useState<string | null>(null);
 	if (!memos.length) {
 		return (
 			<div className="mt-8 rounded-md border border-dashed px-3 py-8 text-center text-xs text-muted-foreground">
@@ -45,34 +79,65 @@ function MemoList({ memos }: { memos: Memo[] }) {
 	}
 
 	return (
-		<div className="mt-8 space-y-3">
-			{memos.map((memo) => (
-				<div key={memo.uid} className="rounded-lg border bg-card p-4 text-sm">
-					<div className="leading-relaxed">
-						<LexicalRenderer payload={memo.payload} />
-					</div>
-					{memo.attachments && memo.attachments.length > 0 && (
-						<div className="mt-2 space-y-1">
-							{memo.attachments.map((att) => (
-								<div
-									key={att.uid}
-									className="flex items-center gap-2 rounded bg-muted/50 px-2 py-1 text-xs"
-								>
-									{att.type.startsWith("image/") || att.type.startsWith("video/")
-										? <ImageIcon className="size-3.5 shrink-0 text-muted-foreground" />
-										: <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />}
-									<span className="min-w-0 truncate text-muted-foreground">{att.filename}</span>
-								</div>
-							))}
+		<>
+			{preview && (
+				<ImagePreview
+					src={preview}
+					filename=""
+					onClose={() => setPreview(null)}
+				/>
+			)}
+			<div className="mt-8 space-y-3">
+				{memos.map((memo) => (
+					<div key={memo.uid} className="rounded-lg border bg-card p-4 text-sm">
+						<div className="leading-relaxed">
+							<LexicalRenderer payload={memo.payload} />
 						</div>
-					)}
-					<div className="mt-2 flex items-center gap-2 text-muted-foreground text-xs">
-						<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
-						<FormattedTime date={memo.createdAt} />
+						{memo.attachments && memo.attachments.length > 0 && (
+							<div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2">
+								{memo.attachments.map((att) => (
+									att.type.startsWith("image/")
+										? (
+											<button
+												key={att.uid}
+												type="button"
+												className="group relative aspect-video overflow-hidden rounded-md bg-muted/50"
+												onClick={() => setPreview(attachmentUrl(att))}
+											>
+												<img
+													src={attachmentUrl(att)}
+													alt={att.filename}
+													className="size-full object-cover"
+													loading="lazy"
+												/>
+												<div className="absolute inset-0 bg-black/0 transition group-hover:bg-black/10" />
+											</button>
+										)
+										: (
+											<a
+												key={att.uid}
+												href={attachmentUrl(att)}
+												target="_blank"
+												rel="noreferrer"
+												className="flex items-center gap-2 rounded-md bg-muted/50 px-2.5 py-2 text-xs hover:bg-muted/80 transition-colors"
+											>
+												{att.type.startsWith("video/")
+													? <ImageIcon className="size-3.5 shrink-0 text-muted-foreground" />
+													: <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />}
+												<span className="min-w-0 truncate text-muted-foreground">{att.filename}</span>
+											</a>
+										)
+								))}
+							</div>
+						)}
+						<div className="mt-2 flex items-center gap-2 text-muted-foreground text-xs">
+							<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
+							<FormattedTime date={memo.createdAt} />
+						</div>
 					</div>
-				</div>
-			))}
-		</div>
+				))}
+			</div>
+		</>
 	);
 }
 
