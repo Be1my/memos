@@ -1,3 +1,4 @@
+import { Temporal } from "@js-temporal/polyfill";
 import { createServerFn } from "@tanstack/react-start";
 
 export interface ListMemosFilter {
@@ -40,11 +41,10 @@ export const listMemosFn = createServerFn({
 	}
 
 	if (filter.date) {
-		const start = new Date(filter.date);
-		const end = new Date(start);
-		end.setDate(end.getDate() + 1);
+		const start = Temporal.PlainDate.from(filter.date);
+		const end = start.add({ days: 1 });
 		conditions.push(
-			sql`${memo.createdAt} >= ${start} AND ${memo.createdAt} < ${end}`,
+			sql`${memo.createdAt} >= ${start.toString()}::timestamptz AND ${memo.createdAt} < ${end.toString()}::timestamptz`,
 		);
 	}
 
@@ -63,7 +63,7 @@ export const listMemosFn = createServerFn({
 	const memoMap = new Map<
 		number,
 		typeof memo.$inferSelect & {
-			attachments: typeof attachment.$inferSelect[];
+			attachments: (typeof attachment.$inferSelect)[];
 		}
 	>();
 	for (const row of rows) {

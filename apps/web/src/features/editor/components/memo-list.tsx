@@ -1,3 +1,4 @@
+import { Temporal } from "@js-temporal/polyfill";
 import { Skeleton } from "@memos/ui/components/skeleton";
 import { FileIcon, ImageIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -24,8 +25,12 @@ function FormattedTime({ date }: { date: string }) {
 		return <Skeleton className="inline-block h-3 w-24 align-middle" />;
 	}
 
-	const d = new Date(date);
-	if (Number.isNaN(d.getTime())) return <>{date}</>;
+	let instant: Temporal.Instant;
+	try {
+		instant = Temporal.Instant.from(date);
+	} catch {
+		return <>{date}</>;
+	}
 	return (
 		<>
 			{new Intl.DateTimeFormat(undefined, {
@@ -34,14 +39,24 @@ function FormattedTime({ date }: { date: string }) {
 				day: "2-digit",
 				hour: "2-digit",
 				minute: "2-digit",
-			}).format(d)}
+			}).format(instant.epochMilliseconds)}
 		</>
 	);
 }
 
-function ImagePreview({ src, filename, onClose }: { src: string; filename: string; onClose: () => void }) {
+function ImagePreview({
+	src,
+	filename,
+	onClose,
+}: {
+	src: string;
+	filename: string;
+	onClose: () => void;
+}) {
 	useEffect(() => {
-		const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+		const handler = (e: KeyboardEvent) => {
+			if (e.key === "Escape") onClose();
+		};
 		document.addEventListener("keydown", handler);
 		return () => document.removeEventListener("keydown", handler);
 	}, [onClose]);
@@ -53,7 +68,7 @@ function ImagePreview({ src, filename, onClose }: { src: string; filename: strin
 		>
 			<button
 				type="button"
-				className="absolute right-4 top-4 text-white/70 hover:text-white"
+				className="absolute top-4 right-4 text-white/70 hover:text-white"
 				onClick={onClose}
 			>
 				<XIcon className="size-6" />
@@ -72,7 +87,7 @@ function MemoList({ memos }: { memos: Memo[] }) {
 	const [preview, setPreview] = useState<string | null>(null);
 	if (!memos.length) {
 		return (
-			<div className="mt-8 rounded-md border border-dashed px-3 py-8 text-center text-xs text-muted-foreground">
+			<div className="mt-8 rounded-md border border-dashed px-3 py-8 text-center text-muted-foreground text-xs">
 				没有找到数据
 			</div>
 		);
@@ -95,39 +110,41 @@ function MemoList({ memos }: { memos: Memo[] }) {
 						</div>
 						{memo.attachments && memo.attachments.length > 0 && (
 							<div className="mt-2 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2">
-								{memo.attachments.map((att) => (
-									att.type.startsWith("image/")
-										? (
-											<button
-												key={att.uid}
-												type="button"
-												className="group relative aspect-video overflow-hidden rounded-md bg-muted/50"
-												onClick={() => setPreview(attachmentUrl(att))}
-											>
-												<img
-													src={attachmentUrl(att)}
-													alt={att.filename}
-													className="size-full object-cover"
-													loading="lazy"
-												/>
-												<div className="absolute inset-0 bg-black/0 transition group-hover:bg-black/10" />
-											</button>
-										)
-										: (
-											<a
-												key={att.uid}
-												href={attachmentUrl(att)}
-												target="_blank"
-												rel="noreferrer"
-												className="flex items-center gap-2 rounded-md bg-muted/50 px-2.5 py-2 text-xs hover:bg-muted/80 transition-colors"
-											>
-												{att.type.startsWith("video/")
-													? <ImageIcon className="size-3.5 shrink-0 text-muted-foreground" />
-													: <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />}
-												<span className="min-w-0 truncate text-muted-foreground">{att.filename}</span>
-											</a>
-										)
-								))}
+								{memo.attachments.map((att) =>
+									att.type.startsWith("image/") ? (
+										<button
+											key={att.uid}
+											type="button"
+											className="group relative aspect-video overflow-hidden rounded-md bg-muted/50"
+											onClick={() => setPreview(attachmentUrl(att))}
+										>
+											<img
+												src={attachmentUrl(att)}
+												alt={att.filename}
+												className="size-full object-cover"
+												loading="lazy"
+											/>
+											<div className="absolute inset-0 bg-black/0 transition group-hover:bg-black/10" />
+										</button>
+									) : (
+										<a
+											key={att.uid}
+											href={attachmentUrl(att)}
+											target="_blank"
+											rel="noreferrer"
+											className="flex items-center gap-2 rounded-md bg-muted/50 px-2.5 py-2 text-xs transition-colors hover:bg-muted/80"
+										>
+											{att.type.startsWith("video/") ? (
+												<ImageIcon className="size-3.5 shrink-0 text-muted-foreground" />
+											) : (
+												<FileIcon className="size-3.5 shrink-0 text-muted-foreground" />
+											)}
+											<span className="min-w-0 truncate text-muted-foreground">
+												{att.filename}
+											</span>
+										</a>
+									),
+								)}
 							</div>
 						)}
 						<div className="mt-2 flex items-center gap-2 text-muted-foreground text-xs">
