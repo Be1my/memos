@@ -1,5 +1,5 @@
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
-
+import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import Loader from "./components/loader";
 
 import "./index.css";
@@ -16,6 +16,11 @@ export const getRouter = () => {
 		context: { queryClient },
 		defaultPendingComponent: () => <Loader />,
 		defaultNotFoundComponent: () => <div>Not Found</div>,
+	});
+
+	setupRouterSsrQueryIntegration({
+		router,
+		queryClient,
 	});
 
 	return router;

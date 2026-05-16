@@ -22,14 +22,15 @@ import { FloatingToolbar } from "./floating-toolbar";
 const placeholder = "Write something...";
 
 function Editor({
-	onChange,
 	onSave,
+	isSaving,
 }: {
-	onChange?: (editorState: EditorState) => void;
-	onSave?: () => void;
+	onSave?: (data: { content: string; payload: Record<string, unknown>; visibility: string }) => void;
+	isSaving?: boolean;
 }) {
 	const [visibility, setVisibility] = useState("private");
 	const [hasContent, setHasContent] = useState(false);
+	const editorStateRef = useRef<EditorState | null>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 
 	const visibilityOptions = [
@@ -41,9 +42,18 @@ function Editor({
 	const currentVisibility = visibilityOptions.find((o) => o.value === visibility);
 
 	const handleSave = useCallback(() => {
-		if (!hasContent) return;
-		onSave?.();
-	}, [onSave, hasContent]);
+		const state = editorStateRef.current;
+		if (!state || isSaving) return;
+
+		let content = "";
+		state.read(() => {
+			content = $getRoot().getTextContent().trim();
+		});
+
+		if (!content) return;
+
+		onSave?.({ content, payload: state.toJSON() as unknown as Record<string, unknown>, visibility });
+	}, [onSave, visibility, isSaving]);
 
 	useEffect(() => {
 		const el = containerRef.current;
@@ -86,6 +96,7 @@ function Editor({
 					<FloatingToolbar />
 					<OnChangePlugin
 						onChange={(editorState) => {
+							editorStateRef.current = editorState;
 							editorState.read(() => {
 								setHasContent($getRoot().getTextContent().trim().length > 0);
 							});
@@ -122,7 +133,7 @@ function Editor({
 							))}
 						</DropdownMenuContent>
 					</DropdownMenu>
-					<Button size="sm" disabled={!hasContent} onClick={handleSave}>
+					<Button size="sm" disabled={!hasContent || isSaving} onClick={handleSave}>
 						<SaveIcon className="size-4" />
 						保存
 					</Button>
