@@ -1,4 +1,5 @@
 import { Skeleton } from "@memos/ui/components/skeleton";
+import { FileIcon, ImageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { listMemosFn } from "../functions/list-memos.function";
 import { LexicalRenderer } from "./lexical-renderer";
@@ -50,6 +51,21 @@ function MemoList({ memos }: { memos: Memo[] }) {
 					<div className="leading-relaxed">
 						<LexicalRenderer payload={memo.payload} />
 					</div>
+					{memo.attachments && memo.attachments.length > 0 && (
+						<div className="mt-2 space-y-1">
+							{memo.attachments.map((att) => (
+								<div
+									key={att.uid}
+									className="flex items-center gap-2 rounded bg-muted/50 px-2 py-1 text-xs"
+								>
+									{att.type.startsWith("image/") || att.type.startsWith("video/")
+										? <ImageIcon className="size-3.5 shrink-0 text-muted-foreground" />
+										: <FileIcon className="size-3.5 shrink-0 text-muted-foreground" />}
+									<span className="truncate text-muted-foreground">{att.filename}</span>
+								</div>
+							))}
+						</div>
+					)}
 					<div className="mt-2 flex items-center gap-2 text-muted-foreground text-xs">
 						<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
 						<FormattedTime date={memo.createdAt} />
