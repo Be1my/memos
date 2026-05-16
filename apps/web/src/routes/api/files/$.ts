@@ -8,7 +8,20 @@ export const Route = createFileRoute("/api/files/$")({
 				const key = url.searchParams.get("key");
 				if (!key) return new Response("Missing key", { status: 400 });
 
-				const { env } = await import("@memos/env/server");
+				if (!key.startsWith("uploads/")) {
+					return new Response("Invalid key", { status: 400 });
+				}
+
+				const [{ createAuth }, { env }] = await Promise.all([
+					import("@memos/auth"),
+					import("@memos/env/server"),
+				]);
+
+				const session = await createAuth().api.getSession({
+					headers: request.headers,
+				});
+				if (!session) return new Response("Unauthorized", { status: 401 });
+
 				const object = await env.ATTACHMENTS_BUCKET.get(key);
 				if (!object) return new Response("Not found", { status: 404 });
 
