@@ -4,6 +4,7 @@ import { FileIcon, ImageIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { LexicalRenderer } from "../../editor/components/lexical-renderer";
 import type { listMemosFn } from "../../editor/functions/list-memos.function";
+import type { ReactionUser } from "../queries/reactions.query";
 import { MemoReactions } from "./memo-reactions";
 import { ReactionTrigger } from "./reaction-trigger";
 
@@ -129,7 +130,18 @@ function MemoList({
 								</span>
 								<FormattedTime date={memo.createdAt} />
 							</div>
-							{userId && <ReactionTrigger contentId={memo.uid} />}
+							{userId && (
+								<ReactionTrigger
+									contentId={memo.uid}
+									reactedEmojis={
+										new Set(
+											memo.reactions
+												.filter((r: ReactionUser) => r.creatorId === userId)
+												.map((r: ReactionUser) => r.reactionType),
+										)
+									}
+								/>
+							)}
 						</div>
 						<div className="leading-relaxed">
 							<LexicalRenderer payload={memo.payload} />
