@@ -17,13 +17,17 @@ export const listMemosFn = createServerFn({
 		{ createDb },
 		{ memo },
 		{ attachment },
+		{ reaction },
+		{ user },
 		{ createAuth },
 		{ getRequestHeaders },
-		{ desc, eq, like, and, sql },
+		{ desc, eq, like, and, sql, inArray },
 	] = await Promise.all([
 		import("@memos/db"),
 		import("@memos/db/schema/memo.table"),
 		import("@memos/db/schema/attachment.table"),
+		import("@memos/db/schema/reaction.table"),
+		import("@memos/db/schema/auth.table"),
 		import("@memos/auth"),
 		import("@tanstack/react-start/server"),
 		import("drizzle-orm"),
@@ -75,7 +79,33 @@ export const listMemosFn = createServerFn({
 		}
 	}
 
-	return Array.from(memoMap.values()).map((m) => ({
+	const memosList = Array.from(memoMap.values());
+
+	const uids = memosList.map((m) => m.uid);
+	const reactionsRows =
+		uids.length > 0
+			? await db
+					.select({
+						id: reaction.id,
+						reactionType: reaction.reactionType,
+						creatorId: reaction.creatorId,
+						creatorName: user.name,
+						contentId: reaction.contentId,
+					})
+					.from(reaction)
+					.innerJoin(user, eq(user.id, reaction.creatorId))
+					.where(inArray(reaction.contentId, uids))
+					.orderBy(reaction.createdAt)
+			: [];
+
+	const reactionsByContentId = new Map<string, typeof reactionsRows>();
+	for (const r of reactionsRows) {
+		const existing = reactionsByContentId.get(r.contentId) ?? [];
+		existing.push(r);
+		reactionsByContentId.set(r.contentId, existing);
+	}
+
+	return memosList.map((m) => ({
 		id: m.id,
 		uid: m.uid,
 		content: m.content,
@@ -91,6 +121,12 @@ export const listMemosFn = createServerFn({
 			size: a.size,
 			storageType: a.storageType,
 			reference: a.reference,
+		})),
+		reactions: (reactionsByContentId.get(m.uid) ?? []).map((r) => ({
+			id: r.id,
+			creatorId: r.creatorId,
+			creatorName: r.creatorName,
+			reactionType: r.reactionType,
 		})),
 	}));
 });

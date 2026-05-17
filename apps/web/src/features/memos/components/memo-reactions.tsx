@@ -7,12 +7,10 @@ import {
 	EmojiPickerFooter,
 	EmojiPickerSearch,
 } from "@memos/ui/components/emoji-picker";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { SmilePlusIcon } from "lucide-react";
 import { useState } from "react";
 import {
 	type ReactionUser,
-	reactionsQueryOptions,
 	useToggleReaction,
 } from "../queries/reactions.query";
 import { ReactionBadge } from "./reaction-badge";
@@ -32,13 +30,15 @@ function groupReactions(
 interface MemoReactionsProps {
 	contentId: string;
 	currentUserId?: string;
+	reactions: ReactionUser[];
 }
 
-function MemoReactions({ contentId, currentUserId }: MemoReactionsProps) {
-	const { data: reactions } = useSuspenseQuery(
-		reactionsQueryOptions(contentId),
-	);
-	const toggleMutation = useToggleReaction(contentId);
+function MemoReactions({
+	contentId,
+	currentUserId,
+	reactions,
+}: MemoReactionsProps) {
+	const toggleMutation = useToggleReaction();
 
 	const grouped = groupReactions(reactions);
 	const [open, setOpen] = useState(false);

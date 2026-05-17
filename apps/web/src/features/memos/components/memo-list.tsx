@@ -166,6 +166,7 @@ function MemoList({
 						<MemoReactions
 							contentId={memo.uid}
 							currentUserId={userId ?? undefined}
+							reactions={memo.reactions}
 						/>
 						<div className="mt-2 flex items-center gap-2 text-muted-foreground text-xs">
 							<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>

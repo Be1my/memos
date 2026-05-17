@@ -11,7 +11,6 @@ import { Editor } from "@/features/editor/components/editor";
 import { createMemoFn } from "@/features/editor/functions/create-memo.function";
 import { memosQueryOptions } from "@/features/editor/queries/memos.query";
 import { MemoList } from "@/features/memos/components/memo-list";
-import { reactionsQueryOptions } from "@/features/memos/queries/reactions.query";
 
 const searchSchema = z.object({
 	q: z.string().optional(),
@@ -28,11 +27,6 @@ export const Route = createFileRoute("/_memos/_protected/home")({
 	}) => {
 		const filter = { q, date, tag };
 		const memos = await queryClient.ensureQueryData(memosQueryOptions(filter));
-		await Promise.all(
-			memos.map((memo) =>
-				queryClient.ensureQueryData(reactionsQueryOptions(memo.uid)),
-			),
-		);
 		return {
 			memos,
 			filter,

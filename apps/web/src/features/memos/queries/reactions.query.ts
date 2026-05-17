@@ -1,29 +1,21 @@
-import {
-	queryOptions,
-	useMutation,
-	useQueryClient,
-} from "@tanstack/react-query";
-import {
-	listReactionsFn,
-	type ReactionUser,
-} from "../functions/list-reactions.function";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { toggleReactionFn } from "../functions/toggle-reaction.function";
 
-export const reactionsQueryOptions = (contentId: string) =>
-	queryOptions({
-		queryKey: ["reactions", contentId],
-		queryFn: () => listReactionsFn({ data: { contentId } } as never),
-	});
+export interface ReactionUser {
+	id: number;
+	creatorId: string;
+	creatorName: string;
+	reactionType: string;
+}
 
-import { toast } from "sonner";
-
-export function useToggleReaction(contentId: string) {
+export function useToggleReaction() {
 	const queryClient = useQueryClient();
 
 	return useMutation({
 		mutationFn: toggleReactionFn,
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["reactions", contentId] });
+			queryClient.invalidateQueries({ queryKey: ["memos"] });
 		},
 		onError: (error) => {
 			console.error("Toggle reaction error:", error);
@@ -31,5 +23,3 @@ export function useToggleReaction(contentId: string) {
 		},
 	});
 }
-
-export type { ReactionUser };
