@@ -1,7 +1,6 @@
-import { SidebarInset, SidebarProvider } from "@memos/ui/components/sidebar";
+import { SidebarProvider } from "@memos/ui/components/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SearchPanel } from "@/components/search-panel/search-panel";
 import { memosStatsQueryOptions } from "@/features/memos/queries/memos-stats.query";
 import { getSessionFn } from "@/functions/get-session";
 
@@ -21,10 +20,7 @@ function RouteComponent() {
 	return (
 		<SidebarProvider className="h-svh">
 			<AppSidebar user={user} />
-			<SearchPanel />
-			<SidebarInset className="overflow-y-auto">
-				<Outlet />
-			</SidebarInset>
+			<Outlet />
 		</SidebarProvider>
 	);
 }
