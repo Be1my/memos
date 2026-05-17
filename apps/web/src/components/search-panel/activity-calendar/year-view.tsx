@@ -1,9 +1,9 @@
-import { Temporal } from "@js-temporal/polyfill";
 import {
 	Dialog,
 	DialogContent,
 	DialogTrigger,
 } from "@memos/ui/components/dialog";
+import { format, isSameMonth } from "date-fns";
 import type { ReactElement } from "react";
 import { MONTHS } from "./calendar-utils";
 import { MonthGrid } from "./month-grid";
@@ -14,7 +14,7 @@ interface YearViewProps {
 	maxCount: number;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	now: Temporal.PlainDate;
+	now: Date;
 	onDayClick: (dateKey: string) => void;
 	children: ReactElement;
 }
@@ -36,7 +36,7 @@ export function YearView({
 				<div className="mb-4 text-center font-medium text-sm">{year}</div>
 				<div className="grid min-h-0 flex-1 auto-rows-1fr grid-cols-2 gap-4 overflow-auto sm:grid-cols-3 lg:grid-cols-4">
 					{MONTHS.map((name, m) => {
-						const isCurMonth = now.year === year && now.month === m + 1;
+						const isCurMonth = isSameMonth(now, new Date(year, m, 1));
 						return (
 							<div
 								key={name}
@@ -53,9 +53,7 @@ export function YearView({
 									maxCount={maxCount}
 									now={now}
 									onDayClick={(day) =>
-										onDayClick(
-											new Temporal.PlainDate(year, m + 1, day).toString(),
-										)
+										onDayClick(format(new Date(year, m, day), "yyyy-MM-dd"))
 									}
 								/>
 							</div>

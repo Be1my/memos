@@ -1,4 +1,4 @@
-import { Temporal } from "@js-temporal/polyfill";
+import { addDays, format, parse } from "date-fns";
 import type { SQL } from "drizzle-orm";
 
 export interface ListMemosFilter {
@@ -31,10 +31,10 @@ export async function queryMemos(conditions: SQL[], filter?: ListMemosFilter) {
 	}
 
 	if (filter?.date) {
-		const start = Temporal.PlainDate.from(filter.date);
-		const end = start.add({ days: 1 });
+		const start = parse(filter.date, "yyyy-MM-dd", new Date());
+		const end = addDays(start, 1);
 		conditions.push(
-			sql`${memo.createdAt} >= ${start.toString()}::timestamptz AND ${memo.createdAt} < ${end.toString()}::timestamptz`,
+			sql`${memo.createdAt} >= ${format(start, "yyyy-MM-dd")}::timestamptz AND ${memo.createdAt} < ${format(end, "yyyy-MM-dd")}::timestamptz`,
 		);
 	}
 

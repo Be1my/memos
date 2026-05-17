@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.0.0",
-		"@js-temporal/polyfill": "^0.5.1",
+		"@date-fns/tz": "^1.4.1",
 		"@lexical/hashtag": "0.27.2",
 		"@lexical/html": "^0.27.0",
 		"@lexical/react": "^0.27.0",
@@ -24,6 +24,7 @@
 		"@tanstack/react-router": "^1.168.22",
 		"@tanstack/react-start": "^1.167.41",
 		"better-auth": "catalog:",
+		"date-fns": "^4.1.0",
 		"dotenv": "catalog:",
 		"lexical": "^0.27.0",
 		"lucide-react": "^1.8.0",

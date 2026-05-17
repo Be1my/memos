@@ -1,4 +1,12 @@
-import { Temporal } from "@js-temporal/polyfill";
+import {
+	addMonths,
+	format,
+	getDay,
+	getDaysInMonth,
+	isSameDay,
+	setDate,
+	subMonths,
+} from "date-fns";
 import { CalendarCell } from "./calendar-cell";
 import { WEEKDAYS } from "./calendar-utils";
 
@@ -7,7 +15,7 @@ interface MonthGridProps {
 	month: number;
 	heatmap: Map<string, number>;
 	maxCount: number;
-	now: Temporal.PlainDate;
+	now: Date;
 	onDayClick?: (day: number) => void;
 	showWeekdays?: boolean;
 }
@@ -21,25 +29,19 @@ export function MonthGrid({
 	onDayClick,
 	showWeekdays = true,
 }: MonthGridProps) {
-	const currentMonth = new Temporal.PlainDate(year, month, 1);
-	const daysInMonth = currentMonth.daysInMonth;
-	const firstDayOfWeek = currentMonth.dayOfWeek % 7;
-	const isCurrentMonth = now.year === year && now.month === month;
-
-	const prevMonth = currentMonth.subtract({ months: 1 });
-	const prevMonthDays = prevMonth.daysInMonth;
-	const nextMonth = currentMonth.add({ months: 1 });
+	const currentMonth = new Date(year, month - 1, 1);
+	const daysInMonth = getDaysInMonth(currentMonth);
+	const firstDayOfWeek = getDay(currentMonth);
+	const prevMonth = subMonths(currentMonth, 1);
+	const prevMonthDays = getDaysInMonth(prevMonth);
+	const nextMonth = addMonths(currentMonth, 1);
 
 	const totalCells = 35;
 	const cells: React.ReactNode[] = [];
 
 	for (let i = firstDayOfWeek - 1; i >= 0; i--) {
 		const d = prevMonthDays - i;
-		const key = new Temporal.PlainDate(
-			prevMonth.year,
-			prevMonth.month,
-			d,
-		).toString();
+		const key = format(setDate(prevMonth, d), "yyyy-MM-dd");
 		const count = heatmap.get(key) ?? 0;
 		cells.push(
 			<CalendarCell
@@ -54,9 +56,9 @@ export function MonthGrid({
 	}
 
 	for (let day = 1; day <= daysInMonth; day++) {
-		const key = new Temporal.PlainDate(year, month, day).toString();
+		const key = format(setDate(currentMonth, day), "yyyy-MM-dd");
 		const count = heatmap.get(key) ?? 0;
-		const isToday = isCurrentMonth && day === now.day;
+		const isToday = isSameDay(now, setDate(currentMonth, day));
 		cells.push(
 			<CalendarCell
 				key={key}
@@ -72,11 +74,7 @@ export function MonthGrid({
 	}
 
 	for (let d = 1; cells.length < totalCells; d++) {
-		const key = new Temporal.PlainDate(
-			nextMonth.year,
-			nextMonth.month,
-			d,
-		).toString();
+		const key = format(setDate(nextMonth, d), "yyyy-MM-dd");
 		const count = heatmap.get(key) ?? 0;
 		cells.push(
 			<CalendarCell

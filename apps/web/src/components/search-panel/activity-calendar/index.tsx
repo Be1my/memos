@@ -1,6 +1,13 @@
-import { Temporal } from "@js-temporal/polyfill";
 import { Button } from "@memos/ui/components/button";
 import { useNavigate } from "@tanstack/react-router";
+import {
+	addMonths,
+	format,
+	isSameMonth,
+	parse,
+	startOfMonth,
+	subMonths,
+} from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { MONTHS } from "./calendar-utils";
@@ -14,36 +21,36 @@ interface ActivityCalendarProps {
 	today: string;
 }
 
+const parseToday = (today: string) => parse(today, "yyyy-MM-dd", new Date());
+
 export function ActivityCalendar({
 	timestamps,
 	timeZone,
 	today,
 }: ActivityCalendarProps) {
 	const navigate = useNavigate();
-	const now = useMemo(() => Temporal.PlainDate.from(today), [today]);
-	const [currentMonth, setCurrentMonth] = useState(
-		() => new Temporal.PlainDate(now.year, now.month, 1),
-	);
+	const now = useMemo(() => parseToday(today), [today]);
+	const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(now));
 	const [yearView, setYearView] = useState(false);
 
 	const heatmap = useHeatmap(timestamps, timeZone);
 
-	const year = currentMonth.year;
-	const month = currentMonth.month;
+	const year = currentMonth.getFullYear();
+	const month = currentMonth.getMonth() + 1;
 	const maxCount = Math.max(...Array.from(heatmap.values()), 1);
-	const isCurrentMonth = now.year === year && now.month === month;
+	const isCurrentMonth = isSameMonth(now, currentMonth);
 
 	const goToPrevMonth = useCallback(() => {
-		setCurrentMonth((prev) => prev.subtract({ months: 1 }));
+		setCurrentMonth((prev) => subMonths(prev, 1));
 	}, []);
 
 	const goToNextMonth = useCallback(() => {
-		setCurrentMonth((prev) => prev.add({ months: 1 }));
+		setCurrentMonth((prev) => addMonths(prev, 1));
 	}, []);
 
 	const handleDayClick = useCallback(
 		(day: number) => {
-			const dateKey = new Temporal.PlainDate(year, month, day).toString();
+			const dateKey = format(new Date(year, month - 1, day), "yyyy-MM-dd");
 			navigate({
 				to: ".",
 				search: (prev: Record<string, unknown>) => ({
@@ -59,7 +66,7 @@ export function ActivityCalendar({
 
 	const handleYearViewDayClick = useCallback(
 		(dateKey: string) => {
-			const date = Temporal.PlainDate.from(dateKey);
+			const date = parseToday(dateKey);
 			navigate({
 				to: ".",
 				search: (prev: Record<string, unknown>) => ({
@@ -69,7 +76,7 @@ export function ActivityCalendar({
 				}),
 				replace: true,
 			});
-			setCurrentMonth(new Temporal.PlainDate(date.year, date.month, 1));
+			setCurrentMonth(startOfMonth(date));
 			setYearView(false);
 		},
 		[navigate],

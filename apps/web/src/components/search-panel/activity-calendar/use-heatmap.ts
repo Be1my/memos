@@ -1,4 +1,5 @@
-import { Temporal } from "@js-temporal/polyfill";
+import { TZDate } from "@date-fns/tz";
+import { format } from "date-fns";
 import { useMemo } from "react";
 
 export function useHeatmap(
@@ -8,10 +9,8 @@ export function useHeatmap(
 	return useMemo(() => {
 		const map = new Map<string, number>();
 		for (const ts of timestamps) {
-			const date = Temporal.Instant.from(ts)
-				.toZonedDateTimeISO(timeZone)
-				.toPlainDate();
-			const key = date.toString();
+			const date = new TZDate(ts, timeZone);
+			const key = format(date, "yyyy-MM-dd");
 			map.set(key, (map.get(key) ?? 0) + 1);
 		}
 		return map;
