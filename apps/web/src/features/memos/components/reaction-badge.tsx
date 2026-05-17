@@ -34,10 +34,12 @@ function ReactionBadge({
 			onClick={() => onToggle(emoji)}
 			data-active={hasReacted || undefined}
 			className="group flex items-center gap-1 rounded-full border bg-card px-2 py-0.5 text-xs transition-colors hover:bg-accent data-[active]:border-primary/30 data-[active]:bg-accent"
-			title={users.map((u) => u.creatorName).join(", ")}
 		>
 			<span className="text-sm">{emoji}</span>
-			<span className="text-muted-foreground group-hover:text-foreground">
+			<span className="text-muted-foreground group-hover:hidden">
+				{users.length}
+			</span>
+			<span className="hidden text-muted-foreground group-hover:inline">
 				{formatReactionText(users)}
 				{emoji}
 			</span>
