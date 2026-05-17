@@ -1,10 +1,10 @@
-import { getSessionFn } from "@/functions/get-session";
 import { Temporal } from "@js-temporal/polyfill";
 import { Skeleton } from "@memos/ui/components/skeleton";
 import { FileIcon, ImageIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { listMemosFn } from "../../editor/functions/list-memos.function";
+import { getSessionFn } from "@/functions/get-session";
 import { LexicalRenderer } from "../../editor/components/lexical-renderer";
+import type { listMemosFn } from "../../editor/functions/list-memos.function";
 import { MemoReactions } from "./memo-reactions";
 
 type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];
@@ -65,6 +65,7 @@ function ImagePreview({
 
 	return (
 		<>
+			{/* biome-ignore lint/a11y/noStaticElementInteractions: overlay with role=presentation */}
 			<div
 				className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
 				role="presentation"
@@ -118,7 +119,10 @@ function MemoList({ memos }: { memos: Memo[] }) {
 			)}
 			<div className="mt-8 space-y-3">
 				{memos.map((memo) => (
-					<div key={memo.uid} className="group/memo relative rounded-lg border bg-card p-4 text-sm">
+					<div
+						key={memo.uid}
+						className="group/memo relative rounded-lg border bg-card p-4 text-sm"
+					>
 						<div className="leading-relaxed">
 							<LexicalRenderer payload={memo.payload} />
 						</div>
@@ -161,10 +165,7 @@ function MemoList({ memos }: { memos: Memo[] }) {
 								)}
 							</div>
 						)}
-						<MemoReactions
-							contentId={memo.uid}
-							currentUserId={currentUserId}
-						/>
+						<MemoReactions contentId={memo.uid} currentUserId={currentUserId} />
 						<div className="mt-2 flex items-center gap-2 text-muted-foreground text-xs">
 							<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
 							<FormattedTime date={memo.createdAt} />

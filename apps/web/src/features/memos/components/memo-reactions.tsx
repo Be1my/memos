@@ -7,15 +7,15 @@ import {
 	EmojiPickerFooter,
 	EmojiPickerSearch,
 } from "@memos/ui/components/emoji-picker";
-import { SmilePlusIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { SmilePlusIcon } from "lucide-react";
 import { useState } from "react";
-import { ReactionBadge } from "./reaction-badge";
 import {
+	type ReactionUser,
 	reactionsQueryOptions,
 	useToggleReaction,
-	type ReactionUser,
 } from "../queries/reactions.query";
+import { ReactionBadge } from "./reaction-badge";
 
 function groupReactions(
 	reactions: ReactionUser[],
@@ -35,9 +35,7 @@ interface MemoReactionsProps {
 }
 
 function MemoReactions({ contentId, currentUserId }: MemoReactionsProps) {
-	const { data: reactions = [] } = useQuery(
-		reactionsQueryOptions(contentId),
-	);
+	const { data: reactions = [] } = useQuery(reactionsQueryOptions(contentId));
 	const toggleMutation = useToggleReaction(contentId);
 
 	const grouped = groupReactions(reactions);
@@ -71,7 +69,7 @@ function MemoReactions({ contentId, currentUserId }: MemoReactionsProps) {
 			{currentUserId && (
 				<Popover.Root open={open} onOpenChange={setOpen}>
 					<Popover.Trigger
-						className="inline-flex size-6 items-center justify-center rounded-full text-muted-foreground opacity-0 transition-opacity group-hover/memo:opacity-100 hover:bg-accent hover:text-foreground"
+						className="inline-flex size-6 items-center justify-center rounded-full text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover/memo:opacity-100"
 						aria-label="Add reaction"
 					>
 						<SmilePlusIcon className="size-4" />
