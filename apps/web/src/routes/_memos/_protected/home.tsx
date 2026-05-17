@@ -8,7 +8,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Editor } from "@/features/editor/components/editor";
-import { MemoList } from "@/features/editor/components/memo-list";
+import { MemoList } from "@/features/memos/components/memo-list";
 import { createMemoFn } from "@/features/editor/functions/create-memo.function";
 import { memosQueryOptions } from "@/features/editor/queries/memos.query";
 
