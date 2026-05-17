@@ -122,11 +122,15 @@ function MemoList({
 						key={memo.uid}
 						className="group/memo relative rounded-lg border bg-card p-4 text-sm"
 					>
-						{userId && (
-							<div className="absolute top-2 right-2">
-								<ReactionTrigger contentId={memo.uid} />
+						<div className="mb-2 flex items-center justify-between text-muted-foreground text-xs">
+							<div className="flex items-center gap-2">
+								<span>
+									{visibilityLabel[memo.visibility] ?? memo.visibility}
+								</span>
+								<FormattedTime date={memo.createdAt} />
 							</div>
-						)}
+							{userId && <ReactionTrigger contentId={memo.uid} />}
+						</div>
 						<div className="leading-relaxed">
 							<LexicalRenderer payload={memo.payload} />
 						</div>
@@ -174,10 +178,6 @@ function MemoList({
 							currentUserId={userId ?? undefined}
 							reactions={memo.reactions}
 						/>
-						<div className="mt-2 flex items-center gap-2 text-muted-foreground text-xs">
-							<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
-							<FormattedTime date={memo.createdAt} />
-						</div>
 					</div>
 				))}
 			</div>
