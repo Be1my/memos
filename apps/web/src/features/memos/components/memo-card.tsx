@@ -1,6 +1,7 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { Skeleton } from "@memos/ui/components/skeleton";
 import { useEffect, useState } from "react";
+import { useTimezone } from "@/lib/timezone-context";
 import { LexicalRenderer } from "../../editor/components/lexical-renderer";
 import type { listMemosFn } from "../../editor/functions/list-memos.function";
 import { AttachmentGrid } from "./attachment-grid";
@@ -18,6 +19,7 @@ const visibilityLabel: Record<string, string> = {
 function FormattedTime({ date }: { date: string }) {
 	const [mounted, setMounted] = useState(false);
 	useEffect(() => setMounted(true), []);
+	const { timeZone } = useTimezone();
 
 	if (!mounted) {
 		return <Skeleton className="inline-block h-3 w-24 align-middle" />;
@@ -37,6 +39,7 @@ function FormattedTime({ date }: { date: string }) {
 				day: "2-digit",
 				hour: "2-digit",
 				minute: "2-digit",
+				timeZone,
 			}).format(instant.epochMilliseconds)}
 		</>
 	);

@@ -1,10 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getCookie } from "@tanstack/react-start/server";
 
-export const getCalendarInfoFn = createServerFn({ method: "GET" }).handler(
-	async () => {
-		const timeZone =
-			getCookie("tz") || Intl.DateTimeFormat().resolvedOptions().timeZone;
+import { localeTzMiddleware } from "@/middleware/locale-tz";
+
+export const getCalendarInfoFn = createServerFn({ method: "GET" })
+	.middleware([localeTzMiddleware])
+	.handler(async ({ context }) => {
+		console.log(context);
+		const { timeZone } = context;
+		// const timeZone = "Asia/Shanghai";
 		const now = new Date();
 		const today = new Intl.DateTimeFormat("en-CA", {
 			timeZone,
@@ -14,5 +17,4 @@ export const getCalendarInfoFn = createServerFn({ method: "GET" }).handler(
 		}).format(now);
 
 		return { timeZone, today };
-	},
-);
+	});
