@@ -1,5 +1,5 @@
 import { SidebarInset } from "@memos/ui/components/sidebar";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_memos/_bare")({
 	component: RouteComponent,

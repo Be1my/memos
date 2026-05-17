@@ -20,18 +20,21 @@ type ElementNode = {
 
 function renderText(node: TextNode): ReactNode {
 	const parts = node.text.split(/(#[\w\u4e00-\u9fff]+)/g);
-	let children: ReactNode = parts.map((part, i) => {
+	const seen = new Map<string, number>();
+	const keyed = (part: string) => {
+		const n = seen.get(part) ?? 0;
+		seen.set(part, n + 1);
+		return n === 0 ? part : `${part}-${n}`;
+	};
+	let children: ReactNode = parts.map((part) => {
 		if (part.startsWith("#")) {
 			return (
-				<>
-					{/* biome-ignore lint/suspicious/noArrayIndexKey: parts array is static */}
-					<span
-						key={i}
-						className="inline-flex items-center rounded-md bg-primary/10 px-1.5 py-0.5 font-medium text-primary"
-					>
-						{part}
-					</span>
-				</>
+				<span
+					key={keyed(part)}
+					className="inline-flex items-center rounded-md bg-primary/10 px-1.5 py-0.5 font-medium text-primary"
+				>
+					{part}
+				</span>
 			);
 		}
 		return part;
