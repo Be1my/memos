@@ -2,7 +2,6 @@ import { Temporal } from "@js-temporal/polyfill";
 import { Skeleton } from "@memos/ui/components/skeleton";
 import { FileIcon, ImageIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getSessionFn } from "@/functions/get-session";
 import { LexicalRenderer } from "../../editor/components/lexical-renderer";
 import type { listMemosFn } from "../../editor/functions/list-memos.function";
 import { MemoReactions } from "./memo-reactions";
@@ -90,15 +89,14 @@ function ImagePreview({
 	);
 }
 
-function MemoList({ memos }: { memos: Memo[] }) {
+function MemoList({
+	memos,
+	userId,
+}: {
+	memos: Memo[];
+	userId?: string | null;
+}) {
 	const [preview, setPreview] = useState<string | null>(null);
-	const [currentUserId, setCurrentUserId] = useState<string | undefined>();
-
-	useEffect(() => {
-		getSessionFn().then((session) => {
-			setCurrentUserId(session?.user?.id);
-		});
-	}, []);
 
 	if (!memos.length) {
 		return (
@@ -165,7 +163,10 @@ function MemoList({ memos }: { memos: Memo[] }) {
 								)}
 							</div>
 						)}
-						<MemoReactions contentId={memo.uid} currentUserId={currentUserId} />
+						<MemoReactions
+							contentId={memo.uid}
+							currentUserId={userId ?? undefined}
+						/>
 						<div className="mt-2 flex items-center gap-2 text-muted-foreground text-xs">
 							<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
 							<FormattedTime date={memo.createdAt} />

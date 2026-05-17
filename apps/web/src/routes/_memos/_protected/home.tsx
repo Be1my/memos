@@ -8,9 +8,10 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Editor } from "@/features/editor/components/editor";
-import { MemoList } from "@/features/memos/components/memo-list";
 import { createMemoFn } from "@/features/editor/functions/create-memo.function";
 import { memosQueryOptions } from "@/features/editor/queries/memos.query";
+import { MemoList } from "@/features/memos/components/memo-list";
+import { reactionsQueryOptions } from "@/features/memos/queries/reactions.query";
 
 const searchSchema = z.object({
 	q: z.string().optional(),
@@ -21,10 +22,22 @@ const searchSchema = z.object({
 export const Route = createFileRoute("/_memos/_protected/home")({
 	validateSearch: searchSchema,
 	loaderDeps: ({ search: { q, date, tag } }) => ({ q, date, tag }),
-	loader: async ({ context: { queryClient }, deps: { q, date, tag } }) => {
+	loader: async ({
+		context: { queryClient, user },
+		deps: { q, date, tag },
+	}) => {
 		const filter = { q, date, tag };
 		const memos = await queryClient.ensureQueryData(memosQueryOptions(filter));
-		return { memos, filter };
+		await Promise.all(
+			memos.map((memo) =>
+				queryClient.ensureQueryData(reactionsQueryOptions(memo.uid)),
+			),
+		);
+		return {
+			memos,
+			filter,
+			userId: (user as { id?: string } | null)?.id ?? null,
+		};
 	},
 	component: RouteComponent,
 });
@@ -32,7 +45,7 @@ export const Route = createFileRoute("/_memos/_protected/home")({
 function RouteComponent() {
 	const [resetKey, setResetKey] = useState(0);
 	const queryClient = useQueryClient();
-	const { filter } = Route.useLoaderData();
+	const { filter, userId } = Route.useLoaderData();
 	const { data: memos } = useSuspenseQuery(memosQueryOptions(filter));
 
 	const mutation = useMutation({
@@ -55,7 +68,7 @@ function RouteComponent() {
 				isSaving={mutation.isPending}
 				onSave={(data) => mutation.mutate({ data })}
 			/>
-			<MemoList memos={memos} />
+			<MemoList memos={memos} userId={userId} />
 		</div>
 	);
 }
