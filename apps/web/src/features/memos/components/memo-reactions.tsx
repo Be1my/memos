@@ -27,7 +27,7 @@ function MemoReactions({
 	currentUserId,
 	reactions,
 }: MemoReactionsProps) {
-	const toggleMutation = useToggleReaction();
+	const toggleMutation = useToggleReaction(currentUserId);
 	const grouped = groupReactions(reactions);
 	const hasReactions = reactions.length > 0;
 

@@ -13,10 +13,11 @@ import { useToggleReaction } from "../queries/reactions.query";
 
 interface ReactionTriggerProps {
 	contentId: string;
+	currentUserId?: string;
 }
 
-function ReactionTrigger({ contentId }: ReactionTriggerProps) {
-	const toggleMutation = useToggleReaction();
+function ReactionTrigger({ contentId, currentUserId }: ReactionTriggerProps) {
+	const toggleMutation = useToggleReaction(currentUserId);
 	const [open, setOpen] = useState(false);
 
 	const handleToggle = (emoji: string) => {

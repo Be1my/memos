@@ -129,7 +129,7 @@ function MemoList({
 								</span>
 								<FormattedTime date={memo.createdAt} />
 							</div>
-							{userId && <ReactionTrigger contentId={memo.uid} />}
+							{userId && <ReactionTrigger contentId={memo.uid} currentUserId={userId} />}
 						</div>
 						<div className="leading-relaxed">
 							<LexicalRenderer payload={memo.payload} />
