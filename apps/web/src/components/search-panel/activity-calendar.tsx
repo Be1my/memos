@@ -1,6 +1,11 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { Button } from "@memos/ui/components/button";
 import {
+	Dialog,
+	DialogContent,
+	DialogTrigger,
+} from "@memos/ui/components/dialog";
+import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
@@ -169,38 +174,23 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 				<Button variant="ghost" size="icon" onClick={goToPrevMonth}>
 					<ChevronLeftIcon className="size-4" />
 				</Button>
-				<Button
-					variant="ghost"
-					size="sm"
-					onClick={() => setYearView(!yearView)}
-					className="font-medium text-xs"
-				>
-					{year} 年 {MONTHS[month - 1]}
-					{isCurrentMonth && <span className="ml-1 text-primary">•</span>}
-				</Button>
-				<Button variant="ghost" size="icon" onClick={goToNextMonth}>
-					<ChevronRightIcon className="size-4" />
-				</Button>
-			</div>
-
-			{yearView && (
-				<>
-					{/* biome-ignore lint/a11y/noStaticElementInteractions: backdrop with role=presentation */}
-					<div
-						className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 sm:p-8"
-						role="presentation"
-						onClick={() => setYearView(false)}
-					>
-						<div
-							className="flex h-full w-full max-w-5xl flex-col rounded-xl border bg-background p-4 shadow-lg sm:p-6"
-							role="dialog"
-							aria-modal="true"
-							onClick={(e) => e.stopPropagation()}
-							onKeyDown={(e) => e.stopPropagation()}
-						>
-							<div className="mb-4 text-center font-medium text-sm">{year}</div>
-							<div className="grid min-h-0 flex-1 auto-rows-1fr grid-cols-2 gap-4 overflow-auto sm:grid-cols-3 lg:grid-cols-4">
-								{MONTHS.map((name, m) => {
+				<Dialog open={yearView} onOpenChange={setYearView}>
+					<DialogTrigger
+						render={
+							<Button
+								variant="ghost"
+								size="sm"
+								className="font-medium text-xs"
+							>
+								{year} 年 {MONTHS[month - 1]}
+								{isCurrentMonth && <span className="ml-1 text-primary">•</span>}
+							</Button>
+						}
+					/>
+					<DialogContent className="max-w-5xl h-[85vh] flex flex-col gap-0 bg-background rounded-xl border p-4 sm:p-6 shadow-lg ring-0 sm:max-w-5xl">
+						<div className="mb-4 text-center font-medium text-sm">{year}</div>
+						<div className="grid min-h-0 flex-1 auto-rows-1fr grid-cols-2 gap-4 overflow-auto sm:grid-cols-3 lg:grid-cols-4">
+							{MONTHS.map((name, m) => {
 									const mDate = new Temporal.PlainDate(year, m + 1, 1);
 									const daysIn = mDate.daysInMonth;
 									const firstDay = mDate.dayOfWeek % 7;
@@ -312,10 +302,12 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 									);
 								})}
 							</div>
-						</div>
-					</div>
-				</>
-			)}
+						</DialogContent>
+					</Dialog>
+					<Button variant="ghost" size="icon" onClick={goToNextMonth}>
+						<ChevronRightIcon className="size-4" />
+					</Button>
+				</div>
 			<div className="grid grid-cols-7 gap-px text-center text-[10px] text-muted-foreground">
 				{WEEKDAYS.map((w) => (
 					<div key={w} className="py-0.5">

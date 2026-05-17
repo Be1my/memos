@@ -25,9 +25,9 @@ function renderText(node: TextNode): ReactNode {
 			return (
 				<>
 					{/* biome-ignore lint/suspicious/noArrayIndexKey: parts array is static */}
-					<span key={i} className="font-medium text-primary">
-						{part}
-					</span>
+				<span key={i} className="inline-flex items-center rounded-md bg-primary/10 px-1.5 py-0.5 font-medium text-primary">
+					{part}
+				</span>
 				</>
 			);
 		}
@@ -45,7 +45,7 @@ function renderText(node: TextNode): ReactNode {
 }
 
 function renderNode(node: TextNode | ElementNode, index: number): ReactNode {
-	if (node.type === "text") {
+	if (node.type === "text" || node.type === "hashtag") {
 		return <span key={index}>{renderText(node as TextNode)}</span>;
 	}
 
