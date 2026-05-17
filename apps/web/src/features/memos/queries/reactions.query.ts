@@ -15,13 +15,19 @@ export const reactionsQueryOptions = (contentId: string) =>
 		queryFn: () => listReactionsFn({ contentId } as never),
 	});
 
+import { toast } from "sonner";
+
 export function useToggleReaction(contentId: string) {
 	const queryClient = useQueryClient();
 
 	return useMutation({
 		mutationFn: toggleReactionFn,
-		onSettled: () => {
+		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["reactions", contentId] });
+		},
+		onError: (error) => {
+			console.error("Toggle reaction error:", error);
+			toast.error(error instanceof Error ? error.message : "操作失败");
 		},
 	});
 }
