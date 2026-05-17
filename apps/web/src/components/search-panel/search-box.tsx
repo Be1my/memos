@@ -1,3 +1,4 @@
+import { Button } from "@memos/ui/components/button";
 import { Input } from "@memos/ui/components/input";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { SearchIcon, XIcon } from "lucide-react";
@@ -37,13 +38,14 @@ export function SearchBox() {
 				className="h-9 pr-8 pl-8 text-sm"
 			/>
 			{value && (
-				<button
-					type="button"
+				<Button
+					variant="ghost"
+					size="icon"
 					onClick={() => setValue("")}
-					className="absolute top-1/2 right-2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+					className="absolute top-1/2 right-2 -translate-y-1/2"
 				>
 					<XIcon className="size-4" />
-				</button>
+				</Button>
 			)}
 		</div>
 	);

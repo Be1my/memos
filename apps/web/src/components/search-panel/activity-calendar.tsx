@@ -1,4 +1,5 @@
 import { Temporal } from "@js-temporal/polyfill";
+import { Button } from "@memos/ui/components/button";
 import {
 	Tooltip,
 	TooltipContent,
@@ -165,28 +166,21 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 	return (
 		<div className="space-y-2">
 			<div className="flex items-center justify-between">
-				<button
-					type="button"
-					onClick={goToPrevMonth}
-					className="p-1 text-muted-foreground hover:text-foreground"
-				>
+				<Button variant="ghost" size="icon" onClick={goToPrevMonth}>
 					<ChevronLeftIcon className="size-4" />
-				</button>
-				<button
-					type="button"
+				</Button>
+				<Button
+					variant="ghost"
+					size="sm"
 					onClick={() => setYearView(!yearView)}
-					className="font-medium text-xs hover:text-primary"
+					className="font-medium text-xs"
 				>
 					{year} 年 {MONTHS[month - 1]}
 					{isCurrentMonth && <span className="ml-1 text-primary">•</span>}
-				</button>
-				<button
-					type="button"
-					onClick={goToNextMonth}
-					className="p-1 text-muted-foreground hover:text-foreground"
-				>
+				</Button>
+				<Button variant="ghost" size="icon" onClick={goToNextMonth}>
 					<ChevronRightIcon className="size-4" />
-				</button>
+				</Button>
 			</div>
 
 			{yearView && (

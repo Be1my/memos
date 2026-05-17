@@ -1,4 +1,5 @@
 import { Temporal } from "@js-temporal/polyfill";
+import { Button } from "@memos/ui/components/button";
 import { Skeleton } from "@memos/ui/components/skeleton";
 import { ArrowUpIcon, FileIcon, ImageIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -71,13 +72,14 @@ function ImagePreview({
 				role="presentation"
 				onClick={onClose}
 			>
-				<button
-					type="button"
+				<Button
+					variant="ghost"
+					size="icon"
 					className="absolute top-4 right-4 text-white/70 hover:text-white"
 					onClick={onClose}
 				>
 					<XIcon className="size-6" />
-				</button>
+				</Button>
 				<img
 					src={src}
 					alt={filename}
@@ -129,7 +131,9 @@ function MemoList({
 								</span>
 								<FormattedTime date={memo.createdAt} />
 							</div>
-							{userId && <ReactionTrigger contentId={memo.uid} currentUserId={userId} />}
+							{userId && (
+								<ReactionTrigger contentId={memo.uid} currentUserId={userId} />
+							)}
 						</div>
 						<div className="leading-relaxed">
 							<LexicalRenderer payload={memo.payload} />
@@ -181,18 +185,19 @@ function MemoList({
 					</div>
 				))}
 			</div>
-			<button
-				type="button"
+			<Button
+				variant="ghost"
+				size="sm"
 				onClick={() =>
 					document
 						.querySelector('[data-slot="sidebar-inset"]')
 						?.scrollTo({ top: 0, behavior: "smooth" })
 				}
-				className="mx-auto mb-8 mt-8 flex items-center gap-1 rounded-md px-3 py-1.5 text-muted-foreground text-xs transition-colors hover:bg-accent hover:text-foreground"
+				className="mx-auto mt-8 mb-8 flex"
 			>
 				<ArrowUpIcon className="size-3.5" />
 				Back to Top
-			</button>
+			</Button>
 		</>
 	);
 }

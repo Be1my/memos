@@ -19,7 +19,9 @@ export function useToggleReaction(currentUserId?: string) {
 
 	return useMutation({
 		mutationFn: toggleReactionFn,
-		onMutate: async (variables: { data: { contentId: string; reactionType: string } }) => {
+		onMutate: async (variables: {
+			data: { contentId: string; reactionType: string };
+		}) => {
 			await queryClient.cancelQueries({ queryKey: ["memos"] });
 
 			const previousQueries = queryClient.getQueriesData<MemoWithReactions[]>({

@@ -1,4 +1,5 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { Button } from "@memos/ui/components/button";
 import {
 	$getSelection,
 	$isRangeSelection,
@@ -101,17 +102,18 @@ function ToolbarButton({
 	children: React.ReactNode;
 }) {
 	return (
-		<button
-			type="button"
+		<Button
+			variant="ghost"
+			size="icon-xs"
 			aria-label={label}
 			aria-pressed={active}
 			data-active={active}
 			onMouseDown={(e) => e.preventDefault()}
 			onClick={onClick}
-			className="flex h-7 w-7 items-center justify-center rounded-md text-sm transition-colors hover:bg-muted data-[active=true]:bg-muted data-[active=true]:text-foreground"
+			className="data-[active=true]:bg-muted data-[active=true]:text-foreground"
 		>
 			{children}
-		</button>
+		</Button>
 	);
 }
 

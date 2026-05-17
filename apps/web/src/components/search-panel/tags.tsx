@@ -1,3 +1,4 @@
+import { Button } from "@memos/ui/components/button";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useCallback } from "react";
 
@@ -43,14 +44,13 @@ export function Tags({ tags }: TagsProps) {
 			{tags.map((tag) => {
 				const isSelected = search.tag === tag.name;
 				return (
-					<button
+					<Button
 						key={tag.name}
-						type="button"
+						variant={isSelected ? "default" : "outline"}
+						size="xs"
 						onClick={() => handleTagClick(tag.name)}
-						className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 font-medium text-xs transition-colors ${
-							isSelected
-								? "border-primary bg-primary text-primary-foreground"
-								: "border-border hover:bg-accent"
+						className={`font-medium text-xs ${
+							isSelected ? "" : "border-border"
 						}`}
 					>
 						{tag.name}
@@ -59,7 +59,7 @@ export function Tags({ tags }: TagsProps) {
 						>
 							{tag.count}
 						</span>
-					</button>
+					</Button>
 				);
 			})}
 		</div>

@@ -1,3 +1,4 @@
+import { Button } from "@memos/ui/components/button";
 import {
 	Tooltip,
 	TooltipContent,
@@ -37,17 +38,21 @@ function ReactionBadge({
 	return (
 		<TooltipProvider>
 			<Tooltip>
-				<TooltipTrigger>
-					<button
-						type="button"
-						onClick={() => onToggle(emoji)}
-						data-active={hasReacted || undefined}
-						className="flex items-center gap-1 rounded-full border bg-card px-2 py-0.5 text-xs transition-colors hover:bg-accent data-[active]:border-primary/30 data-[active]:bg-accent"
-					>
-						<span className="text-sm leading-none">{emoji}</span>
-						<span className="text-muted-foreground">{users.length}</span>
-					</button>
-				</TooltipTrigger>
+				<TooltipTrigger
+					render={
+						<Button
+							variant="outline"
+							size="xs"
+							onClick={() => onToggle(emoji)}
+							data-active={hasReacted || undefined}
+							className="rounded-full border bg-card px-2 data-[active]:border-primary/30 data-[active]:bg-accent"
+						>
+							<span className="text-sm leading-none">{emoji}</span>
+							<span className="text-muted-foreground">{users.length}</span>
+						</Button>
+					}
+				/>
+
 				<TooltipContent side="top" align="center">
 					{formatReactionText(users)}
 				</TooltipContent>

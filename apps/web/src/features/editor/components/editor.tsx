@@ -225,15 +225,16 @@ function Editor({
 							<span className="text-muted-foreground">
 								{formatSize(f.file.size)}
 							</span>
-							<button
-								type="button"
+							<Button
+								variant="ghost"
+								size="icon-xs"
 								onClick={() =>
 									setPendingFiles((prev) => prev.filter((p) => p.id !== f.id))
 								}
-								className="ml-0.5 rounded p-0.5 hover:bg-muted-foreground/20"
+								className="ml-0.5"
 							>
 								<XIcon className="size-3" />
-							</button>
+							</Button>
 						</div>
 					))}
 				</div>
@@ -266,15 +267,15 @@ function Editor({
 					<DropdownMenu>
 						<DropdownMenuTrigger
 							render={
-								<button
-									type="button"
-									className="flex cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-muted-foreground text-sm outline-none hover:text-foreground"
+								<Button
+									variant="ghost"
+									className="cursor-default px-2 text-muted-foreground text-sm"
 								>
 									{currentVisibility && (
 										<currentVisibility.icon className="size-4" />
 									)}
 									{currentVisibility?.label}
-								</button>
+								</Button>
 							}
 						/>
 						<DropdownMenuContent align="end">
