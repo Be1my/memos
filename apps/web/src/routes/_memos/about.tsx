@@ -1,3 +1,4 @@
+import { SidebarInset } from "@memos/ui/components/sidebar";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_memos/about")({
@@ -5,5 +6,11 @@ export const Route = createFileRoute("/_memos/about")({
 });
 
 function RouteComponent() {
-	return <div>Hello "/_protected/about"!</div>;
+	return (
+		<SidebarInset className="overflow-y-auto">
+			<div className="mx-auto w-full max-w-2xl px-4 pt-8">
+				<div>Hello "/_memos/about"!</div>
+			</div>
+		</SidebarInset>
+	);
 }
