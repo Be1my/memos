@@ -48,5 +48,12 @@
 	"settings_default_visibility": "默认可见性",
 	"settings_private": "私有",
 	"settings_workspace": "工作区",
-	"settings_public": "公开"
+	"settings_public": "公开",
+	"settings_avatar_updated": "头像已更新",
+	"settings_avatar_failed": "头像更新失败",
+	"settings_password_mismatch": "密码不匹配",
+	"settings_password_failed": "修改失败",
+	"settings_password_same": "新密码不能与当前密码相同",
+	"settings_account_deleted": "账号已删除",
+	"settings_delete_failed": "删除失败"
 }

@@ -87,9 +87,9 @@ function MyAccountSection() {
 			})() });
 			const { path } = await res.json() as { path: string };
 			await authClient.updateUser({ image: path });
-			toast.success("头像已更新");
+			toast.success(m.settings_avatar_updated());
 		} catch {
-			toast.error("头像更新失败");
+			toast.error(m.settings_avatar_failed());
 		}
 	};
 
@@ -149,7 +149,11 @@ function ChangePasswordForm() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (newPassword !== confirmPassword) {
-			toast.error("密码不匹配");
+			toast.error(m.settings_password_mismatch());
+			return;
+		}
+		if (newPassword === currentPassword) {
+			toast.error(m.settings_password_same());
 			return;
 		}
 		setIsSubmitting(true);
@@ -160,7 +164,7 @@ function ChangePasswordForm() {
 			setNewPassword("");
 			setConfirmPassword("");
 		} catch (err) {
-			toast.error(err instanceof Error ? err.message : "修改失败");
+			toast.error(err instanceof Error ? err.message : m.settings_password_failed());
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -203,22 +207,24 @@ function ChangePasswordForm() {
 }
 
 function DeleteAccountDialog() {
+	const [open, setOpen] = useState(false);
 	const [isDeleting, setIsDeleting] = useState(false);
 
 	const handleDelete = async () => {
 		setIsDeleting(true);
 		try {
 			await authClient.deleteUser?.();
-			toast.success("账号已删除");
+			toast.success(m.settings_account_deleted());
+			setOpen(false);
 		} catch (err) {
-			toast.error(err instanceof Error ? err.message : "删除失败");
+			toast.error(err instanceof Error ? err.message : m.settings_delete_failed());
 		} finally {
 			setIsDeleting(false);
 		}
 	};
 
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger
 				render={
 					<Button variant="destructive">
@@ -235,6 +241,9 @@ function DeleteAccountDialog() {
 					</DialogDescription>
 				</DialogHeader>
 				<DialogFooter>
+					<Button variant="outline" onClick={() => setOpen(false)}>
+						{m.settings_cancel()}
+					</Button>
 					<Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
 						{m.settings_delete_account_confirm()}
 					</Button>
@@ -327,10 +336,22 @@ function ThemeSelect() {
 }
 
 function DefaultVisibilitySelect() {
+	const [defaultVisibility, setDefaultVisibility] = useState(() => {
+		try { return localStorage.getItem("default-visibility") || "private"; }
+		catch { return "private"; }
+	});
+
+	const handleChange = (value: string | null) => {
+		if (!value) return;
+		setDefaultVisibility(value);
+		try { localStorage.setItem("default-visibility", value); }
+		catch {}
+	};
+
 	return (
 		<Field>
 			<FieldLabel>{m.settings_default_visibility()}</FieldLabel>
-			<Select defaultValue="private">
+			<Select value={defaultVisibility} onValueChange={handleChange}>
 				<SelectTrigger className="w-full">
 					<SelectValue />
 				</SelectTrigger>

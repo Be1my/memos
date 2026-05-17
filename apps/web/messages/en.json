@@ -48,5 +48,12 @@
 	"settings_default_visibility": "Default Visibility",
 	"settings_private": "Private",
 	"settings_workspace": "Workspace",
-	"settings_public": "Public"
+	"settings_public": "Public",
+	"settings_avatar_updated": "Avatar updated",
+	"settings_avatar_failed": "Failed to update avatar",
+	"settings_password_mismatch": "Passwords do not match",
+	"settings_password_failed": "Failed to change password",
+	"settings_password_same": "New password cannot be the same as current password",
+	"settings_account_deleted": "Account deleted",
+	"settings_delete_failed": "Failed to delete account"
 }
