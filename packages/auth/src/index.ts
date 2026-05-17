@@ -22,7 +22,9 @@ export function createAuth() {
 		baseURL: {
 			allowedHosts: [
 				env.BETTER_AUTH_URL,
-				...env.ALLOWED_HOSTS.split(",").map((h) => h.trim()).filter(Boolean),
+				...env.ALLOWED_HOSTS.split(",")
+					.map((h) => h.trim())
+					.filter(Boolean),
 			],
 			protocol: "https",
 		},

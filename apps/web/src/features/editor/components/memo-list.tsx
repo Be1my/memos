@@ -62,24 +62,29 @@ function ImagePreview({
 	}, [onClose]);
 
 	return (
-		<div
-			className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-			onClick={onClose}
-		>
-			<button
-				type="button"
-				className="absolute top-4 right-4 text-white/70 hover:text-white"
+		<>
+			{/* biome-ignore lint/a11y/noStaticElementInteractions: overlay with role=presentation */}
+			<div
+				className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+				role="presentation"
 				onClick={onClose}
 			>
-				<XIcon className="size-6" />
-			</button>
-			<img
-				src={src}
-				alt={filename}
-				className="max-h-full max-w-full rounded object-contain"
-				onClick={(e) => e.stopPropagation()}
-			/>
-		</div>
+				<button
+					type="button"
+					className="absolute top-4 right-4 text-white/70 hover:text-white"
+					onClick={onClose}
+				>
+					<XIcon className="size-6" />
+				</button>
+				<img
+					src={src}
+					alt={filename}
+					className="max-h-full max-w-full rounded object-contain"
+					onClick={(e) => e.stopPropagation()}
+					onKeyDown={(e) => e.stopPropagation()}
+				/>
+			</div>
+		</>
 	);
 }
 

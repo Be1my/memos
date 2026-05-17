@@ -17,10 +17,15 @@ const bucket = await R2Bucket("attachments", {
 export const web = await TanStackStart("web", {
 	cwd: "../../apps/web",
 	bindings: {
+		/* biome-ignore lint/style/noNonNullAssertion: env vars are defined at runtime */
 		DATABASE_URL: alchemy.secret.env.DATABASE_URL!,
+		/* biome-ignore lint/style/noNonNullAssertion: env vars are defined at runtime */
 		CORS_ORIGIN: alchemy.env.CORS_ORIGIN!,
+		/* biome-ignore lint/style/noNonNullAssertion: env vars are defined at runtime */
 		BETTER_AUTH_SECRET: alchemy.secret.env.BETTER_AUTH_SECRET!,
+		/* biome-ignore lint/style/noNonNullAssertion: env vars are defined at runtime */
 		BETTER_AUTH_URL: alchemy.env.BETTER_AUTH_URL!,
+		/* biome-ignore lint/style/noNonNullAssertion: env vars are defined at runtime */
 		ALLOWED_HOSTS: alchemy.env.ALLOWED_HOSTS!,
 		ATTACHMENTS_BUCKET: bucket,
 	},

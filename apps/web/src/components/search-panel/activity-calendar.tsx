@@ -190,130 +190,137 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 			</div>
 
 			{yearView && (
-				<div
-					className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 sm:p-8"
-					onClick={() => setYearView(false)}
-				>
+				<>
+					{/* biome-ignore lint/a11y/noStaticElementInteractions: backdrop with role=presentation */}
 					<div
-						className="flex h-full w-full max-w-5xl flex-col rounded-xl border bg-background p-4 shadow-lg sm:p-6"
-						onClick={(e) => e.stopPropagation()}
+						className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 sm:p-8"
+						role="presentation"
+						onClick={() => setYearView(false)}
 					>
-						<div className="mb-4 text-center font-medium text-sm">{year}</div>
-						<div className="grid min-h-0 flex-1 auto-rows-1fr grid-cols-2 gap-4 overflow-auto sm:grid-cols-3 lg:grid-cols-4">
-							{MONTHS.map((name, m) => {
-								const mDate = new Temporal.PlainDate(year, m + 1, 1);
-								const daysIn = mDate.daysInMonth;
-								const firstDay = mDate.dayOfWeek % 7;
-								const isCurMonth = now.year === year && now.month === m + 1;
-								const prevMD = mDate.subtract({ months: 1 });
-								const prevDays = prevMD.daysInMonth;
-								const nextMD = mDate.add({ months: 1 });
+						<div
+							className="flex h-full w-full max-w-5xl flex-col rounded-xl border bg-background p-4 shadow-lg sm:p-6"
+							role="dialog"
+							aria-modal="true"
+							onClick={(e) => e.stopPropagation()}
+							onKeyDown={(e) => e.stopPropagation()}
+						>
+							<div className="mb-4 text-center font-medium text-sm">{year}</div>
+							<div className="grid min-h-0 flex-1 auto-rows-1fr grid-cols-2 gap-4 overflow-auto sm:grid-cols-3 lg:grid-cols-4">
+								{MONTHS.map((name, m) => {
+									const mDate = new Temporal.PlainDate(year, m + 1, 1);
+									const daysIn = mDate.daysInMonth;
+									const firstDay = mDate.dayOfWeek % 7;
+									const isCurMonth = now.year === year && now.month === m + 1;
+									const prevMD = mDate.subtract({ months: 1 });
+									const prevDays = prevMD.daysInMonth;
+									const nextMD = mDate.add({ months: 1 });
 
-								const miniCells = [];
-								for (let i = firstDay - 1; i >= 0; i--) {
-									const d = prevDays - i;
-									const dateKey = new Temporal.PlainDate(
-										prevMD.year,
-										prevMD.month,
-										d,
-									).toString();
-									const count = heatmap.get(dateKey) ?? 0;
-									miniCells.push(
+									const miniCells = [];
+									for (let i = firstDay - 1; i >= 0; i--) {
+										const d = prevDays - i;
+										const dateKey = new Temporal.PlainDate(
+											prevMD.year,
+											prevMD.month,
+											d,
+										).toString();
+										const count = heatmap.get(dateKey) ?? 0;
+										miniCells.push(
+											<div
+												key={dateKey}
+												className={`flex aspect-square w-full items-center justify-center rounded-sm font-medium text-[10px] text-muted-foreground/30 ${getHeatColor(count, maxCount)}`}
+											>
+												{d}
+											</div>,
+										);
+									}
+									for (let d = 1; d <= daysIn; d++) {
+										const dayKey = new Temporal.PlainDate(
+											year,
+											m + 1,
+											d,
+										).toString();
+										const count = heatmap.get(dayKey) ?? 0;
+										miniCells.push(
+											<Tooltip key={dayKey}>
+												<TooltipTrigger
+													render={
+														<button
+															type="button"
+															onClick={() => {
+																navigate({
+																	to: ".",
+																	search: (prev: Record<string, unknown>) => ({
+																		...prev,
+																		date:
+																			prev.date === dayKey ? undefined : dayKey,
+																		tag: undefined,
+																	}),
+																	replace: true,
+																});
+																setCurrentMonth(
+																	new Temporal.PlainDate(year, m + 1, 1),
+																);
+																setYearView(false);
+															}}
+															className={`aspect-square w-full cursor-pointer rounded-sm font-medium text-[10px] transition-colors ${getHeatColor(count, maxCount)} ${
+																isCurMonth && d === now.day
+																	? "ring-1 ring-muted-foreground/50"
+																	: ""
+															} ${count === 0 ? "hover:bg-primary/[0.08]" : ""}`}
+														>
+															{d}
+														</button>
+													}
+												/>
+												<TooltipContent side="top" align="center">
+													{dayKey} · {count} 条
+												</TooltipContent>
+											</Tooltip>,
+										);
+									}
+									const padToRowEnd = (7 - ((firstDay + daysIn) % 7)) % 7;
+									for (let d = 1; d <= padToRowEnd; d++) {
+										const dateKey = new Temporal.PlainDate(
+											nextMD.year,
+											nextMD.month,
+											d,
+										).toString();
+										const count = heatmap.get(dateKey) ?? 0;
+										miniCells.push(
+											<div
+												key={dateKey}
+												className={`flex aspect-square w-full items-center justify-center rounded-sm font-medium text-[10px] text-muted-foreground/30 ${getHeatColor(count, maxCount)}`}
+											>
+												{d}
+											</div>,
+										);
+									}
+									return (
 										<div
-											key={`p-${m}-${d}`}
-											className={`flex aspect-square w-full items-center justify-center rounded-sm font-medium text-[10px] text-muted-foreground/30 ${getHeatColor(count, maxCount)}`}
+											key={name}
+											className="flex h-full flex-col gap-1 rounded-lg border p-2"
 										>
-											{d}
-										</div>,
-									);
-								}
-								for (let d = 1; d <= daysIn; d++) {
-									const dayKey = new Temporal.PlainDate(
-										year,
-										m + 1,
-										d,
-									).toString();
-									const count = heatmap.get(dayKey) ?? 0;
-									miniCells.push(
-										<Tooltip key={dayKey}>
-											<TooltipTrigger
-												render={
-													<button
-														type="button"
-														onClick={() => {
-															navigate({
-																to: ".",
-																search: (prev: Record<string, unknown>) => ({
-																	...prev,
-																	date:
-																		prev.date === dayKey ? undefined : dayKey,
-																	tag: undefined,
-																}),
-																replace: true,
-															});
-															setCurrentMonth(
-																new Temporal.PlainDate(year, m + 1, 1),
-															);
-															setYearView(false);
-														}}
-														className={`aspect-square w-full cursor-pointer rounded-sm font-medium text-[10px] transition-colors ${getHeatColor(count, maxCount)} ${
-															isCurMonth && d === now.day
-																? "ring-1 ring-muted-foreground/50"
-																: ""
-														} ${count === 0 ? "hover:bg-primary/[0.08]" : ""}`}
-													>
-														{d}
-													</button>
-												}
-											/>
-											<TooltipContent side="top" align="center">
-												{dayKey} · {count} 条
-											</TooltipContent>
-										</Tooltip>,
-									);
-								}
-								const padToRowEnd = (7 - ((firstDay + daysIn) % 7)) % 7;
-								for (let d = 1; d <= padToRowEnd; d++) {
-									const dateKey = new Temporal.PlainDate(
-										nextMD.year,
-										nextMD.month,
-										d,
-									).toString();
-									const count = heatmap.get(dateKey) ?? 0;
-									miniCells.push(
-										<div
-											key={`n-${m}-${d}`}
-											className={`flex aspect-square w-full items-center justify-center rounded-sm font-medium text-[10px] text-muted-foreground/30 ${getHeatColor(count, maxCount)}`}
-										>
-											{d}
-										</div>,
-									);
-								}
-								return (
-									<div
-										key={m}
-										className="flex h-full flex-col gap-1 rounded-lg border p-2"
-									>
-										<div className="text-center font-medium text-[10px] text-muted-foreground sm:text-xs">
-											{name}
-											{isCurMonth && (
-												<span className="ml-0.5 text-primary">•</span>
-											)}
+											<div className="text-center font-medium text-[10px] text-muted-foreground sm:text-xs">
+												{name}
+												{isCurMonth && (
+													<span className="ml-0.5 text-primary">•</span>
+												)}
+											</div>
+											<div className="grid grid-cols-7 gap-px text-center text-[10px] text-muted-foreground">
+												{WEEKDAYS.map((w) => (
+													<div key={w} className="py-0.5">
+														{w}
+													</div>
+												))}
+											</div>
+											<div className="grid grid-cols-7 gap-px">{miniCells}</div>
 										</div>
-										<div className="grid grid-cols-7 gap-px text-center text-[10px] text-muted-foreground">
-											{WEEKDAYS.map((w) => (
-												<div key={w} className="py-0.5">
-													{w}
-												</div>
-											))}
-										</div>
-										<div className="grid grid-cols-7 gap-px">{miniCells}</div>
-									</div>
-								);
-							})}
+									);
+								})}
+							</div>
 						</div>
 					</div>
-				</div>
+				</>
 			)}
 			<div className="grid grid-cols-7 gap-px text-center text-[10px] text-muted-foreground">
 				{WEEKDAYS.map((w) => (

@@ -32,7 +32,7 @@ export function Tags({ tags }: TagsProps) {
 
 	if (tags.length === 0) {
 		return (
-			<div className="rounded-md border border-dashed px-3 py-4 text-center text-xs text-muted-foreground">
+			<div className="rounded-md border border-dashed px-3 py-4 text-center text-muted-foreground text-xs">
 				暂无标签
 			</div>
 		);
@@ -47,14 +47,16 @@ export function Tags({ tags }: TagsProps) {
 						key={tag.name}
 						type="button"
 						onClick={() => handleTagClick(tag.name)}
-						className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-medium transition-colors ${
+						className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 font-medium text-xs transition-colors ${
 							isSelected
 								? "border-primary bg-primary text-primary-foreground"
 								: "border-border hover:bg-accent"
 						}`}
 					>
 						{tag.name}
-						<span className={`text-[10px] ${isSelected ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
+						<span
+							className={`text-[10px] ${isSelected ? "text-primary-foreground/70" : "text-muted-foreground"}`}
+						>
 							{tag.count}
 						</span>
 					</button>

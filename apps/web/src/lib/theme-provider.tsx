@@ -74,7 +74,7 @@ const themeScript = (() => {
 			} else {
 				root.classList.add(validTheme);
 			}
-		} catch (e) {
+		} catch (_e) {
 			const root = document.documentElement;
 			root.classList.remove("light", "dark", "paper", "system");
 			const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
@@ -116,7 +116,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
 	return (
 		<ThemeContext value={{ userTheme, appTheme, setTheme }}>
-			{/** biome-ignore lint/correctness/noChildrenProp: <explanation> */}
+			{/** biome-ignore lint/correctness/noChildrenProp: ScriptOnce requires children prop */}
 			<ScriptOnce children={themeScript} />
 
 			{children}

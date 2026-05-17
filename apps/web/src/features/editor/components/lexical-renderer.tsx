@@ -23,9 +23,12 @@ function renderText(node: TextNode): ReactNode {
 	let children: ReactNode = parts.map((part, i) => {
 		if (part.startsWith("#")) {
 			return (
-				<span key={i} className="text-primary font-medium">
-					{part}
-				</span>
+				<>
+					{/* biome-ignore lint/suspicious/noArrayIndexKey: parts array is static */}
+					<span key={i} className="font-medium text-primary">
+						{part}
+					</span>
+				</>
 			);
 		}
 		return part;

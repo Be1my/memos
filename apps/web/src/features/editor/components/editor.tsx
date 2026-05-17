@@ -1,7 +1,9 @@
+import { HashtagNode } from "@lexical/hashtag";
 import type { InitialConfigType } from "@lexical/react/LexicalComposer";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { HashtagPlugin } from "@lexical/react/LexicalHashtagPlugin";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
@@ -12,8 +14,6 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@memos/ui/components/dropdown-menu";
-import { HashtagNode } from "@lexical/hashtag";
-import { HashtagPlugin } from "@lexical/react/LexicalHashtagPlugin";
 import type { EditorState } from "lexical";
 import { $getRoot } from "lexical";
 import {
@@ -28,9 +28,9 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { editorTheme } from "../editor-theme";
+import type { FilePayload } from "../functions/create-memo.function";
 import { FloatingToolbar } from "./floating-toolbar";
 import { TagAutocompletePlugin } from "./tag-autocomplete-plugin";
-import type { FilePayload } from "../functions/create-memo.function";
 
 const placeholder = "Write something...";
 
@@ -43,7 +43,7 @@ function formatSize(bytes: number): string {
 	if (bytes === 0) return "0 B";
 	const units = ["B", "KB", "MB", "GB"];
 	const i = Math.floor(Math.log(bytes) / Math.log(1024));
-	return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
+	return `${(bytes / 1024 ** i).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 }
 
 function fileToBase64(file: File): Promise<string> {
@@ -215,13 +215,16 @@ function Editor({
 							key={f.id}
 							className="flex items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-xs"
 						>
-							{f.file.type.startsWith("image/") || f.file.type.startsWith("video/") ? (
+							{f.file.type.startsWith("image/") ||
+							f.file.type.startsWith("video/") ? (
 								<ImageIcon className="size-3.5 shrink-0" />
 							) : (
 								<FileIcon className="size-3.5 shrink-0" />
 							)}
 							<span className="max-w-[120px] truncate">{f.file.name}</span>
-							<span className="text-muted-foreground">{formatSize(f.file.size)}</span>
+							<span className="text-muted-foreground">
+								{formatSize(f.file.size)}
+							</span>
 							<button
 								type="button"
 								onClick={() =>
@@ -262,10 +265,9 @@ function Editor({
 				<div className="flex items-center gap-2">
 					<DropdownMenu>
 						<DropdownMenuTrigger
-							render={(props: any) => (
+							render={
 								<button
 									type="button"
-									{...props}
 									className="flex cursor-default items-center gap-1.5 rounded-md px-2 py-1 text-muted-foreground text-sm outline-none hover:text-foreground"
 								>
 									{currentVisibility && (
@@ -273,7 +275,7 @@ function Editor({
 									)}
 									{currentVisibility?.label}
 								</button>
-							)}
+							}
 						/>
 						<DropdownMenuContent align="end">
 							{visibilityOptions.map((opt) => (

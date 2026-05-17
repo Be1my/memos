@@ -71,7 +71,7 @@ export const listMemosFn = createServerFn({
 			memoMap.set(row.memo.id, { ...row.memo, attachments: [] });
 		}
 		if (row.attachment) {
-			memoMap.get(row.memo.id)!.attachments.push(row.attachment);
+			memoMap.get(row.memo.id)?.attachments.push(row.attachment);
 		}
 	}
 

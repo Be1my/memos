@@ -131,12 +131,12 @@ function NavItems({ items }: { items: NavItem[] }) {
 		<SidebarMenuItem key={item.to}>
 			<SidebarMenuButton
 				tooltip={item.label}
-				render={(props: any) => (
-					<Link to={item.to} {...props}>
+				render={
+					<Link to={item.to}>
 						<item.icon />
 						<span>{item.label}</span>
 					</Link>
-				)}
+				}
 			/>
 		</SidebarMenuItem>
 	));
@@ -217,9 +217,7 @@ function UserDropdown({
 	const navigate = useNavigate();
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger
-				render={(props: any) => <SidebarMenuButton {...props} />}
-			>
+			<DropdownMenuTrigger render={<SidebarMenuButton />}>
 				<UserIcon />
 				<span className="group-data-collapsible=icon:group-data-state=collapsed:hidden">
 					{user?.name ?? "User"}

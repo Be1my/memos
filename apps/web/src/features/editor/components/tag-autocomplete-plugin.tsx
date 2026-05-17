@@ -5,7 +5,7 @@ import {
 	useBasicTypeaheadTriggerMatch,
 } from "@lexical/react/LexicalTypeaheadMenuPlugin";
 import { useQuery } from "@tanstack/react-query";
-import { type TextNode } from "lexical";
+import type { TextNode } from "lexical";
 import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { memosStatsQueryOptions } from "@/features/memos/queries/memos-stats.query";
@@ -52,7 +52,7 @@ export function TagAutocompletePlugin() {
 			closeMenu: () => void,
 		) => {
 			editor.update(() => {
-				if (textNodeContainingQuery && textNodeContainingQuery.isAttached()) {
+				if (textNodeContainingQuery?.isAttached()) {
 					textNodeContainingQuery.setTextContent(`#${option.name} `);
 					textNodeContainingQuery.select(
 						textNodeContainingQuery.getTextContent().length,
@@ -93,7 +93,7 @@ export function TagAutocompletePlugin() {
 						<button
 							key={option.key}
 							type="button"
-							className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs font-medium transition-colors ${
+							className={`flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left font-medium text-xs transition-colors ${
 								i === selectedIndex
 									? "bg-accent text-accent-foreground"
 									: "text-foreground hover:bg-accent/50"
@@ -115,12 +115,12 @@ export function TagAutocompletePlugin() {
 	);
 
 	return (
-		<LexicalTypeaheadMenuPlugin
+		<LexicalTypeaheadMenuPlugin<TagOption>
 			triggerFn={triggerFn}
 			onQueryChange={onQueryChange}
 			onSelectOption={onSelectOption}
 			options={options}
-			menuRenderFn={menuRenderFn as any}
+			menuRenderFn={menuRenderFn}
 		/>
 	);
 }

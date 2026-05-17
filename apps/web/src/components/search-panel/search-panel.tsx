@@ -15,14 +15,14 @@ export function SearchPanel() {
 			<SearchBox />
 			<SidebarSeparator className="mx-0" />
 			<div className="space-y-1">
-				<h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+				<h3 className="font-semibold text-[11px] text-muted-foreground uppercase tracking-wider">
 					活动日历
 				</h3>
 				<ActivityCalendar timestamps={timestamps} />
 			</div>
 			<SidebarSeparator className="mx-0" />
 			<div className="space-y-1">
-				<h3 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+				<h3 className="font-semibold text-[11px] text-muted-foreground uppercase tracking-wider">
 					标签
 				</h3>
 				<Tags tags={tags} />

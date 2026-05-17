@@ -1,3 +1,4 @@
+import type { Locale } from "@/features/i18n/schemas";
 import { locales, setLocale } from "@/paraglide/runtime";
 
 const LOCALE_STORAGE_KEY = "memos-locale";
@@ -5,7 +6,7 @@ const LOCALE_STORAGE_KEY = "memos-locale";
 const getStoredLocale = (): string | null => {
 	try {
 		const stored = localStorage.getItem(LOCALE_STORAGE_KEY);
-		return stored && locales.includes(stored as any) ? stored : null;
+		return stored && locales.includes(stored as Locale) ? stored : null;
 	} catch {
 		return null;
 	}
@@ -18,7 +19,7 @@ const setStoredLocale = (locale: string): void => {
 };
 
 export const findNearestMatchedLanguage = (language: string): string => {
-	if (locales.includes(language as any)) return language;
+	if (locales.includes(language as Locale)) return language;
 	const shortCode = language.substring(0, 2);
 	const match = locales.find((l) => l.substring(0, 2) === shortCode);
 	return match ?? "en";
@@ -26,7 +27,7 @@ export const findNearestMatchedLanguage = (language: string): string => {
 
 export const isValidLocale = (locale: string | undefined | null): boolean => {
 	if (!locale) return false;
-	return locales.includes(locale as any);
+	return locales.includes(locale as Locale);
 };
 
 export const getLocaleWithFallback = (userLocale?: string): string => {
@@ -45,7 +46,7 @@ export const loadLocale = (locale: string): string => {
 				typeof navigator !== "undefined" ? navigator.language : "en",
 			);
 	setStoredLocale(validLocale);
-	setLocale(validLocale as any, { reload: true });
+	setLocale(validLocale as Locale, { reload: true });
 	document.documentElement.lang = validLocale;
 	return validLocale;
 };

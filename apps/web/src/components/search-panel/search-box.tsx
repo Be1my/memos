@@ -29,18 +29,18 @@ export function SearchBox() {
 
 	return (
 		<div className="relative">
-			<SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+			<SearchIcon className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
 			<Input
 				value={value}
 				onChange={(e) => setValue(e.target.value)}
 				placeholder="搜索..."
-				className="h-9 pl-8 pr-8 text-sm"
+				className="h-9 pr-8 pl-8 text-sm"
 			/>
 			{value && (
 				<button
 					type="button"
 					onClick={() => setValue("")}
-					className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+					className="absolute top-1/2 right-2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
 				>
 					<XIcon className="size-4" />
 				</button>

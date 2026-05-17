@@ -19,7 +19,7 @@ export default function LocaleSelector() {
 	const currentLocale = getLocale();
 
 	const handleSelectChange = (locale: string | null) => {
-		if (!locale || !locales.includes(locale as any)) return;
+		if (!locale || !locales.includes(locale as Locale)) return;
 		loadLocale(locale);
 	};
 

@@ -25,7 +25,8 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 export const createMemoFn = createServerFn({ method: "POST" })
 	.inputValidator((input: unknown) => {
-		const { content, payload, visibility, tags, files } = input as CreateMemoInput;
+		const { content, payload, visibility, tags, files } =
+			input as CreateMemoInput;
 
 		if (!content?.trim()) {
 			throw new Error("Content is required");
@@ -60,15 +61,21 @@ export const createMemoFn = createServerFn({ method: "POST" })
 		return { content, payload, visibility, tags, files: files ?? [] };
 	})
 	.handler(async ({ data }) => {
-		const [{ createDb }, { memo }, { attachment }, { env }, { createAuth }, { getRequestHeaders }] =
-			await Promise.all([
-				import("@memos/db"),
-				import("@memos/db/schema/memo.table"),
-				import("@memos/db/schema/attachment.table"),
-				import("@memos/env/server"),
-				import("@memos/auth"),
-				import("@tanstack/react-start/server"),
-			]);
+		const [
+			{ createDb },
+			{ memo },
+			{ attachment },
+			{ env },
+			{ createAuth },
+			{ getRequestHeaders },
+		] = await Promise.all([
+			import("@memos/db"),
+			import("@memos/db/schema/memo.table"),
+			import("@memos/db/schema/attachment.table"),
+			import("@memos/env/server"),
+			import("@memos/auth"),
+			import("@tanstack/react-start/server"),
+		]);
 
 		const headers = getRequestHeaders();
 		const session = await createAuth().api.getSession({ headers });
@@ -109,7 +116,9 @@ export const createMemoFn = createServerFn({ method: "POST" })
 
 		for (const file of data.files) {
 			if (file.size > MAX_FILE_SIZE) {
-				console.warn(`File ${file.name} exceeds maximum size of 50MB, skipping`);
+				console.warn(
+					`File ${file.name} exceeds maximum size of 50MB, skipping`,
+				);
 				continue;
 			}
 			if (!file.name) {
@@ -128,7 +137,9 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			const key = `uploads/${created.id}/${crypto.randomUUID()}-${file.name}`;
 
 			try {
-				const bytes = Uint8Array.from(atob(file.base64), c => c.charCodeAt(0));
+				const bytes = Uint8Array.from(atob(file.base64), (c) =>
+					c.charCodeAt(0),
+				);
 
 				await bucket.put(key, bytes.buffer, {
 					httpMetadata: { contentType: file.type },
