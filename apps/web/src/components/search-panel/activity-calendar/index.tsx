@@ -2,7 +2,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { Button } from "@memos/ui/components/button";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { MONTHS } from "./calendar-utils";
 import { MonthGrid } from "./month-grid";
 import { useHeatmap } from "./use-heatmap";
@@ -10,17 +10,23 @@ import { YearView } from "./year-view";
 
 interface ActivityCalendarProps {
 	timestamps: string[];
+	timeZone: string;
+	today: string;
 }
 
-export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
+export function ActivityCalendar({
+	timestamps,
+	timeZone,
+	today,
+}: ActivityCalendarProps) {
 	const navigate = useNavigate();
-	const now = Temporal.Now.plainDateISO();
+	const now = useMemo(() => Temporal.PlainDate.from(today), [today]);
 	const [currentMonth, setCurrentMonth] = useState(
 		() => new Temporal.PlainDate(now.year, now.month, 1),
 	);
 	const [yearView, setYearView] = useState(false);
 
-	const heatmap = useHeatmap(timestamps);
+	const heatmap = useHeatmap(timestamps, timeZone);
 
 	const year = currentMonth.year;
 	const month = currentMonth.month;
