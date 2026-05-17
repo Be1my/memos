@@ -12,7 +12,7 @@ import { toggleReactionFn } from "../functions/toggle-reaction.function";
 export const reactionsQueryOptions = (contentId: string) =>
 	queryOptions({
 		queryKey: ["reactions", contentId],
-		queryFn: () => listReactionsFn({ contentId } as never),
+		queryFn: () => listReactionsFn({ data: { contentId } } as never),
 	});
 
 import { toast } from "sonner";
