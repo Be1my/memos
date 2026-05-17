@@ -122,7 +122,7 @@ function MemoList({
 						key={memo.uid}
 						className="group/memo relative rounded-lg border bg-card p-4 text-sm"
 					>
-						<div className="mb-2 flex items-center justify-between text-muted-foreground text-xs">
+						<div className="mb-3 flex items-center justify-between text-muted-foreground text-xs">
 							<div className="flex items-center gap-2">
 								<span>
 									{visibilityLabel[memo.visibility] ?? memo.visibility}

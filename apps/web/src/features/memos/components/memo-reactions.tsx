@@ -40,7 +40,7 @@ function MemoReactions({
 	}
 
 	return (
-		<div className="flex flex-wrap gap-1">
+		<div className="mt-3 flex flex-wrap gap-1">
 			{Array.from(grouped.entries()).map(([emoji, users]) => (
 				<ReactionBadge
 					key={emoji}
