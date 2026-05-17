@@ -9,6 +9,7 @@
 		"machine-translate": "inlang machine translate --project project.inlang"
 	},
 	"dependencies": {
+		"@base-ui/react": "^1.0.0",
 		"@js-temporal/polyfill": "^0.5.1",
 		"@lexical/hashtag": "0.27.2",
 		"@lexical/html": "^0.27.0",
