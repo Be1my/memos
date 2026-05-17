@@ -1,18 +1,7 @@
 "use client";
 
-import { Popover } from "@base-ui/react/popover";
-import {
-	EmojiPicker,
-	EmojiPickerContent,
-	EmojiPickerFooter,
-	EmojiPickerSearch,
-} from "@memos/ui/components/emoji-picker";
-import { SmilePlusIcon } from "lucide-react";
-import { useState } from "react";
-import {
-	type ReactionUser,
-	useToggleReaction,
-} from "../queries/reactions.query";
+import type { ReactionUser } from "../queries/reactions.query";
+import { useToggleReaction } from "../queries/reactions.query";
 import { ReactionBadge } from "./reaction-badge";
 
 function groupReactions(
@@ -39,62 +28,28 @@ function MemoReactions({
 	reactions,
 }: MemoReactionsProps) {
 	const toggleMutation = useToggleReaction();
-
 	const grouped = groupReactions(reactions);
-	const [open, setOpen] = useState(false);
+	const hasReactions = reactions.length > 0;
 
 	const handleToggle = (emoji: string) => {
 		toggleMutation.mutate({ data: { contentId, reactionType: emoji } });
 	};
 
-	const hasReactions = reactions.length > 0;
-
-	if (!currentUserId && !hasReactions) {
+	if (!hasReactions) {
 		return null;
 	}
 
 	return (
-		<div className="mt-2 flex items-center gap-1.5">
-			{hasReactions && (
-				<div className="flex flex-wrap gap-1">
-					{Array.from(grouped.entries()).map(([emoji, users]) => (
-						<ReactionBadge
-							key={emoji}
-							emoji={emoji}
-							users={users}
-							currentUserId={currentUserId}
-							onToggle={handleToggle}
-						/>
-					))}
-				</div>
-			)}
-			{currentUserId && (
-				<Popover.Root open={open} onOpenChange={setOpen}>
-					<Popover.Trigger
-						className="inline-flex size-6 items-center justify-center rounded-full text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover/memo:opacity-100"
-						aria-label="Add reaction"
-					>
-						<SmilePlusIcon className="size-4" />
-					</Popover.Trigger>
-					<Popover.Portal>
-						<Popover.Positioner side="top" align="end" sideOffset={4}>
-							<Popover.Popup className="z-50 h-80 w-72 overflow-hidden rounded-lg bg-popover shadow-lg ring-1 ring-foreground/10">
-								<EmojiPicker
-									onEmojiSelect={({ emoji }) => {
-										handleToggle(emoji);
-										setOpen(false);
-									}}
-									locale="zh"
-								>
-									<EmojiPickerSearch />
-									<EmojiPickerContent />
-									<EmojiPickerFooter />
-								</EmojiPicker>
-							</Popover.Popup>
-						</Popover.Positioner>
-					</Popover.Portal>
-				</Popover.Root>
-			)}
+		<div className="flex flex-wrap gap-1">
+			{Array.from(grouped.entries()).map(([emoji, users]) => (
+				<ReactionBadge
+					key={emoji}
+					emoji={emoji}
+					users={users}
+					currentUserId={currentUserId}
+					onToggle={handleToggle}
+				/>
+			))}
 		</div>
 	);
 }

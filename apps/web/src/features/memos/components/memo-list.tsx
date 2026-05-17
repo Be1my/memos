@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { LexicalRenderer } from "../../editor/components/lexical-renderer";
 import type { listMemosFn } from "../../editor/functions/list-memos.function";
 import { MemoReactions } from "./memo-reactions";
+import { ReactionTrigger } from "./reaction-trigger";
 
 type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];
 
@@ -121,6 +122,11 @@ function MemoList({
 						key={memo.uid}
 						className="group/memo relative rounded-lg border bg-card p-4 text-sm"
 					>
+						{userId && (
+							<div className="absolute top-2 right-2">
+								<ReactionTrigger contentId={memo.uid} />
+							</div>
+						)}
 						<div className="leading-relaxed">
 							<LexicalRenderer payload={memo.payload} />
 						</div>
