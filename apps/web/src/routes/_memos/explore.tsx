@@ -1,6 +1,8 @@
+import { SidebarInset } from "@memos/ui/components/sidebar";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { SearchPanel } from "@/components/search-panel/search-panel";
 import { listExploreMemosQueryOptions } from "@/features/editor/queries/list-explore-memos.query";
 import { MemoList } from "@/features/memos/components/memo-list";
 
@@ -37,8 +39,13 @@ function RouteComponent() {
 	);
 
 	return (
-		<div className="mx-auto w-full max-w-2xl px-4 pt-8">
-			<MemoList memos={memos} userId={userId} />
-		</div>
+		<>
+			<SearchPanel />
+			<SidebarInset className="overflow-y-auto">
+				<div className="mx-auto w-full max-w-2xl px-4 pt-8">
+					<MemoList memos={memos} userId={userId} />
+				</div>
+			</SidebarInset>
+		</>
 	);
 }
