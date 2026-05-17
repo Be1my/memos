@@ -1,4 +1,3 @@
-import { SidebarInset } from "@memos/ui/components/sidebar";
 import {
 	useMutation,
 	useQueryClient,
@@ -8,7 +7,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { SearchPanel } from "@/components/search-panel/search-panel";
 import { Editor } from "@/features/editor/components/editor";
 import { createMemoFn } from "@/features/editor/functions/create-memo.function";
 import { memosQueryOptions } from "@/features/editor/queries/memos.query";
@@ -20,7 +18,7 @@ const searchSchema = z.object({
 	tag: z.string().optional(),
 });
 
-export const Route = createFileRoute("/_memos/_protected/home")({
+export const Route = createFileRoute("/_memos/_search/_protected/home")({
 	validateSearch: searchSchema,
 	loaderDeps: ({ search: { q, date, tag } }) => ({ q, date, tag }),
 	loader: async ({
@@ -58,18 +56,13 @@ function RouteComponent() {
 	});
 
 	return (
-		<>
-			<SearchPanel />
-			<SidebarInset className="overflow-y-auto">
-				<div className="mx-auto w-full max-w-2xl px-4 pt-8">
-					<Editor
-						key={resetKey}
-						isSaving={mutation.isPending}
-						onSave={(data) => mutation.mutate({ data })}
-					/>
-					<MemoList memos={memos} userId={userId} />
-				</div>
-			</SidebarInset>
-		</>
+		<div className="mx-auto w-full max-w-2xl px-4 pt-8">
+			<Editor
+				key={resetKey}
+				isSaving={mutation.isPending}
+				onSave={(data) => mutation.mutate({ data })}
+			/>
+			<MemoList memos={memos} userId={userId} />
+		</div>
 	);
 }

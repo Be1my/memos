@@ -25,9 +25,12 @@ function renderText(node: TextNode): ReactNode {
 			return (
 				<>
 					{/* biome-ignore lint/suspicious/noArrayIndexKey: parts array is static */}
-				<span key={i} className="inline-flex items-center rounded-md bg-primary/10 px-1.5 py-0.5 font-medium text-primary">
-					{part}
-				</span>
+					<span
+						key={i}
+						className="inline-flex items-center rounded-md bg-primary/10 px-1.5 py-0.5 font-medium text-primary"
+					>
+						{part}
+					</span>
 				</>
 			);
 		}

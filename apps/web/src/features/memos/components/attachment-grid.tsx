@@ -6,8 +6,9 @@ import {
 import { FileIcon, ImageIcon } from "lucide-react";
 import type { listMemosFn } from "../../editor/functions/list-memos.function";
 
-type Attachment =
-	Awaited<ReturnType<typeof listMemosFn>>[number]["attachments"][number];
+type Attachment = Awaited<
+	ReturnType<typeof listMemosFn>
+>[number]["attachments"][number];
 
 function attachmentUrl(att: Attachment) {
 	return `/api/files?key=${encodeURIComponent(att.reference)}`;
@@ -35,7 +36,7 @@ function AttachmentGrid({ attachments }: { attachments: Attachment[] }) {
 								</button>
 							}
 						/>
-						<DialogContent className="grid max-w-none place-items-center border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-none w-auto">
+						<DialogContent className="grid w-auto max-w-none place-items-center border-0 bg-transparent p-0 shadow-none ring-0 sm:max-w-none">
 							<img
 								src={attachmentUrl(att)}
 								alt={att.filename}

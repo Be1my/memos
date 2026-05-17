@@ -1,7 +1,5 @@
 import { Button } from "@memos/ui/components/button";
-import {
-	Card,
-} from "@memos/ui/components/card";
+import { Card } from "@memos/ui/components/card";
 import {
 	Dialog,
 	DialogContent,
@@ -43,7 +41,9 @@ const visibilityOptions = [
 ] as const;
 
 export function SettingsView() {
-	const [activeTab, setActiveTab] = useState<"account" | "preferences">("account");
+	const [activeTab, setActiveTab] = useState<"account" | "preferences">(
+		"account",
+	);
 
 	const tabs = [
 		{ id: "account" as const, label: m.settings_my_account() },
@@ -65,7 +65,11 @@ export function SettingsView() {
 				))}
 			</div>
 			<div className="flex-1 p-6">
-				{activeTab === "account" ? <MyAccountSection /> : <PreferencesSection />}
+				{activeTab === "account" ? (
+					<MyAccountSection />
+				) : (
+					<PreferencesSection />
+				)}
 			</div>
 		</Card>
 	);
@@ -80,12 +84,15 @@ function MyAccountSection() {
 		if (!file) return;
 
 		try {
-			const res = await fetch("/api/files/upload", { method: "POST", body: (() => {
-				const formData = new FormData();
-				formData.append("file", file);
-				return formData;
-			})() });
-			const { path } = await res.json() as { path: string };
+			const res = await fetch("/api/files/upload", {
+				method: "POST",
+				body: (() => {
+					const formData = new FormData();
+					formData.append("file", file);
+					return formData;
+				})(),
+			});
+			const { path } = (await res.json()) as { path: string };
 			await authClient.updateUser({ image: path });
 			toast.success(m.settings_avatar_updated());
 		} catch {
@@ -124,7 +131,9 @@ function MyAccountSection() {
 			<Separator />
 
 			<div>
-				<h3 className="mb-4 font-medium text-base">{m.settings_change_password()}</h3>
+				<h3 className="mb-4 font-medium text-base">
+					{m.settings_change_password()}
+				</h3>
 				<ChangePasswordForm />
 			</div>
 
@@ -164,7 +173,9 @@ function ChangePasswordForm() {
 			setNewPassword("");
 			setConfirmPassword("");
 		} catch (err) {
-			toast.error(err instanceof Error ? err.message : m.settings_password_failed());
+			toast.error(
+				err instanceof Error ? err.message : m.settings_password_failed(),
+			);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -217,7 +228,9 @@ function DeleteAccountDialog() {
 			toast.success(m.settings_account_deleted());
 			setOpen(false);
 		} catch (err) {
-			toast.error(err instanceof Error ? err.message : m.settings_delete_failed());
+			toast.error(
+				err instanceof Error ? err.message : m.settings_delete_failed(),
+			);
 		} finally {
 			setIsDeleting(false);
 		}
@@ -244,7 +257,11 @@ function DeleteAccountDialog() {
 					<Button variant="outline" onClick={() => setOpen(false)}>
 						{m.settings_cancel()}
 					</Button>
-					<Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+					<Button
+						variant="destructive"
+						onClick={handleDelete}
+						disabled={isDeleting}
+					>
 						{m.settings_delete_account_confirm()}
 					</Button>
 				</DialogFooter>
@@ -257,7 +274,9 @@ function PreferencesSection() {
 	return (
 		<div className="space-y-8">
 			<div>
-				<h3 className="mb-4 font-medium text-base">{m.settings_appearance()}</h3>
+				<h3 className="mb-4 font-medium text-base">
+					{m.settings_appearance()}
+				</h3>
 				<div className="max-w-xs space-y-4">
 					<LanguageSelect />
 					<ThemeSelect />
@@ -267,7 +286,9 @@ function PreferencesSection() {
 			<Separator />
 
 			<div>
-				<h3 className="mb-4 font-medium text-base">{m.settings_memo_defaults()}</h3>
+				<h3 className="mb-4 font-medium text-base">
+					{m.settings_memo_defaults()}
+				</h3>
 				<div className="max-w-xs">
 					<DefaultVisibilitySelect />
 				</div>
@@ -337,15 +358,19 @@ function ThemeSelect() {
 
 function DefaultVisibilitySelect() {
 	const [defaultVisibility, setDefaultVisibility] = useState(() => {
-		try { return localStorage.getItem("default-visibility") || "private"; }
-		catch { return "private"; }
+		try {
+			return localStorage.getItem("default-visibility") || "private";
+		} catch {
+			return "private";
+		}
 	});
 
 	const handleChange = (value: string | null) => {
 		if (!value) return;
 		setDefaultVisibility(value);
-		try { localStorage.setItem("default-visibility", value); }
-		catch {}
+		try {
+			localStorage.setItem("default-visibility", value);
+		} catch {}
 	};
 
 	return (

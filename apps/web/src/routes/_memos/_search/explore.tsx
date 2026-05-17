@@ -1,8 +1,6 @@
-import { SidebarInset } from "@memos/ui/components/sidebar";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { SearchPanel } from "@/components/search-panel/search-panel";
 import { listExploreMemosQueryOptions } from "@/features/editor/queries/list-explore-memos.query";
 import { MemoList } from "@/features/memos/components/memo-list";
 
@@ -12,7 +10,7 @@ const searchSchema = z.object({
 	tag: z.string().optional(),
 });
 
-export const Route = createFileRoute("/_memos/explore")({
+export const Route = createFileRoute("/_memos/_search/explore")({
 	validateSearch: searchSchema,
 	loaderDeps: ({ search: { q, date, tag } }) => ({ q, date, tag }),
 	loader: async ({
@@ -39,13 +37,8 @@ function RouteComponent() {
 	);
 
 	return (
-		<>
-			<SearchPanel />
-			<SidebarInset className="overflow-y-auto">
-				<div className="mx-auto w-full max-w-2xl px-4 pt-8">
-					<MemoList memos={memos} userId={userId} />
-				</div>
-			</SidebarInset>
-		</>
+		<div className="mx-auto w-full max-w-2xl px-4 pt-8">
+			<MemoList memos={memos} userId={userId} />
+		</div>
 	);
 }

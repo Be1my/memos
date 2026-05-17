@@ -42,13 +42,7 @@ function FormattedTime({ date }: { date: string }) {
 	);
 }
 
-function MemoCard({
-	memo,
-	userId,
-}: {
-	memo: Memo;
-	userId?: string | null;
-}) {
+function MemoCard({ memo, userId }: { memo: Memo; userId?: string | null }) {
 	return (
 		<div className="group/memo relative rounded-lg border bg-card p-4 text-sm">
 			<div className="mb-3 flex items-center justify-between text-muted-foreground text-xs">

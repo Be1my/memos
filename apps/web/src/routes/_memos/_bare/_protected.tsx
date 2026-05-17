@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/_memos/_protected")({
+export const Route = createFileRoute("/_memos/_bare/_protected")({
 	beforeLoad: async ({ context }) => {
 		const { user } = context as { user?: unknown };
 		if (!user) {
