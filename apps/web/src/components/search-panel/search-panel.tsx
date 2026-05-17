@@ -11,7 +11,7 @@ export function SearchPanel() {
 	const tags = stats?.tags ?? [];
 
 	return (
-		<div className="flex w-64 shrink-0 flex-col gap-4 overflow-auto border-r p-3">
+		<div className="flex w-64 shrink-0 flex-col gap-4 overflow-hidden border-r p-3">
 			<SearchBox />
 			<SidebarSeparator className="mx-0" />
 			<div className="space-y-1">

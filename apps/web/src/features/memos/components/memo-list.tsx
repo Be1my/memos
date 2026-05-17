@@ -1,6 +1,6 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { Skeleton } from "@memos/ui/components/skeleton";
-import { FileIcon, ImageIcon, XIcon } from "lucide-react";
+import { ArrowUpIcon, FileIcon, ImageIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { LexicalRenderer } from "../../editor/components/lexical-renderer";
 import type { listMemosFn } from "../../editor/functions/list-memos.function";
@@ -181,6 +181,18 @@ function MemoList({
 					</div>
 				))}
 			</div>
+			<button
+				type="button"
+				onClick={() =>
+					document
+						.querySelector('[data-slot="sidebar-inset"]')
+						?.scrollTo({ top: 0, behavior: "smooth" })
+				}
+				className="mx-auto mb-8 mt-8 flex items-center gap-1 rounded-md px-3 py-1.5 text-muted-foreground text-xs transition-colors hover:bg-accent hover:text-foreground"
+			>
+				<ArrowUpIcon className="size-3.5" />
+				Back to Top
+			</button>
 		</>
 	);
 }

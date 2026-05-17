@@ -19,10 +19,10 @@ export const Route = createFileRoute("/_memos")({
 function RouteComponent() {
 	const { user } = Route.useRouteContext();
 	return (
-		<SidebarProvider>
+		<SidebarProvider className="h-svh">
 			<AppSidebar user={user} />
 			<SearchPanel />
-			<SidebarInset>
+			<SidebarInset className="overflow-y-auto">
 				<Outlet />
 			</SidebarInset>
 		</SidebarProvider>
