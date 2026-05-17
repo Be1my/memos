@@ -5,7 +5,6 @@ import { localeTzMiddleware } from "@/middleware/locale-tz";
 export const getCalendarInfoFn = createServerFn({ method: "GET" })
 	.middleware([localeTzMiddleware])
 	.handler(async ({ context }) => {
-		console.log(context);
 		const { timeZone } = context;
 		// const timeZone = "Asia/Shanghai";
 		const now = new Date();

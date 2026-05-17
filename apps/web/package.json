@@ -11,9 +11,9 @@
 	"dependencies": {
 		"@base-ui/react": "^1.0.0",
 		"@date-fns/tz": "^1.4.1",
-		"@lexical/hashtag": "0.27.2",
-		"@lexical/html": "^0.27.0",
-		"@lexical/react": "^0.27.0",
+		"@lexical/hashtag": "^0.44.0",
+		"@lexical/html": "^0.44.0",
+		"@lexical/react": "^0.44.0",
 		"@memos/auth": "workspace:*",
 		"@memos/db": "workspace:*",
 		"@memos/env": "workspace:*",
@@ -23,7 +23,9 @@
 		"@tanstack/react-query": "^5.99.0",
 		"@tanstack/react-router": "^1.168.22",
 		"@tanstack/react-start": "^1.167.41",
+		"@tanstack/react-router-ssr-query": "^1.167.0",
 		"better-auth": "catalog:",
+		"drizzle-orm": "^1.0.0-rc.2",
 		"date-fns": "^4.1.0",
 		"dotenv": "catalog:",
 		"lexical": "^0.27.0",
@@ -33,12 +35,13 @@
 		"react-dom": "^19.2.5",
 		"sonner": "^2.0.7",
 		"tailwindcss": "^4.2.2",
-		"zod": "catalog:"
+		"zod": "catalog:",
+		"@js-temporal/polyfill":"0.5.1"
 	},
 	"devDependencies": {
 		"@cloudflare/vite-plugin": "^1.17.1",
 		"@memos/config": "workspace:*",
-		"@tanstack/react-router-devtools": "^1.166.13",
+		"@tanstack/react-router-devtools": "^1.167.0",
 		"@testing-library/dom": "^10.4.1",
 		"@testing-library/react": "^16.3.2",
 		"@types/react": "^19.2.14",

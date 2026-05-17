@@ -17,9 +17,7 @@ const cloudflareWorkersShimPath = fileURLToPath(
 );
 const cloudflareWorkersAlias = shouldUseAlchemy
 	? {}
-	: {
-			"cloudflare:workers": cloudflareWorkersShimPath,
-		};
+	: { "cloudflare:workers": cloudflareWorkersShimPath };
 
 export default defineConfig({
 	server: {
@@ -29,9 +27,13 @@ export default defineConfig({
 		tsconfigPaths: true,
 		alias: cloudflareWorkersAlias,
 	},
+	build: {
+		rolldownOptions: shouldUseAlchemy
+			? { external: ["cloudflare:workers"] }
+			: undefined,
+	},
 	plugins: [
-		alchemy({ configPath: alchemyConfigPath }),
-		// ...(shouldUseAlchemy ? [alchemy({ configPath: alchemyConfigPath })] : []),
+		tailwindcss(),
 		paraglideVitePlugin({
 			project: "./project.inlang",
 			outdir: "./src/paraglide",
@@ -39,12 +41,8 @@ export default defineConfig({
 			cookieName: "PARAGLIDE_LOCALE",
 			strategy: ["cookie", "preferredLanguage", "baseLocale"],
 		}),
-		tailwindcss(),
-
-		tanstackStart({
-			target: "cloudflare-module",
-			customViteReactPlugin: true,
-		}),
+		tanstackStart({}),
 		viteReact(),
+		...(shouldUseAlchemy ? [alchemy({ configPath: alchemyConfigPath })] : []),
 	],
 });
