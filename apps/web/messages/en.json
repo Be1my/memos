@@ -54,5 +54,42 @@
 	"settings_password_failed": "Failed to change password",
 	"settings_password_same": "New password cannot be the same as current password",
 	"settings_account_deleted": "Account deleted",
-	"settings_delete_failed": "Failed to delete account"
+	"settings_delete_failed": "Failed to delete account",
+	"time_now": "now",
+	"time_minutes_ago": [
+		{
+			"declarations": [
+				"input minutes",
+				"local formatted = minutes: relativetime unit=minute style=short numeric=always"
+			],
+			"match": {
+				"minutes=*": "{formatted}"
+			}
+		}
+	],
+	"time_hours_ago": [
+		{
+			"declarations": [
+				"input hours",
+				"local formatted = hours: relativetime unit=hour style=short numeric=always"
+			],
+			"match": {
+				"hours=*": "{formatted}"
+			}
+		}
+	],
+	"time_date": [
+		{
+			"declarations": [
+				"input date",
+				"local formatted = date: datetime weekday=short month=short day=numeric year=numeric"
+			],
+			"match": {
+				"date=*": "{formatted}"
+			}
+		}
+	],
+	"time_last_updated": "Last updated at {time}",
+	"time_created_tooltip": "Created: {time}",
+	"time_updated_tooltip": "Last updated: {time}"
 }

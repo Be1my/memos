@@ -1,7 +1,4 @@
-import { TZDate } from "@date-fns/tz";
 import { createServerFn } from "@tanstack/react-start";
-import { format } from "date-fns";
-import { parseTimezoneFromHeaders } from "@/lib/parse-timezone-from-headers";
 import type { ListMemosFilter } from "./list-memos.shared";
 import { queryMemos } from "./list-memos.shared";
 
@@ -28,12 +25,5 @@ export const listMemosFn = createServerFn({
 	const conditions = [eq(memo.creatorId, session?.user.id ?? "")];
 
 	const memos = await queryMemos(conditions, filter, true);
-	const timeZone = parseTimezoneFromHeaders(headers);
-	return memos.map((m) => ({
-		...m,
-		formattedTime: format(
-			new TZDate(m.createdAt, timeZone),
-			"yyyy/MM/dd HH:mm",
-		),
-	}));
+	return memos;
 });

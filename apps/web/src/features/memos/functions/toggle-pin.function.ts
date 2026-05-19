@@ -34,7 +34,9 @@ export const togglePinFn = createServerFn({ method: "POST" })
 		const [updated] = await db
 			.update(memo)
 			.set({ pinned: sql`NOT ${memo.pinned}` })
-			.where(and(eq(memo.uid, data.memoId), eq(memo.creatorId, session.user.id)))
+			.where(
+				and(eq(memo.uid, data.memoId), eq(memo.creatorId, session.user.id)),
+			)
 			.returning({ uid: memo.uid, pinned: memo.pinned });
 
 		if (!updated) {
