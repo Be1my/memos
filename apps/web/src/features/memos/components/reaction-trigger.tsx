@@ -1,6 +1,10 @@
 "use client";
 
-import { Popover } from "@base-ui/react/popover";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@memos/ui/components/popover";
 import {
 	EmojiPicker,
 	EmojiPickerContent,
@@ -26,27 +30,23 @@ function ReactionTrigger({ contentId, currentUserId }: ReactionTriggerProps) {
 	};
 
 	return (
-		<Popover.Root open={open} onOpenChange={setOpen}>
-			<Popover.Trigger className="inline-flex size-6 items-center justify-center rounded-full text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover/memo:opacity-100">
+		<Popover open={open} onOpenChange={setOpen}>
+			<PopoverTrigger className="inline-flex size-6 items-center justify-center rounded-full text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover/memo:opacity-100">
 				<SmilePlusIcon className="size-4" />
-			</Popover.Trigger>
-			<Popover.Portal>
-				<Popover.Positioner side="bottom" align="end" sideOffset={4}>
-					<Popover.Popup className="z-50 h-80 w-72 overflow-hidden rounded-lg bg-popover shadow-lg ring-1 ring-foreground/10">
-						<EmojiPicker
-							onEmojiSelect={({ emoji }) => {
-								handleToggle(emoji);
-							}}
-							locale="zh"
-						>
-							<EmojiPickerSearch />
-							<EmojiPickerContent />
-							<EmojiPickerFooter />
-						</EmojiPicker>
-					</Popover.Popup>
-				</Popover.Positioner>
-			</Popover.Portal>
-		</Popover.Root>
+			</PopoverTrigger>
+			<PopoverContent side="bottom" align="end" sideOffset={4} className="h-80 w-72 overflow-hidden p-0">
+				<EmojiPicker
+					onEmojiSelect={({ emoji }) => {
+						handleToggle(emoji);
+					}}
+					locale="zh"
+				>
+					<EmojiPickerSearch />
+					<EmojiPickerContent />
+					<EmojiPickerFooter />
+				</EmojiPicker>
+			</PopoverContent>
+		</Popover>
 	);
 }
 

@@ -63,7 +63,7 @@ function RouteComponent() {
 				onSave={(data) => mutation.mutate({ data })}
 				dateSearch={{ date: filter.date }}
 			/>
-			<MemoList memos={memos} userId={userId} />
+			<MemoList memos={memos} userId={userId} showVisibility={false} />
 		</div>
 	);
 }

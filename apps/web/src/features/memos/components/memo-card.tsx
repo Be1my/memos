@@ -1,4 +1,10 @@
-import { PinIcon } from "lucide-react";
+import { GlobeIcon, LockIcon, PinIcon, UsersIcon } from "lucide-react";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@memos/ui/components/tooltip";
 import { LexicalRenderer } from "../../editor/components/lexical-renderer";
 import type { listMemosFn } from "../../editor/functions/list-memos.function";
 import { useTogglePin } from "../queries/pin-memo.query";
@@ -16,7 +22,13 @@ const visibilityLabel: Record<string, string> = {
 	PROTECTED: "工作区",
 };
 
-function MemoCard({ memo, userId }: { memo: Memo; userId?: string | null }) {
+const visibilityIcon: Record<string, typeof GlobeIcon> = {
+	PRIVATE: LockIcon,
+	PUBLIC: GlobeIcon,
+	PROTECTED: UsersIcon,
+};
+
+function MemoCard({ memo, userId, showVisibility = true }: { memo: Memo; userId?: string | null; showVisibility?: boolean }) {
 	const togglePin = useTogglePin();
 
 	return (
@@ -32,18 +44,34 @@ function MemoCard({ memo, userId }: { memo: Memo; userId?: string | null }) {
 							<PinIcon className="size-3 fill-current" />
 						</button>
 					)}
-					<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
 					<MemoTimeDisplay
 						createdAt={memo.createdAt}
 						updatedAt={memo.updatedAt}
 					/>
 				</div>
-				{userId && (
-					<div className="flex items-center gap-0.5">
-						<ReactionTrigger contentId={memo.uid} currentUserId={userId} />
-						<MemoCardActions memoUid={memo.uid} pinned={memo.pinned} />
-					</div>
-				)}
+				<div className="flex items-center gap-0.5">
+					{userId && (
+						<>
+							<ReactionTrigger contentId={memo.uid} currentUserId={userId} />
+							{showVisibility && (() => {
+								const Icon = visibilityIcon[memo.visibility];
+								return (
+									<TooltipProvider>
+										<Tooltip>
+								<TooltipTrigger render={<span className="inline-flex size-6 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground" />}>
+									<Icon className="size-4" />
+											</TooltipTrigger>
+											<TooltipContent side="top" align="center">
+												{visibilityLabel[memo.visibility] ?? memo.visibility}
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
+								);
+							})()}
+							<MemoCardActions memoUid={memo.uid} pinned={memo.pinned} />
+						</>
+					)}
+				</div>
 			</div>
 			<div className="leading-relaxed">
 				<LexicalRenderer payload={memo.payload} />
