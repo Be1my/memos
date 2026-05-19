@@ -14,36 +14,49 @@ import { TimePickerInput } from "./time-picker-input";
 interface MemoDatetimeProps {
 	onChange: (isoString: string | null) => void;
 	dateSearch: { date?: string };
+	defaultDate?: string;
 }
 
-export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
-	const dateStr = dateSearch.date;
+export function MemoDatetime({
+	onChange,
+	dateSearch,
+	defaultDate,
+}: MemoDatetimeProps) {
 	const [open, setOpen] = useState(false);
 	const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
-		if (!dateStr) return null;
-		const [y, m, d] = dateStr.split("-").map(Number);
-		return new Date(y, m - 1, d, 0, 0, 0);
+		if (dateSearch?.date) {
+			const [y, m, d] = dateSearch.date.split("-").map(Number);
+			return new Date(y, m - 1, d, 0, 0, 0);
+		}
+		if (defaultDate) {
+			return new Date(defaultDate);
+		}
+		return null;
 	});
 
 	useEffect(() => {
-		if (!dateStr) {
+		if (dateSearch?.date) {
+			const now = new Date();
+			const [y, m, d] = dateSearch.date.split("-").map(Number);
+			const date = new Date(
+				y,
+				m - 1,
+				d,
+				now.getHours(),
+				now.getMinutes(),
+				now.getSeconds(),
+			);
+			setSelectedDate(date);
+			onChange(date.toISOString());
+		} else if (defaultDate) {
+			const date = new Date(defaultDate);
+			setSelectedDate(date);
+			onChange(date.toISOString());
+		} else {
 			setSelectedDate(null);
 			onChange(null);
-			return;
 		}
-		const now = new Date();
-		const [y, m, d] = dateStr.split("-").map(Number);
-		const date = new Date(
-			y,
-			m - 1,
-			d,
-			now.getHours(),
-			now.getMinutes(),
-			now.getSeconds(),
-		);
-		setSelectedDate(date);
-		onChange(date.toISOString());
-	}, [dateStr, onChange]);
+	}, [dateSearch?.date, defaultDate, onChange]);
 
 	const handleConfirm = () => {
 		if (selectedDate) {
@@ -52,7 +65,8 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 		setOpen(false);
 	};
 
-	if (!dateStr || !selectedDate) return null;
+	const show = dateSearch?.date ?? defaultDate;
+	if (!show || !selectedDate) return null;
 
 	const dateDots = format(selectedDate, "yyyy.MM.dd");
 	const timeFull = format(selectedDate, "HH:mm:ss");
@@ -91,69 +105,69 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 			/>
 			<ClientOnly fallback={null}>
 				<PopoverContent className="w-72 p-5" align="center" sideOffset={12}>
-				<div
-					className="absolute inset-x-0 top-0 h-1 rounded-t-lg"
-					style={{
-						background:
-							"linear-gradient(90deg, transparent 0%, var(--color-primary) 50%, transparent 100%)",
-					}}
-				/>
-				<div className="flex flex-col gap-5 pt-1">
-					<div className="grid gap-2">
-						<Label className="flex items-center gap-2 font-semibold text-muted-foreground text-xs uppercase tracking-wider">
-							<span className="h-px flex-1 bg-border/50" />
-							Time
-							<span className="h-px flex-1 bg-border/50" />
-						</Label>
-						<div className="flex items-center justify-center gap-2 rounded-xl bg-muted/60 px-4 py-3 ring-1 ring-border/50">
-							<div className="grid gap-0.5 text-center">
-								<span className="font-semibold text-[9px] text-muted-foreground/40 uppercase tracking-[0.15em]">
-									HH
+					<div
+						className="absolute inset-x-0 top-0 h-1 rounded-t-lg"
+						style={{
+							background:
+								"linear-gradient(90deg, transparent 0%, var(--color-primary) 50%, transparent 100%)",
+						}}
+					/>
+					<div className="flex flex-col gap-5 pt-1">
+						<div className="grid gap-2">
+							<Label className="flex items-center gap-2 font-semibold text-muted-foreground text-xs uppercase tracking-wider">
+								<span className="h-px flex-1 bg-border/50" />
+								Time
+								<span className="h-px flex-1 bg-border/50" />
+							</Label>
+							<div className="flex items-center justify-center gap-2 rounded-xl bg-muted/60 px-4 py-3 ring-1 ring-border/50">
+								<div className="grid gap-0.5 text-center">
+									<span className="font-semibold text-[9px] text-muted-foreground/40 uppercase tracking-[0.15em]">
+										HH
+									</span>
+									<TimePickerInput
+										picker="hours"
+										date={selectedDate}
+										setDate={setSelectedDate}
+									/>
+								</div>
+								<span className="mt-5 self-start font-thin text-muted-foreground/30 text-xl">
+									:
 								</span>
-								<TimePickerInput
-									picker="hours"
-									date={selectedDate}
-									setDate={setSelectedDate}
-								/>
-							</div>
-							<span className="mt-5 self-start font-thin text-muted-foreground/30 text-xl">
-								:
-							</span>
-							<div className="grid gap-0.5 text-center">
-								<span className="font-semibold text-[9px] text-muted-foreground/40 uppercase tracking-[0.15em]">
-									MM
+								<div className="grid gap-0.5 text-center">
+									<span className="font-semibold text-[9px] text-muted-foreground/40 uppercase tracking-[0.15em]">
+										MM
+									</span>
+									<TimePickerInput
+										picker="minutes"
+										date={selectedDate}
+										setDate={setSelectedDate}
+									/>
+								</div>
+								<span className="mt-5 self-start font-thin text-muted-foreground/30 text-xl">
+									:
 								</span>
-								<TimePickerInput
-									picker="minutes"
-									date={selectedDate}
-									setDate={setSelectedDate}
-								/>
-							</div>
-							<span className="mt-5 self-start font-thin text-muted-foreground/30 text-xl">
-								:
-							</span>
-							<div className="grid gap-0.5 text-center">
-								<span className="font-semibold text-[9px] text-muted-foreground/40 uppercase tracking-[0.15em]">
-									SS
-								</span>
-								<TimePickerInput
-									picker="seconds"
-									date={selectedDate}
-									setDate={setSelectedDate}
-								/>
+								<div className="grid gap-0.5 text-center">
+									<span className="font-semibold text-[9px] text-muted-foreground/40 uppercase tracking-[0.15em]">
+										SS
+									</span>
+									<TimePickerInput
+										picker="seconds"
+										date={selectedDate}
+										setDate={setSelectedDate}
+									/>
+								</div>
 							</div>
 						</div>
+						<Button
+							size="sm"
+							onClick={handleConfirm}
+							className="w-full gap-2 bg-primary text-primary-foreground shadow-sm transition-all hover:shadow-md"
+						>
+							<CheckIcon className="size-3.5" />
+							Apply
+						</Button>
 					</div>
-					<Button
-						size="sm"
-						onClick={handleConfirm}
-						className="w-full gap-2 bg-primary text-primary-foreground shadow-sm transition-all hover:shadow-md"
-					>
-						<CheckIcon className="size-3.5" />
-						Apply
-					</Button>
-				</div>
-			</PopoverContent>
+				</PopoverContent>
 			</ClientOnly>
 		</Popover>
 	);
