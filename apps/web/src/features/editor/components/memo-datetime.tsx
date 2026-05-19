@@ -1,14 +1,14 @@
 import { Button } from "@memos/ui/components/button";
-import { Input } from "@memos/ui/components/input";
 import { Label } from "@memos/ui/components/label";
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
 } from "@memos/ui/components/popover";
+import { ClientOnly } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { CalendarDays, CheckIcon } from "lucide-react";
-import { type ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TimePickerInput } from "./time-picker-input";
 
 interface MemoDatetimeProps {
@@ -19,7 +19,11 @@ interface MemoDatetimeProps {
 export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 	const dateStr = dateSearch.date;
 	const [open, setOpen] = useState(false);
-	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+	const [selectedDate, setSelectedDate] = useState<Date | null>(() => {
+		if (!dateStr) return null;
+		const [y, m, d] = dateStr.split("-").map(Number);
+		return new Date(y, m - 1, d, 0, 0, 0);
+	});
 
 	useEffect(() => {
 		if (!dateStr) {
@@ -41,14 +45,6 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 		onChange(date.toISOString());
 	}, [dateStr, onChange]);
 
-	const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-		if (!e.target.value || !selectedDate) return;
-		const [y, m, d] = e.target.value.split("-").map(Number);
-		const newDate = new Date(selectedDate);
-		newDate.setFullYear(y, m - 1, d);
-		setSelectedDate(newDate);
-	};
-
 	const handleConfirm = () => {
 		if (selectedDate) {
 			onChange(selectedDate.toISOString());
@@ -60,7 +56,6 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 
 	const dateDots = format(selectedDate, "yyyy.MM.dd");
 	const timeFull = format(selectedDate, "HH:mm:ss");
-	const dateValue = format(selectedDate, "yyyy-MM-dd");
 	const weekday = format(selectedDate, "EEE");
 
 	return (
@@ -76,9 +71,17 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 							<span className="font-medium text-white/90 tracking-[0.06em]">
 								{dateDots}
 							</span>
-							<span className="font-bold font-mono text-sm tracking-[0.05em]">
-								{timeFull}
-							</span>
+							<ClientOnly
+								fallback={
+									<span className="font-bold font-mono text-sm tracking-[0.05em]">
+										--:--:--
+									</span>
+								}
+							>
+								<span className="font-bold font-mono text-sm tracking-[0.05em]">
+									{timeFull}
+								</span>
+							</ClientOnly>
 						</span>
 						<span className="font-medium text-[10px] text-white/40 uppercase tracking-[0.08em]">
 							{weekday}
@@ -86,7 +89,8 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 					</button>
 				}
 			/>
-			<PopoverContent className="w-72 p-5" align="center" sideOffset={12}>
+			<ClientOnly fallback={null}>
+				<PopoverContent className="w-72 p-5" align="center" sideOffset={12}>
 				<div
 					className="absolute inset-x-0 top-0 h-1 rounded-t-lg"
 					style={{
@@ -95,26 +99,6 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 					}}
 				/>
 				<div className="flex flex-col gap-5 pt-1">
-					<div className="grid gap-2">
-						<Label
-							htmlFor="memo-date"
-							className="flex items-center gap-2 font-semibold text-muted-foreground text-xs uppercase tracking-wider"
-						>
-							<span className="h-px flex-1 bg-border/50" />
-							Date
-							<span className="h-px flex-1 bg-border/50" />
-						</Label>
-						<div className="relative">
-							<CalendarDays className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground/40" />
-							<Input
-								id="memo-date"
-								type="date"
-								value={dateValue}
-								onChange={handleDateChange}
-								className="pl-9"
-							/>
-						</div>
-					</div>
 					<div className="grid gap-2">
 						<Label className="flex items-center gap-2 font-semibold text-muted-foreground text-xs uppercase tracking-wider">
 							<span className="h-px flex-1 bg-border/50" />
@@ -170,6 +154,7 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 					</Button>
 				</div>
 			</PopoverContent>
+			</ClientOnly>
 		</Popover>
 	);
 }

@@ -106,6 +106,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			};
 			if (data.createdAt) {
 				insertData.createdAt = new Date(data.createdAt);
+				insertData.updatedAt = new Date(data.createdAt);
 			}
 			[created] = await db.insert(memo).values(insertData).returning();
 		} catch (error) {
