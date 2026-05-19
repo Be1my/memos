@@ -74,6 +74,7 @@ function Editor({
 		visibility: string;
 		tags?: string[];
 		files?: FilePayload[];
+		createdAt?: string;
 	}) => void;
 	isSaving?: boolean;
 	dateSearch?: { date?: string };
