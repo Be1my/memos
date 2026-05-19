@@ -61,6 +61,7 @@ function RouteComponent() {
 				key={resetKey}
 				isSaving={mutation.isPending}
 				onSave={(data) => mutation.mutate({ data })}
+				dateSearch={{ date: filter.date }}
 			/>
 			<MemoList memos={memos} userId={userId} />
 		</div>

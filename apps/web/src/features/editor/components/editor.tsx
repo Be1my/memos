@@ -14,7 +14,6 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@memos/ui/components/dropdown-menu";
-import { useSearch } from "@tanstack/react-router";
 import type { EditorState } from "lexical";
 import { $getRoot } from "lexical";
 import {
@@ -63,6 +62,7 @@ function fileToBase64(file: File): Promise<string> {
 function Editor({
 	onSave,
 	isSaving,
+	dateSearch,
 }: {
 	onSave?: (data: {
 		content: string;
@@ -72,14 +72,13 @@ function Editor({
 		files?: FilePayload[];
 	}) => void;
 	isSaving?: boolean;
+	dateSearch?: { date?: string };
 }) {
 	const [visibility, setVisibility] = useState("private");
 	const [hasContent, setHasContent] = useState(false);
 	const editorStateRef = useRef<EditorState | null>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
-	const search = useSearch();
-	const dateSearch = { date: search?.date as string | undefined };
 	const [createdAt, setCreatedAt] = useState<string | null>(null);
 	const mediaInputRef = useRef<HTMLInputElement>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
