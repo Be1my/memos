@@ -7,7 +7,7 @@ import {
 	PopoverTrigger,
 } from "@memos/ui/components/popover";
 import { format } from "date-fns";
-import { ClockIcon } from "lucide-react";
+import { ClockIcon, PencilIcon } from "lucide-react";
 import { type ChangeEvent, useEffect, useState } from "react";
 import { TimePickerInput } from "./time-picker-input";
 
@@ -58,27 +58,46 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 
 	if (!dateStr || !selectedDate) return null;
 
+	const dateDots = format(selectedDate, "yyyy.MM.dd");
+	const timeDisplay = format(selectedDate, "HH:mm");
+	const seconds = format(selectedDate, "ss");
 	const dateValue = format(selectedDate, "yyyy-MM-dd");
-	const timeLabel = format(selectedDate, "yyyy-MM-dd HH:mm:ss");
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger
 				render={
-					<Button
-						variant="ghost"
-						size="sm"
-						className="mb-2 h-auto px-2 py-1 font-mono text-muted-foreground text-xs hover:text-foreground"
+					<button
+						type="button"
+						className="group mb-3 flex cursor-pointer items-center gap-2.5 rounded-xl border border-border/50 bg-gradient-to-b from-card to-muted/50 px-3.5 py-2 text-left text-xs shadow-xs ring-1 ring-foreground/5 transition-all duration-200 hover:border-border/80 hover:shadow-sm hover:ring-foreground/10 active:scale-[0.98]"
 					>
-						<ClockIcon className="mr-1 size-3" />
-						{timeLabel}
-					</Button>
+						<span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
+							<ClockIcon className="size-3" />
+						</span>
+						<span className="flex items-baseline gap-2">
+							<span className="font-medium text-muted-foreground text-xs tracking-[0.08em]">
+								{dateDots}
+							</span>
+							<span className="font-mono font-semibold text-foreground text-sm leading-none tracking-[0.04em]">
+								{timeDisplay}
+							</span>
+							<span className="font-medium font-mono text-[11px] text-muted-foreground/60 leading-none">
+								{seconds}
+							</span>
+						</span>
+						<span className="ml-auto flex h-5 w-5 items-center justify-center rounded-md text-muted-foreground/30 opacity-0 transition-all duration-200 group-hover:text-muted-foreground/60 group-hover:opacity-100">
+							<PencilIcon className="size-3" />
+						</span>
+					</button>
 				}
 			/>
-			<PopoverContent className="w-auto p-3" align="start">
-				<div className="flex flex-col gap-3">
-					<div className="grid gap-1">
-						<Label htmlFor="memo-date" className="text-xs">
+			<PopoverContent className="w-64 p-4" align="start" sideOffset={8}>
+				<div className="flex flex-col gap-4">
+					<div className="grid gap-1.5">
+						<Label
+							htmlFor="memo-date"
+							className="font-medium text-muted-foreground text-xs uppercase tracking-wide"
+						>
 							Date
 						</Label>
 						<Input
@@ -86,46 +105,53 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 							type="date"
 							value={dateValue}
 							onChange={handleDateChange}
-							className="w-full"
 						/>
 					</div>
-					<div className="flex items-end gap-2">
-						<div className="grid gap-1 text-center">
-							<Label htmlFor="hours" className="text-xs">
-								Hours
-							</Label>
-							<TimePickerInput
-								picker="hours"
-								date={selectedDate}
-								setDate={setSelectedDate}
-							/>
+					<div className="grid gap-1.5">
+						<Label className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
+							Time
+						</Label>
+						<div className="flex items-end justify-center gap-1 rounded-lg bg-muted/50 px-3 py-2.5">
+							<div className="grid gap-0.5 text-center">
+								<span className="font-medium text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+									H
+								</span>
+								<TimePickerInput
+									picker="hours"
+									date={selectedDate}
+									setDate={setSelectedDate}
+								/>
+							</div>
+							<span className="pb-2 font-light text-lg text-muted-foreground/40">
+								:
+							</span>
+							<div className="grid gap-0.5 text-center">
+								<span className="font-medium text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+									M
+								</span>
+								<TimePickerInput
+									picker="minutes"
+									date={selectedDate}
+									setDate={setSelectedDate}
+								/>
+							</div>
+							<span className="pb-2 font-light text-lg text-muted-foreground/40">
+								:
+							</span>
+							<div className="grid gap-0.5 text-center">
+								<span className="font-medium text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+									S
+								</span>
+								<TimePickerInput
+									picker="seconds"
+									date={selectedDate}
+									setDate={setSelectedDate}
+								/>
+							</div>
 						</div>
-						<span className="pb-2 text-muted-foreground text-sm">:</span>
-						<div className="grid gap-1 text-center">
-							<Label htmlFor="minutes" className="text-xs">
-								Minutes
-							</Label>
-							<TimePickerInput
-								picker="minutes"
-								date={selectedDate}
-								setDate={setSelectedDate}
-							/>
-						</div>
-						<span className="pb-2 text-muted-foreground text-sm">:</span>
-						<div className="grid gap-1 text-center">
-							<Label htmlFor="seconds" className="text-xs">
-								Seconds
-							</Label>
-							<TimePickerInput
-								picker="seconds"
-								date={selectedDate}
-								setDate={setSelectedDate}
-							/>
-						</div>
-						<ClockIcon className="mb-2 size-4 text-muted-foreground" />
 					</div>
-					<Button size="sm" onClick={handleConfirm}>
-						Confirm
+					<Button size="sm" onClick={handleConfirm} className="w-full">
+						Apply
 					</Button>
 				</div>
 			</PopoverContent>
