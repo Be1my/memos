@@ -1,23 +1,24 @@
 import { SidebarInset } from "@memos/ui/components/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { SearchPanel } from "@/components/search-panel/search-panel";
-import { getCalendarInfoFn } from "@/functions/get-calendar-info";
-import { TimezoneProvider } from "@/lib/timezone-context";
+import { calendarInfoQueryOptions } from "@/features/memos/queries/calendar-info.query";
+import { memosStatsQueryOptions } from "@/features/memos/queries/memos-stats.query";
 
 export const Route = createFileRoute("/_memos/_search")({
-	loader: () => getCalendarInfoFn(),
+	loader: async ({ context: { queryClient } }) => {
+		await queryClient.ensureQueryData(calendarInfoQueryOptions());
+		await queryClient.ensureQueryData(memosStatsQueryOptions());
+	},
+
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	const { timeZone, today } = Route.useLoaderData();
 	return (
 		<>
-			<SearchPanel timeZone={timeZone} today={today} />
+			<SearchPanel />
 			<SidebarInset className="overflow-y-auto">
-				<TimezoneProvider timeZone={timeZone}>
-					<Outlet />
-				</TimezoneProvider>
+				<Outlet />
 			</SidebarInset>
 		</>
 	);

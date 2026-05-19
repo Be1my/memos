@@ -1,4 +1,5 @@
 import { Button } from "@memos/ui/components/button";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import {
 	addMonths,
@@ -10,6 +11,7 @@ import {
 } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
+import { calendarInfoQueryOptions } from "@/features/memos/queries/calendar-info.query";
 import { MONTHS } from "./calendar-utils";
 import { MonthGrid } from "./month-grid";
 import { useHeatmap } from "./use-heatmap";
@@ -17,18 +19,16 @@ import { YearView } from "./year-view";
 
 interface ActivityCalendarProps {
 	timestamps: string[];
-	timeZone: string;
-	today: string;
 }
 
 const parseToday = (today: string) => parse(today, "yyyy-MM-dd", new Date());
 
-export function ActivityCalendar({
-	timestamps,
-	timeZone,
-	today,
-}: ActivityCalendarProps) {
+export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 	const navigate = useNavigate();
+	const {
+		data: { timeZone, today },
+	} = useSuspenseQuery(calendarInfoQueryOptions());
+
 	const now = useMemo(() => parseToday(today), [today]);
 	const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(now));
 	const [yearView, setYearView] = useState(false);

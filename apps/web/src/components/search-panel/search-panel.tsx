@@ -1,17 +1,13 @@
 import { SidebarSeparator } from "@memos/ui/components/sidebar";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { calendarInfoQueryOptions } from "@/features/memos/queries/calendar-info.query";
 import { memosStatsQueryOptions } from "@/features/memos/queries/memos-stats.query";
 import { ActivityCalendar } from "./activity-calendar";
 import { SearchBox } from "./search-box";
 import { Tags } from "./tags";
 
-interface SearchPanelProps {
-	timeZone: string;
-	today: string;
-}
-
-export function SearchPanel({ timeZone, today }: SearchPanelProps) {
-	const { data: stats } = useQuery(memosStatsQueryOptions());
+export function SearchPanel() {
+	const { data: stats } = useSuspenseQuery(memosStatsQueryOptions());
 	const timestamps = stats?.timestamps ?? [];
 	const tags = stats?.tags ?? [];
 
@@ -25,8 +21,6 @@ export function SearchPanel({ timeZone, today }: SearchPanelProps) {
 				</h3>
 				<ActivityCalendar
 					timestamps={timestamps}
-					timeZone={timeZone}
-					today={today}
 				/>
 			</div>
 			<SidebarSeparator className="mx-0" />

@@ -1,16 +1,14 @@
 import { SidebarProvider } from "@memos/ui/components/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
-import { memosStatsQueryOptions } from "@/features/memos/queries/memos-stats.query";
-import { getSessionFn } from "@/functions/get-session";
+import { sessionQueryOptions } from "@/features/auth/queries/auth.query";
 
 export const Route = createFileRoute("/_memos")({
 	beforeLoad: async ({ context: { queryClient } }) => {
-		const session = await getSessionFn();
-		if (session?.user) {
-			await queryClient.prefetchQuery(memosStatsQueryOptions());
+		const session = await queryClient.ensureQueryData(sessionQueryOptions());
+		return {
+			user: session?.user,
 		}
-		return { user: session?.user ?? null };
 	},
 	component: RouteComponent,
 });
