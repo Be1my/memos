@@ -1,11 +1,8 @@
-import { Temporal } from "@js-temporal/polyfill";
-import { Skeleton } from "@memos/ui/components/skeleton";
-import { useEffect, useState } from "react";
-import { useTimezone } from "@/lib/timezone-context";
 import { LexicalRenderer } from "../../editor/components/lexical-renderer";
 import type { listMemosFn } from "../../editor/functions/list-memos.function";
 import { AttachmentGrid } from "./attachment-grid";
 import { MemoReactions } from "./memo-reactions";
+import { MemoCardActions } from "./memo-card-actions";
 import { ReactionTrigger } from "./reaction-trigger";
 
 type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];
@@ -16,33 +13,8 @@ const visibilityLabel: Record<string, string> = {
 	PROTECTED: "工作区",
 };
 
-function FormattedTime({ date }: { date: string }) {
-	const [mounted, setMounted] = useState(false);
-	useEffect(() => setMounted(true), []);
-	const { timeZone } = useTimezone();
-
-	if (!mounted) {
-		return <Skeleton className="inline-block h-3 w-24 align-middle" />;
-	}
-
-	let instant: Temporal.Instant;
-	try {
-		instant = Temporal.Instant.from(date);
-	} catch {
-		return <>{date}</>;
-	}
-	return (
-		<>
-			{new Intl.DateTimeFormat(undefined, {
-				year: "numeric",
-				month: "2-digit",
-				day: "2-digit",
-				hour: "2-digit",
-				minute: "2-digit",
-				timeZone,
-			}).format(instant.epochMilliseconds)}
-		</>
-	);
+function FormattedTime({ formattedTime }: { formattedTime: string }) {
+	return <>{formattedTime}</>;
 }
 
 function MemoCard({ memo, userId }: { memo: Memo; userId?: string | null }) {
@@ -51,10 +23,13 @@ function MemoCard({ memo, userId }: { memo: Memo; userId?: string | null }) {
 			<div className="mb-3 flex items-center justify-between text-muted-foreground text-xs">
 				<div className="flex items-center gap-2">
 					<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
-					<FormattedTime date={memo.createdAt} />
+					<FormattedTime formattedTime={memo.formattedTime} />
 				</div>
 				{userId && (
-					<ReactionTrigger contentId={memo.uid} currentUserId={userId} />
+					<div className="flex items-center gap-0.5">
+						<ReactionTrigger contentId={memo.uid} currentUserId={userId} />
+						<MemoCardActions />
+					</div>
 				)}
 			</div>
 			<div className="leading-relaxed">

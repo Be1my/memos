@@ -11,6 +11,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { firstUserQueryOptions } from "@/features/auth/queries/auth.query";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { getLocale } from "@/paraglide/runtime";
+import { useEffect } from "react";
 import appCss from "../index.css?url";
 
 export interface RouterAppContext {
@@ -57,6 +58,12 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
+	useEffect(() => {
+		if (document.cookie.includes("memos-tz")) return;
+		const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		document.cookie = `memos-tz=${tz}; path=/; maxAge=${60 * 60 * 24 * 365}`;
+	}, []);
+
 	return (
 		<html lang={getLocale()} suppressHydrationWarning>
 			<head>

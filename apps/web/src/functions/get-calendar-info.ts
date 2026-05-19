@@ -1,3 +1,5 @@
+import { TZDate } from "@date-fns/tz";
+import { format } from "date-fns";
 import { createServerFn } from "@tanstack/react-start";
 
 import { localeTzMiddleware } from "@/middleware/locale-tz";
@@ -6,14 +8,7 @@ export const getCalendarInfoFn = createServerFn({ method: "GET" })
 	.middleware([localeTzMiddleware])
 	.handler(async ({ context }) => {
 		const { timeZone } = context;
-		// const timeZone = "Asia/Shanghai";
-		const now = new Date();
-		const today = new Intl.DateTimeFormat("en-CA", {
-			timeZone,
-			year: "numeric",
-			month: "2-digit",
-			day: "2-digit",
-		}).format(now);
+		const today = format(new TZDate(Date.now(), timeZone), "yyyy-MM-dd");
 
 		return { timeZone, today };
 	});
