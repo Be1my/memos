@@ -7,7 +7,7 @@ import {
 	PopoverTrigger,
 } from "@memos/ui/components/popover";
 import { format } from "date-fns";
-import { ClockIcon, PencilIcon } from "lucide-react";
+import { CalendarDays, CheckIcon } from "lucide-react";
 import { type ChangeEvent, useEffect, useState } from "react";
 import { TimePickerInput } from "./time-picker-input";
 
@@ -62,6 +62,7 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 	const timeDisplay = format(selectedDate, "HH:mm");
 	const seconds = format(selectedDate, "ss");
 	const dateValue = format(selectedDate, "yyyy-MM-dd");
+	const weekday = format(selectedDate, "EEE");
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
@@ -69,52 +70,67 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 				render={
 					<button
 						type="button"
-						className="group mb-3 flex cursor-pointer items-center gap-2.5 rounded-xl border border-border/50 bg-gradient-to-b from-card to-muted/50 px-3.5 py-2 text-left text-xs shadow-xs ring-1 ring-foreground/5 transition-all duration-200 hover:border-border/80 hover:shadow-sm hover:ring-foreground/10 active:scale-[0.98]"
+						className="group relative mx-auto -mt-3 mb-2 flex cursor-pointer items-center gap-3 overflow-hidden rounded-full border bg-gradient-to-r from-primary/90 to-primary px-5 py-1.5 text-white shadow-lg shadow-primary/20 transition-all duration-300 hover:shadow-primary/30 hover:shadow-xl active:scale-95"
 					>
-						<span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
-							<ClockIcon className="size-3" />
-						</span>
-						<span className="flex items-baseline gap-2">
-							<span className="font-medium text-muted-foreground text-xs tracking-[0.08em]">
+						<CalendarDays className="size-3.5 shrink-0 text-white/80" />
+						<span className="flex items-baseline gap-2.5 text-[13px] leading-none">
+							<span className="font-medium text-white/90 tracking-[0.06em]">
 								{dateDots}
 							</span>
-							<span className="font-mono font-semibold text-foreground text-sm leading-none tracking-[0.04em]">
-								{timeDisplay}
-							</span>
-							<span className="font-medium font-mono text-[11px] text-muted-foreground/60 leading-none">
-								{seconds}
+							<span className="flex items-center gap-1">
+								<span className="font-bold font-mono text-sm tracking-[0.05em]">
+									{timeDisplay}
+								</span>
+								<span className="font-medium font-mono text-[10px] text-white/50">
+									{seconds}
+								</span>
 							</span>
 						</span>
-						<span className="ml-auto flex h-5 w-5 items-center justify-center rounded-md text-muted-foreground/30 opacity-0 transition-all duration-200 group-hover:text-muted-foreground/60 group-hover:opacity-100">
-							<PencilIcon className="size-3" />
+						<span className="font-medium text-[10px] text-white/40 uppercase tracking-[0.08em]">
+							{weekday}
 						</span>
 					</button>
 				}
 			/>
-			<PopoverContent className="w-64 p-4" align="start" sideOffset={8}>
-				<div className="flex flex-col gap-4">
-					<div className="grid gap-1.5">
+			<PopoverContent className="w-72 p-5" align="center" sideOffset={12}>
+				<div
+					className="absolute inset-x-0 top-0 h-1 rounded-t-lg"
+					style={{
+						background:
+							"linear-gradient(90deg, transparent 0%, var(--color-primary) 50%, transparent 100%)",
+					}}
+				/>
+				<div className="flex flex-col gap-5 pt-1">
+					<div className="grid gap-2">
 						<Label
 							htmlFor="memo-date"
-							className="font-medium text-muted-foreground text-xs uppercase tracking-wide"
+							className="flex items-center gap-2 font-semibold text-muted-foreground text-xs uppercase tracking-wider"
 						>
+							<span className="h-px flex-1 bg-border/50" />
 							Date
+							<span className="h-px flex-1 bg-border/50" />
 						</Label>
-						<Input
-							id="memo-date"
-							type="date"
-							value={dateValue}
-							onChange={handleDateChange}
-						/>
+						<div className="relative">
+							<CalendarDays className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground/40" />
+							<Input
+								id="memo-date"
+								type="date"
+								value={dateValue}
+								onChange={handleDateChange}
+								className="pl-9"
+							/>
+						</div>
 					</div>
-					<div className="grid gap-1.5">
-						<Label className="font-medium text-muted-foreground text-xs uppercase tracking-wide">
+					<div className="grid gap-2">
+						<Label className="flex items-center gap-2 font-semibold text-muted-foreground text-xs uppercase tracking-wider">
+							<span className="h-px flex-1 bg-border/50" />
 							Time
+							<span className="h-px flex-1 bg-border/50" />
 						</Label>
-						<div className="flex items-end justify-center gap-1 rounded-lg bg-muted/50 px-3 py-2.5">
+						<div className="flex items-center justify-center gap-2 rounded-xl bg-muted/60 px-4 py-3 ring-1 ring-border/50">
 							<div className="grid gap-0.5 text-center">
-								<span className="font-medium text-[10px] text-muted-foreground/50 uppercase tracking-wider">
-									H
+								<span className="font-semibold text-[9px] text-muted-foreground/40 uppercase tracking-[0.15em]">
+									HH
 								</span>
 								<TimePickerInput
 									picker="hours"
@@ -122,12 +138,12 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 									setDate={setSelectedDate}
 								/>
 							</div>
-							<span className="pb-2 font-light text-lg text-muted-foreground/40">
+							<span className="mt-5 self-start font-thin text-muted-foreground/30 text-xl">
 								:
 							</span>
 							<div className="grid gap-0.5 text-center">
-								<span className="font-medium text-[10px] text-muted-foreground/50 uppercase tracking-wider">
-									M
+								<span className="font-semibold text-[9px] text-muted-foreground/40 uppercase tracking-[0.15em]">
+									MM
 								</span>
 								<TimePickerInput
 									picker="minutes"
@@ -135,12 +151,12 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 									setDate={setSelectedDate}
 								/>
 							</div>
-							<span className="pb-2 font-light text-lg text-muted-foreground/40">
+							<span className="mt-5 self-start font-thin text-muted-foreground/30 text-xl">
 								:
 							</span>
 							<div className="grid gap-0.5 text-center">
-								<span className="font-medium text-[10px] text-muted-foreground/50 uppercase tracking-wider">
-									S
+								<span className="font-semibold text-[9px] text-muted-foreground/40 uppercase tracking-[0.15em]">
+									SS
 								</span>
 								<TimePickerInput
 									picker="seconds"
@@ -150,7 +166,12 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 							</div>
 						</div>
 					</div>
-					<Button size="sm" onClick={handleConfirm} className="w-full">
+					<Button
+						size="sm"
+						onClick={handleConfirm}
+						className="w-full gap-2 bg-primary text-primary-foreground shadow-sm transition-all hover:shadow-md"
+					>
+						<CheckIcon className="size-3.5" />
 						Apply
 					</Button>
 				</div>
