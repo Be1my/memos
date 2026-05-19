@@ -14,7 +14,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@memos/ui/components/dropdown-menu";
-import type { EditorState } from "lexical";
+import type { EditorState, SerializedEditorState } from "lexical";
 import { $getRoot } from "lexical";
 import {
 	FileIcon,
@@ -77,7 +77,7 @@ function Editor({
 	}) => void;
 	isSaving?: boolean;
 	dateSearch?: { date?: string };
-	initialEditorState?: Record<string, unknown>;
+	initialEditorState?: SerializedEditorState;
 	initialVisibility?: string;
 	initialCreatedAt?: string;
 	onCancel?: () => void;
