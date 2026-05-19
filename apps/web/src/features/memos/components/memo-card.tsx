@@ -1,9 +1,10 @@
 import { LexicalRenderer } from "../../editor/components/lexical-renderer";
 import type { listMemosFn } from "../../editor/functions/list-memos.function";
 import { AttachmentGrid } from "./attachment-grid";
-import { MemoReactions } from "./memo-reactions";
 import { MemoCardActions } from "./memo-card-actions";
+import { MemoReactions } from "./memo-reactions";
 import { ReactionTrigger } from "./reaction-trigger";
+import { PinIcon } from "lucide-react";
 
 type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];
 
@@ -22,13 +23,14 @@ function MemoCard({ memo, userId }: { memo: Memo; userId?: string | null }) {
 		<div className="group/memo relative rounded-lg border bg-card p-4 text-sm">
 			<div className="mb-3 flex items-center justify-between text-muted-foreground text-xs">
 				<div className="flex items-center gap-2">
+					{memo.pinned && <PinIcon className="size-3 fill-current" />}
 					<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
 					<FormattedTime formattedTime={memo.formattedTime} />
 				</div>
 				{userId && (
 					<div className="flex items-center gap-0.5">
 						<ReactionTrigger contentId={memo.uid} currentUserId={userId} />
-						<MemoCardActions />
+						<MemoCardActions memoUid={memo.uid} pinned={memo.pinned} />
 					</div>
 				)}
 			</div>
