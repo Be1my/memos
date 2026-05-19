@@ -1,16 +1,32 @@
 // apps/web/src/middleware/locale-tz.ts
 import { createMiddleware } from "@tanstack/react-start";
 
+function parseCookies(cookieHeader: string): Record<string, string> {
+	const cookies: Record<string, string> = {};
+	if (!cookieHeader) return cookies;
+
+	cookieHeader.split(";").forEach((part) => {
+		const [name, ...rest] = part.trim().split("=");
+		if (name) {
+			try {
+				cookies[name] = decodeURIComponent(rest.join("=") || "");
+			} catch {
+				cookies[name] = rest.join("=") || "";
+			}
+		}
+	});
+
+	return cookies;
+}
+
 export const localeTzMiddleware = createMiddleware().server(
 	async ({ next, request }) => {
 		const cookieHeader = request.headers.get("cookie") || "";
-		const locale = cookieHeader.includes("PARAGLIDE_LOCALE")
-			? cookieHeader.split("PARAGLIDE_LOCALE=")[1]?.split(";")[0]
-			: "en";
-		const timeZone = cookieHeader.includes("memos-tz")
-			? cookieHeader.split("memos-tz=")[1]?.split(";")[0]
-			: "UTC";
+		const cookies = parseCookies(cookieHeader);
 
-		return next({ context: { locale, timeZone: timeZone || "UTC" } });
+		const locale = cookies["PARAGLIDE_LOCALE"] || "en";
+		const timeZone = cookies["tz"] || "UTC";
+
+		return next({ context: { locale, timeZone } });
 	},
 );

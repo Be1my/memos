@@ -5,6 +5,7 @@ import { MemoCardActions } from "./memo-card-actions";
 import { MemoReactions } from "./memo-reactions";
 import { ReactionTrigger } from "./reaction-trigger";
 import { PinIcon } from "lucide-react";
+import { useTogglePin } from "../queries/pin-memo.query";
 
 type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];
 
@@ -19,11 +20,21 @@ function FormattedTime({ formattedTime }: { formattedTime: string }) {
 }
 
 function MemoCard({ memo, userId }: { memo: Memo; userId?: string | null }) {
+	const togglePin = useTogglePin();
+
 	return (
 		<div className="group/memo relative rounded-lg border bg-card p-4 text-sm">
 			<div className="mb-3 flex items-center justify-between text-muted-foreground text-xs">
 				<div className="flex items-center gap-2">
-					{memo.pinned && <PinIcon className="size-3 fill-current" />}
+					{memo.pinned && (
+						<button
+							type="button"
+							onClick={() => togglePin.mutate({ data: { memoId: memo.uid } })}
+							className="inline-flex items-center justify-center rounded-sm text-muted-foreground transition-all hover:opacity-80"
+						>
+							<PinIcon className="size-3 fill-current" />
+						</button>
+					)}
 					<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
 					<FormattedTime formattedTime={memo.formattedTime} />
 				</div>

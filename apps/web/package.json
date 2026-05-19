@@ -28,7 +28,7 @@
 		"drizzle-orm": "^1.0.0-rc.2",
 		"date-fns": "^4.1.0",
 		"dotenv": "catalog:",
-		"lexical": "^0.27.0",
+		"lexical": "^0.44.0",
 		"lucide-react": "^1.8.0",
 		"next-themes": "catalog:",
 		"react": "^19.2.5",
