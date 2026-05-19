@@ -50,7 +50,7 @@ export const updateMemoFn = createServerFn({ method: "POST" })
 
 		const db = createDb();
 
-		const updateData: Record<string, unknown> = {
+		const updateData: Partial<typeof memo.$inferInsert> = {
 			content: data.content,
 			payload: data.payload,
 			visibility: visibilityMap[data.visibility] ?? "PRIVATE",
