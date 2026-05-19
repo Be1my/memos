@@ -20,17 +20,28 @@ import {
 	PinIcon,
 	Trash2Icon,
 } from "lucide-react";
+import { useTogglePin } from "../queries/pin-memo.query";
 
-function MemoCardActions() {
+interface MemoCardActionsProps {
+	memoUid: string;
+	pinned: boolean;
+}
+
+function MemoCardActions({ memoUid, pinned }: MemoCardActionsProps) {
+	const togglePin = useTogglePin();
+
+	const handleTogglePin = () => {
+		togglePin.mutate({ data: { memoId: memoUid } });
+	};
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="inline-flex size-6 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground">
 				<MoreVerticalIcon className="size-4" />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" sideOffset={4}>
-				<DropdownMenuItem>
+				<DropdownMenuItem onClick={handleTogglePin}>
 					<PinIcon className="size-4" />
-					固定
+					{pinned ? "取消固定" : "固定"}
 				</DropdownMenuItem>
 				<DropdownMenuItem>
 					<PencilIcon className="size-4" />
