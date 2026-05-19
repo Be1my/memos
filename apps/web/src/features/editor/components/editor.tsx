@@ -14,6 +14,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@memos/ui/components/dropdown-menu";
+import { useSearch } from "@tanstack/react-router";
 import type { EditorState } from "lexical";
 import { $getRoot } from "lexical";
 import {
@@ -30,6 +31,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { editorTheme } from "../editor-theme";
 import type { FilePayload } from "../functions/create-memo.function";
 import { FloatingToolbar } from "./floating-toolbar";
+import { MemoDatetime } from "./memo-datetime";
 import { TagAutocompletePlugin } from "./tag-autocomplete-plugin";
 
 const placeholder = "Write something...";
@@ -76,6 +78,9 @@ function Editor({
 	const editorStateRef = useRef<EditorState | null>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
+	const search = useSearch();
+	const dateSearch = { date: search?.date as string | undefined };
+	const [createdAt, setCreatedAt] = useState<string | null>(null);
 	const mediaInputRef = useRef<HTMLInputElement>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -119,8 +124,9 @@ function Editor({
 			visibility,
 			tags,
 			files,
+			...(createdAt ? { createdAt } : {}),
 		});
-	}, [onSave, visibility, isSaving, pendingFiles]);
+	}, [onSave, visibility, isSaving, pendingFiles, createdAt]);
 
 	useEffect(() => {
 		const el = containerRef.current;
@@ -151,6 +157,7 @@ function Editor({
 			ref={containerRef}
 			className="rounded-xl border bg-card ring-1 ring-foreground/10 focus-within:ring-2 focus-within:ring-ring"
 		>
+			<MemoDatetime onChange={setCreatedAt} dateSearch={dateSearch} />
 			<LexicalComposer initialConfig={initialConfig}>
 				<div className="relative max-h-[240px] min-h-[100px] overflow-y-auto px-3.5 py-3.5 text-sm">
 					<RichTextPlugin

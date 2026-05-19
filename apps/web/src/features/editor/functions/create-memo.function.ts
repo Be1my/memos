@@ -19,6 +19,7 @@ interface CreateMemoInput {
 	visibility: string;
 	tags?: string[];
 	files?: FilePayload[];
+	createdAt?: string;
 }
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -26,7 +27,7 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024;
 export const createMemoFn = createServerFn({ method: "POST" })
 
 	.inputValidator((input: unknown) => {
-		const { content, payload, visibility, tags, files } =
+		const { content, payload, visibility, tags, files, createdAt } =
 			input as CreateMemoInput;
 
 		if (!content?.trim()) {
@@ -59,7 +60,14 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			}
 		}
 
-		return { content, payload, visibility, tags, files: files ?? [] };
+		return {
+			content,
+			payload,
+			visibility,
+			tags,
+			files: files ?? [],
+			createdAt,
+		};
 	})
 	.handler(async ({ data }) => {
 		const [
@@ -88,17 +96,18 @@ export const createMemoFn = createServerFn({ method: "POST" })
 
 		let created: typeof memo.$inferSelect;
 		try {
-			[created] = await db
-				.insert(memo)
-				.values({
-					uid: crypto.randomUUID(),
-					creatorId: session.user.id,
-					content: data.content,
-					payload: data.payload ?? {},
-					visibility: visibilityMap[data.visibility] ?? "PRIVATE",
-					tags: data.tags ?? [],
-				})
-				.returning();
+			const insertData: typeof memo.$inferInsert = {
+				uid: crypto.randomUUID(),
+				creatorId: session.user.id,
+				content: data.content,
+				payload: data.payload ?? {},
+				visibility: visibilityMap[data.visibility] ?? "PRIVATE",
+				tags: data.tags ?? [],
+			};
+			if (data.createdAt) {
+				insertData.createdAt = new Date(data.createdAt);
+			}
+			[created] = await db.insert(memo).values(insertData).returning();
 		} catch (error) {
 			console.error("Failed to create memo:", error);
 			throw new Error("Failed to create memo");
