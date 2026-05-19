@@ -12,6 +12,7 @@ const bucket = await R2Bucket("attachments", {
 	dev: {
 		remote: true,
 	},
+	adopt: true,
 });
 
 export const web = await TanStackStart("web", {

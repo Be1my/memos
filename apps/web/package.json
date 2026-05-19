@@ -5,7 +5,7 @@
 	"scripts": {
 		"build": "vite build",
 		"serve": "vite preview",
-		"dev:bare": "vite dev",
+		"dev:bare": "lsof -ti:3001 | xargs kill -9 2>/dev/null; vite dev",
 		"machine-translate": "inlang machine translate --project project.inlang"
 	},
 	"dependencies": {
