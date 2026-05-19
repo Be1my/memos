@@ -1,12 +1,15 @@
-import { GlobeIcon, LockIcon, PinIcon, UsersIcon } from "lucide-react";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
 	TooltipTrigger,
 } from "@memos/ui/components/tooltip";
+import { GlobeIcon, LockIcon, PinIcon, UsersIcon } from "lucide-react";
+import { useState } from "react";
+import { Editor } from "../../editor/components/editor";
 import { LexicalRenderer } from "../../editor/components/lexical-renderer";
 import type { listMemosFn } from "../../editor/functions/list-memos.function";
+import { useUpdateMemo } from "../../editor/queries/update-memo.query";
 import { useTogglePin } from "../queries/pin-memo.query";
 import { AttachmentGrid } from "./attachment-grid";
 import { MemoCardActions } from "./memo-card-actions";
@@ -28,8 +31,67 @@ const visibilityIcon: Record<string, typeof GlobeIcon> = {
 	PROTECTED: UsersIcon,
 };
 
-function MemoCard({ memo, userId, showVisibility = true }: { memo: Memo; userId?: string | null; showVisibility?: boolean }) {
+function MemoCard({
+	memo,
+	userId,
+	showVisibility = true,
+}: {
+	memo: Memo;
+	userId?: string | null;
+	showVisibility?: boolean;
+}) {
 	const togglePin = useTogglePin();
+	const updateMemo = useUpdateMemo();
+	const [isEditing, setIsEditing] = useState(false);
+
+	const visibilityReverseMap: Record<string, string> = {
+		PRIVATE: "private",
+		PUBLIC: "public",
+		PROTECTED: "workspace",
+	};
+
+	const handleEditSave = (data: {
+		content: string;
+		payload: Record<string, unknown>;
+		visibility: string;
+		tags?: string[];
+		files?: { name: string; type: string; size: number; base64: string }[];
+		createdAt?: string;
+	}) => {
+		updateMemo.mutate(
+			{
+				data: {
+					memoId: memo.uid,
+					content: data.content,
+					payload: data.payload,
+					visibility: data.visibility,
+					createdAt: data.createdAt,
+				},
+			},
+			{
+				onSuccess: () => {
+					setIsEditing(false);
+				},
+			},
+		);
+	};
+
+	const handleEditCancel = () => {
+		setIsEditing(false);
+	};
+
+	if (isEditing) {
+		return (
+			<Editor
+				onSave={handleEditSave}
+				isSaving={updateMemo.isPending}
+				initialEditorState={memo.payload as never}
+				initialVisibility={visibilityReverseMap[memo.visibility] ?? "private"}
+				initialCreatedAt={memo.createdAt}
+				onCancel={handleEditCancel}
+			/>
+		);
+	}
 
 	return (
 		<div className="group/memo relative rounded-lg border bg-card p-4 text-sm">
@@ -53,22 +115,31 @@ function MemoCard({ memo, userId, showVisibility = true }: { memo: Memo; userId?
 					{userId && (
 						<>
 							<ReactionTrigger contentId={memo.uid} currentUserId={userId} />
-							{showVisibility && (() => {
-								const Icon = visibilityIcon[memo.visibility];
-								return (
-									<TooltipProvider>
-										<Tooltip>
-								<TooltipTrigger render={<span className="inline-flex size-6 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground" />}>
-									<Icon className="size-4" />
-											</TooltipTrigger>
-											<TooltipContent side="top" align="center">
-												{visibilityLabel[memo.visibility] ?? memo.visibility}
-											</TooltipContent>
-										</Tooltip>
-									</TooltipProvider>
-								);
-							})()}
-							<MemoCardActions memoUid={memo.uid} pinned={memo.pinned} />
+							{showVisibility &&
+								(() => {
+									const Icon = visibilityIcon[memo.visibility];
+									return (
+										<TooltipProvider>
+											<Tooltip>
+												<TooltipTrigger
+													render={
+														<span className="inline-flex size-6 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground" />
+													}
+												>
+													<Icon className="size-4" />
+												</TooltipTrigger>
+												<TooltipContent side="top" align="center">
+													{visibilityLabel[memo.visibility] ?? memo.visibility}
+												</TooltipContent>
+											</Tooltip>
+										</TooltipProvider>
+									);
+								})()}
+							<MemoCardActions
+								memoUid={memo.uid}
+								pinned={memo.pinned}
+								onEdit={() => setIsEditing(true)}
+							/>
 						</>
 					)}
 				</div>
