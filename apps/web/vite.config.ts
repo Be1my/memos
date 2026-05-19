@@ -15,9 +15,7 @@ const shouldUseAlchemy = existsSync(alchemyConfigPath);
 const cloudflareWorkersShimPath = fileURLToPath(
 	new URL("../../packages/env/src/cloudflare-local.ts", import.meta.url),
 );
-const cloudflareWorkersAlias = shouldUseAlchemy
-	? {}
-	: { "cloudflare:workers": cloudflareWorkersShimPath };
+const cloudflareWorkersAlias = {"cloudflare:workers": cloudflareWorkersShimPath };
 
 export default defineConfig({
 	server: {
