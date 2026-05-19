@@ -5,6 +5,7 @@ import { togglePinFn } from "../functions/toggle-pin.function";
 interface MemoWithPin {
 	uid: string;
 	pinned: boolean;
+	createdAt: string;
 }
 
 export function useTogglePin() {
@@ -23,10 +24,17 @@ export function useTogglePin() {
 				{ queryKey: ["memos"] },
 				(old) => {
 					if (!old) return old;
-					return old.map((memo) => {
-						if (memo.uid !== variables.data.memoId) return memo;
-						return { ...memo, pinned: !memo.pinned };
-					});
+					return old
+						.map((memo) => {
+							if (memo.uid !== variables.data.memoId) return memo;
+							return { ...memo, pinned: !memo.pinned };
+						})
+						.sort((a, b) => {
+							if (a.pinned !== b.pinned) {
+								return a.pinned ? -1 : 1;
+							}
+							return b.createdAt.localeCompare(a.createdAt);
+						});
 				},
 			);
 
