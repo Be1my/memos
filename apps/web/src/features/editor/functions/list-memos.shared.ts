@@ -7,7 +7,11 @@ export interface ListMemosFilter {
 	tag?: string;
 }
 
-export async function queryMemos(conditions: SQL[], filter?: ListMemosFilter) {
+export async function queryMemos(
+	conditions: SQL[],
+	filter?: ListMemosFilter,
+	orderByPinned?: boolean,
+) {
 	const [
 		{ createDb },
 		{ memo },
@@ -47,7 +51,9 @@ export async function queryMemos(conditions: SQL[], filter?: ListMemosFilter) {
 		.from(memo)
 		.leftJoin(attachment, eq(attachment.memoId, memo.id))
 		.where(and(...conditions))
-		.orderBy(desc(memo.createdAt))
+		.orderBy(
+			...(orderByPinned ? [desc(memo.pinned), desc(memo.createdAt)] : [desc(memo.createdAt)]),
+		)
 		.limit(20);
 
 	const memoMap = new Map<
@@ -98,6 +104,7 @@ export async function queryMemos(conditions: SQL[], filter?: ListMemosFilter) {
 		payload: m.payload,
 		visibility: m.visibility,
 		tags: m.tags,
+		pinned: m.pinned,
 		createdAt: m.createdAt.toISOString(),
 		attachments: m.attachments.map((a) => ({
 			id: a.id,
