@@ -23,7 +23,6 @@ export const memo = pgTable(
 			.defaultNow(),
 		updatedAt: timestamp("updated_at", { withTimezone: true })
 			.defaultNow()
-			.$onUpdate(() => /* @__PURE__ */ new Date())
 			.notNull(),
 		rowStatus: rowStatusEnum("row_status").notNull().default("NORMAL"),
 		content: text("content").notNull().default(""),
