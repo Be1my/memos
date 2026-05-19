@@ -54,5 +54,42 @@
 	"settings_password_failed": "修改失败",
 	"settings_password_same": "新密码不能与当前密码相同",
 	"settings_account_deleted": "账号已删除",
-	"settings_delete_failed": "删除失败"
+	"settings_delete_failed": "删除失败",
+	"time_now": "刚刚",
+	"time_minutes_ago": [
+		{
+			"declarations": [
+				"input minutes",
+				"local formatted = minutes: relativetime unit=minute style=short numeric=always"
+			],
+			"match": {
+				"minutes=*": "{formatted}"
+			}
+		}
+	],
+	"time_hours_ago": [
+		{
+			"declarations": [
+				"input hours",
+				"local formatted = hours: relativetime unit=hour style=short numeric=always"
+			],
+			"match": {
+				"hours=*": "{formatted}"
+			}
+		}
+	],
+	"time_date": [
+		{
+			"declarations": [
+				"input date",
+				"local formatted = date: datetime weekday=short month=short day=numeric year=numeric"
+			],
+			"match": {
+				"date=*": "{formatted}"
+			}
+		}
+	],
+	"time_last_updated": "最后更新于 {time}",
+	"time_created_tooltip": "创建时间：{time}",
+	"time_updated_tooltip": "最后更新：{time}"
 }

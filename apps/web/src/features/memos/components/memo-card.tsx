@@ -1,11 +1,12 @@
+import { PinIcon } from "lucide-react";
 import { LexicalRenderer } from "../../editor/components/lexical-renderer";
 import type { listMemosFn } from "../../editor/functions/list-memos.function";
+import { useTogglePin } from "../queries/pin-memo.query";
 import { AttachmentGrid } from "./attachment-grid";
 import { MemoCardActions } from "./memo-card-actions";
 import { MemoReactions } from "./memo-reactions";
+import { MemoTimeDisplay } from "./memo-time-display";
 import { ReactionTrigger } from "./reaction-trigger";
-import { PinIcon } from "lucide-react";
-import { useTogglePin } from "../queries/pin-memo.query";
 
 type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];
 
@@ -14,10 +15,6 @@ const visibilityLabel: Record<string, string> = {
 	PUBLIC: "公开",
 	PROTECTED: "工作区",
 };
-
-function FormattedTime({ formattedTime }: { formattedTime: string }) {
-	return <>{formattedTime}</>;
-}
 
 function MemoCard({ memo, userId }: { memo: Memo; userId?: string | null }) {
 	const togglePin = useTogglePin();
@@ -36,7 +33,10 @@ function MemoCard({ memo, userId }: { memo: Memo; userId?: string | null }) {
 						</button>
 					)}
 					<span>{visibilityLabel[memo.visibility] ?? memo.visibility}</span>
-					<FormattedTime formattedTime={memo.formattedTime} />
+					<MemoTimeDisplay
+						createdAt={memo.createdAt}
+						updatedAt={memo.updatedAt}
+					/>
 				</div>
 				{userId && (
 					<div className="flex items-center gap-0.5">

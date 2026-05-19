@@ -52,7 +52,9 @@ export async function queryMemos(
 		.leftJoin(attachment, eq(attachment.memoId, memo.id))
 		.where(and(...conditions))
 		.orderBy(
-			...(orderByPinned ? [desc(memo.pinned), desc(memo.createdAt)] : [desc(memo.createdAt)]),
+			...(orderByPinned
+				? [desc(memo.pinned), desc(memo.createdAt)]
+				: [desc(memo.createdAt)]),
 		)
 		.limit(20);
 
@@ -106,6 +108,7 @@ export async function queryMemos(
 		tags: m.tags,
 		pinned: m.pinned,
 		createdAt: m.createdAt.toISOString(),
+		updatedAt: m.updatedAt.toISOString(),
 		attachments: m.attachments.map((a) => ({
 			id: a.id,
 			uid: a.uid,

@@ -4,7 +4,9 @@ interface TimezoneContextValue {
 	timeZone: string;
 }
 
-const TimezoneContext = createContext<TimezoneContextValue>({ timeZone: "UTC" });
+const TimezoneContext = createContext<TimezoneContextValue>({
+	timeZone: "UTC",
+});
 
 export function TimezoneProvider({
 	timeZone,
