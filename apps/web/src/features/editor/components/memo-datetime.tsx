@@ -13,7 +13,7 @@ import { TimePickerInput } from "./time-picker-input";
 
 interface MemoDatetimeProps {
 	onChange: (isoString: string | null) => void;
-	dateSearch: { date?: string };
+	dateSearch?: { date?: string };
 	defaultDate?: string;
 }
 

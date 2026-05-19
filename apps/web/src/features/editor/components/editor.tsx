@@ -63,6 +63,10 @@ function Editor({
 	onSave,
 	isSaving,
 	dateSearch,
+	initialEditorState,
+	initialVisibility,
+	initialCreatedAt,
+	onCancel,
 }: {
 	onSave?: (data: {
 		content: string;
@@ -73,8 +77,12 @@ function Editor({
 	}) => void;
 	isSaving?: boolean;
 	dateSearch?: { date?: string };
+	initialEditorState?: Record<string, unknown>;
+	initialVisibility?: string;
+	initialCreatedAt?: string;
+	onCancel?: () => void;
 }) {
-	const [visibility, setVisibility] = useState("private");
+	const [visibility, setVisibility] = useState(initialVisibility ?? "private");
 	const [hasContent, setHasContent] = useState(false);
 	const editorStateRef = useRef<EditorState | null>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -149,6 +157,9 @@ function Editor({
 		theme: editorTheme,
 		nodes: [HashtagNode],
 		onError: (error: Error) => console.error(error),
+		editorState: initialEditorState
+			? JSON.stringify(initialEditorState)
+			: undefined,
 	};
 
 	return (
@@ -156,7 +167,11 @@ function Editor({
 			ref={containerRef}
 			className="rounded-xl border bg-card ring-1 ring-foreground/10 focus-within:ring-2 focus-within:ring-ring"
 		>
-			<MemoDatetime onChange={setCreatedAt} dateSearch={dateSearch} />
+			<MemoDatetime
+				onChange={setCreatedAt}
+				dateSearch={dateSearch}
+				defaultDate={initialCreatedAt}
+			/>
 			<LexicalComposer initialConfig={initialConfig}>
 				<div className="relative max-h-[240px] min-h-[100px] overflow-y-auto px-3.5 py-3.5 text-sm">
 					<RichTextPlugin
@@ -270,6 +285,11 @@ function Editor({
 					</DropdownMenuContent>
 				</DropdownMenu>
 				<div className="flex items-center gap-2">
+					{onCancel && (
+						<Button size="sm" variant="ghost" onClick={onCancel}>
+							取消
+						</Button>
+					)}
 					<DropdownMenu>
 						<DropdownMenuTrigger
 							render={
