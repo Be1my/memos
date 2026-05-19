@@ -4,6 +4,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@memos/ui/components/tooltip";
+import type { SerializedEditorState } from "lexical";
 import { GlobeIcon, LockIcon, PinIcon, UsersIcon } from "lucide-react";
 import { useState } from "react";
 import { Editor } from "../../editor/components/editor";
@@ -31,6 +32,12 @@ const visibilityIcon: Record<string, typeof GlobeIcon> = {
 	PROTECTED: UsersIcon,
 };
 
+const visibilityReverseMap: Record<string, string> = {
+	PRIVATE: "private",
+	PUBLIC: "public",
+	PROTECTED: "workspace",
+};
+
 function MemoCard({
 	memo,
 	userId,
@@ -43,12 +50,6 @@ function MemoCard({
 	const togglePin = useTogglePin();
 	const updateMemo = useUpdateMemo();
 	const [isEditing, setIsEditing] = useState(false);
-
-	const visibilityReverseMap: Record<string, string> = {
-		PRIVATE: "private",
-		PUBLIC: "public",
-		PROTECTED: "workspace",
-	};
 
 	const handleEditSave = (data: {
 		content: string;
@@ -69,9 +70,8 @@ function MemoCard({
 				},
 			},
 			{
-				onSuccess: () => {
-					setIsEditing(false);
-				},
+				onSuccess: () => setIsEditing(false),
+				onError: () => setIsEditing(false),
 			},
 		);
 	};
@@ -85,7 +85,7 @@ function MemoCard({
 			<Editor
 				onSave={handleEditSave}
 				isSaving={updateMemo.isPending}
-				initialEditorState={memo.payload as never}
+				initialEditorState={memo.payload as unknown as SerializedEditorState}
 				initialVisibility={visibilityReverseMap[memo.visibility] ?? "private"}
 				initialCreatedAt={memo.createdAt}
 				onCancel={handleEditCancel}
