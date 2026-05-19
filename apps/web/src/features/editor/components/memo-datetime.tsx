@@ -59,8 +59,7 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 	if (!dateStr || !selectedDate) return null;
 
 	const dateDots = format(selectedDate, "yyyy.MM.dd");
-	const timeDisplay = format(selectedDate, "HH:mm");
-	const seconds = format(selectedDate, "ss");
+	const timeFull = format(selectedDate, "HH:mm:ss");
 	const dateValue = format(selectedDate, "yyyy-MM-dd");
 	const weekday = format(selectedDate, "EEE");
 
@@ -77,13 +76,8 @@ export function MemoDatetime({ onChange, dateSearch }: MemoDatetimeProps) {
 							<span className="font-medium text-white/90 tracking-[0.06em]">
 								{dateDots}
 							</span>
-							<span className="flex items-center gap-1">
-								<span className="font-bold font-mono text-sm tracking-[0.05em]">
-									{timeDisplay}
-								</span>
-								<span className="font-medium font-mono text-[10px] text-white/50">
-									{seconds}
-								</span>
+							<span className="font-bold font-mono text-sm tracking-[0.05em]">
+								{timeFull}
 							</span>
 						</span>
 						<span className="font-medium text-[10px] text-white/40 uppercase tracking-[0.08em]">
