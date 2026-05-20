@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 
 import { authMiddleware } from "@/middleware/auth";
+import { notFound, unauthorized } from "@/lib/errors";
 
 import { UpdateMemoInputSchema } from "../schemas/update-memo";
 
@@ -14,7 +15,7 @@ export const updateMemoFn = createServerFn({ method: "POST" })
 	.inputValidator(UpdateMemoInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
-		if (!context.session) throw new Error("Not authenticated");
+		if (!context.session) throw unauthorized();
 
 		const [
 			{ createDb },
@@ -54,7 +55,7 @@ export const updateMemoFn = createServerFn({ method: "POST" })
 				updatedAt: memo.updatedAt,
 			});
 
-		if (!updated) throw new Error("Memo not found or not authorized");
+		if (!updated) throw notFound("Memo not found");
 
 		return {
 			...updated,

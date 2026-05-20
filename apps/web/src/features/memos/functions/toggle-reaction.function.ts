@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 
 import { authMiddleware } from "@/middleware/auth";
+import { unauthorized } from "@/lib/errors";
 
 import { ToggleReactionInputSchema } from "../schemas/toggle-reaction";
 
@@ -9,7 +10,7 @@ export const toggleReactionFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
 		if (!context.session) {
-			throw new Error("Not authenticated");
+			throw unauthorized();
 		}
 
 		const [

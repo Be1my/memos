@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 
 import { authMiddleware } from "@/middleware/auth";
+import { internalError, unauthorized } from "@/lib/errors";
 
 import { CreateMemoInputSchema } from "../schemas/create-memo";
 
@@ -25,7 +26,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
 		if (!context.session) {
-			throw new Error("Not authenticated");
+			throw unauthorized();
 		}
 
 		const [
@@ -59,7 +60,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			[created] = await db.insert(memo).values(insertData).returning();
 		} catch (error) {
 			console.error("Failed to create memo:", error);
-			throw new Error("Failed to create memo");
+			throw internalError("Failed to create memo");
 		}
 
 		const bucket = env.ATTACHMENTS_BUCKET;
