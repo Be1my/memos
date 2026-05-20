@@ -1,4 +1,6 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useMemo } from "react";
+import { m } from "@/paraglide/messages";
 
 export function ActiveFilters() {
   const search = useSearch({ strict: false }) as {
@@ -8,17 +10,19 @@ export function ActiveFilters() {
   };
   const navigate = useNavigate();
 
-  const filters: { key: string; label: string }[] = [];
-
-  if (search.q) {
-    filters.push({ key: "q", label: `搜索: ${search.q}` });
-  }
-  if (search.date) {
-    filters.push({ key: "date", label: search.date });
-  }
-  if (search.tag) {
-    filters.push({ key: "tag", label: `标签: ${search.tag}` });
-  }
+  const filters = useMemo(() => {
+    const result: { key: string; label: string }[] = [];
+    if (search.q) {
+      result.push({ key: "q", label: m.search_filter_search({ query: search.q }) });
+    }
+    if (search.date) {
+      result.push({ key: "date", label: search.date });
+    }
+    if (search.tag) {
+      result.push({ key: "tag", label: m.search_filter_tag({ tag: search.tag }) });
+    }
+    return result;
+  }, [search.q, search.date, search.tag]);
 
   if (filters.length === 0) return null;
 
@@ -27,7 +31,7 @@ export function ActiveFilters() {
       {filters.map((f) => (
         <span
           key={f.key}
-          className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1 text-sm text-blue-700"
+          className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary"
         >
           {f.label}
           <button
@@ -42,8 +46,8 @@ export function ActiveFilters() {
                 replace: true,
               })
             }
-            className="ml-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full hover:bg-blue-200"
-            aria-label={`移除${f.label}`}
+            className="ml-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full hover:bg-primary/20"
+            aria-label={`${m.search_filter_remove()} ${f.label}`}
           >
             ×
           </button>

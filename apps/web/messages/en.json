@@ -89,6 +89,9 @@
 			}
 		}
 	],
+	"search_filter_search": "Search: {query}",
+	"search_filter_tag": "Tag: {tag}",
+	"search_filter_remove": "Remove",
 	"time_last_updated": "Last updated at {time}",
 	"time_created_tooltip": "Created: {time}",
 	"time_updated_tooltip": "Last updated: {time}"
