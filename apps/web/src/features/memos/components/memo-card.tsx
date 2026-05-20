@@ -56,7 +56,7 @@ function MemoCard({
 		payload: SerializedEditorState;
 		visibility: string;
 		tags?: string[];
-		files?: { name: string; type: string; size: number; base64: string }[];
+		files?: { name: string; type: string; size: number; key: string }[];
 		createdAt?: string;
 	}) => {
 		updateMemo.mutate(
