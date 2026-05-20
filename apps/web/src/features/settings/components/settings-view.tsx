@@ -80,10 +80,13 @@ function MyAccountSection() {
 	const session = authClient.useSession();
 	const user = session.data?.user;
 
+	const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+
 	const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
-		if (!file) return;
+		if (!file || isUploadingAvatar) return;
 
+		setIsUploadingAvatar(true);
 		try {
 			const { urls } = await getUploadPresignedUrlsFn({
 				data: {
@@ -101,8 +104,12 @@ function MyAccountSection() {
 
 			await authClient.updateUser({ image: entry.key });
 			toast.success(m.settings_avatar_updated());
-		} catch {
-			toast.error(m.settings_avatar_failed());
+		} catch (err) {
+			toast.error(
+				err instanceof Error ? err.message : m.settings_avatar_failed(),
+			);
+		} finally {
+			setIsUploadingAvatar(false);
 		}
 	};
 
