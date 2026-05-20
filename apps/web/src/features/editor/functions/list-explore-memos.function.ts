@@ -9,8 +9,8 @@ import { ListMemosFilterSchema, queryMemos } from "./list-memos.shared";
 export type { ListMemosFilter };
 
 export const listExploreMemosFn = createServerFn({ method: "GET" })
-	.middleware([authMiddleware])
 	.inputValidator(ListMemosFilterSchema.optional().default({}))
+	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
 		const filter = data;
 
