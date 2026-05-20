@@ -70,7 +70,7 @@ function Editor({
 }: {
 	onSave?: (data: {
 		content: string;
-		payload: Record<string, unknown>;
+		payload: SerializedEditorState;
 		visibility: string;
 		tags?: string[];
 		files?: FilePayload[];
@@ -128,7 +128,7 @@ function Editor({
 
 		onSave?.({
 			content,
-			payload: state.toJSON() as unknown as Record<string, unknown>,
+			payload: state.toJSON(),
 			visibility,
 			tags,
 			files,

@@ -53,7 +53,7 @@ function MemoCard({
 
 	const handleEditSave = (data: {
 		content: string;
-		payload: Record<string, unknown>;
+		payload: SerializedEditorState;
 		visibility: string;
 		tags?: string[];
 		files?: { name: string; type: string; size: number; base64: string }[];
@@ -64,7 +64,7 @@ function MemoCard({
 				data: {
 					memoId: memo.uid,
 					content: data.content,
-					payload: data.payload,
+					payload: data.payload as unknown as Record<string, unknown>,
 					visibility: data.visibility,
 					createdAt: data.createdAt,
 				},
@@ -85,7 +85,7 @@ function MemoCard({
 			<Editor
 				onSave={handleEditSave}
 				isSaving={updateMemo.isPending}
-				initialEditorState={memo.payload as unknown as SerializedEditorState}
+				initialEditorState={memo.payload}
 				initialVisibility={visibilityReverseMap[memo.visibility] ?? "private"}
 				initialCreatedAt={memo.createdAt}
 				onCancel={handleEditCancel}

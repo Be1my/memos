@@ -10,7 +10,7 @@ const visibilityMap: Record<string, "PRIVATE" | "PUBLIC" | "PROTECTED"> = {
 	public: "PUBLIC",
 };
 
-export const updateMemoFn = createServerFn({ method: "POST", strict: { output: false } })
+export const updateMemoFn = createServerFn({ method: "POST" })
 	.inputValidator(UpdateMemoInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
@@ -58,6 +58,7 @@ export const updateMemoFn = createServerFn({ method: "POST", strict: { output: f
 
 		return {
 			...updated,
+			payload: updated.payload as Record<string, any>,
 			createdAt: updated.createdAt.toISOString(),
 			updatedAt: updated.updatedAt.toISOString(),
 		};

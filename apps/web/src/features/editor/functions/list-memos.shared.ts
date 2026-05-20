@@ -1,11 +1,14 @@
 import { addDays, format, parse } from "date-fns";
 import type { SQL } from "drizzle-orm";
+import { z } from "zod";
 
-export interface ListMemosFilter {
-	q?: string;
-	date?: string;
-	tag?: string;
-}
+export const ListMemosFilterSchema = z.object({
+	q: z.string().optional(),
+	date: z.string().optional(),
+	tag: z.string().optional(),
+});
+
+export type ListMemosFilter = z.infer<typeof ListMemosFilterSchema>;
 
 export async function queryMemos(
 	conditions: SQL[],
@@ -103,7 +106,7 @@ export async function queryMemos(
 		id: m.id,
 		uid: m.uid,
 		content: m.content,
-		payload: m.payload,
+		payload: m.payload as Record<string, any>,
 		visibility: m.visibility,
 		tags: m.tags,
 		pinned: m.pinned,

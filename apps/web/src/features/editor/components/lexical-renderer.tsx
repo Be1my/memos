@@ -1,3 +1,4 @@
+import type { SerializedEditorState } from "lexical";
 import type { ReactNode } from "react";
 
 type TextNode = {
@@ -108,8 +109,8 @@ function renderNode(node: TextNode | ElementNode, index: number): ReactNode {
 	}
 }
 
-function LexicalRenderer({ payload }: { payload: Record<string, unknown> }) {
-	const root = payload as { root?: ElementNode };
+function LexicalRenderer({ payload }: { payload: SerializedEditorState }) {
+	const root = payload as unknown as { root?: ElementNode };
 	if (!root?.root?.children?.length) {
 		return null;
 	}
