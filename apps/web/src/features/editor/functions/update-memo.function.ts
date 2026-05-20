@@ -2,35 +2,16 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { authMiddleware } from "@/middleware/auth";
 
+import { UpdateMemoInputSchema } from "../schemas/update-memo";
+
 const visibilityMap: Record<string, "PRIVATE" | "PUBLIC" | "PROTECTED"> = {
 	private: "PRIVATE",
 	workspace: "PROTECTED",
 	public: "PUBLIC",
 };
 
-interface UpdateMemoInput {
-	memoId: string;
-	content: string;
-	payload: Record<string, unknown>;
-	visibility: string;
-	createdAt?: string;
-}
-
-export const updateMemoFn = createServerFn({ method: "POST" })
-	.inputValidator((input: unknown) => {
-		const data = input as UpdateMemoInput;
-		if (!data.memoId) throw new Error("memoId is required");
-		if (!data.content?.trim()) throw new Error("Content is required");
-		if (
-			data.payload !== undefined &&
-			(typeof data.payload !== "object" ||
-				data.payload === null ||
-				Array.isArray(data.payload))
-		) {
-			throw new Error("Payload must be a plain object");
-		}
-		return data;
-	})
+export const updateMemoFn = createServerFn({ method: "POST", strict: { output: false } })
+	.inputValidator(UpdateMemoInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
 		if (!context.session) throw new Error("Not authenticated");

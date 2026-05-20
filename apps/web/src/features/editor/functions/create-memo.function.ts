@@ -2,6 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { authMiddleware } from "@/middleware/auth";
 
+import { CreateMemoInputSchema } from "../schemas/create-memo";
+
 const visibilityMap: Record<string, "PRIVATE" | "PUBLIC" | "PROTECTED"> = {
 	private: "PRIVATE",
 	workspace: "PROTECTED",
@@ -15,62 +17,11 @@ export interface FilePayload {
 	base64: string;
 }
 
-interface CreateMemoInput {
-	content: string;
-	payload: Record<string, unknown>;
-	visibility: string;
-	tags?: string[];
-	files?: FilePayload[];
-	createdAt?: string;
-}
-
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 export const createMemoFn = createServerFn({ method: "POST" })
 
-	.inputValidator((input: unknown) => {
-		const { content, payload, visibility, tags, files, createdAt } =
-			input as CreateMemoInput;
-
-		if (!content?.trim()) {
-			throw new Error("Content is required");
-		}
-
-		if (
-			payload !== undefined &&
-			(typeof payload !== "object" ||
-				payload === null ||
-				Array.isArray(payload))
-		) {
-			throw new Error("Payload must be a plain object");
-		}
-
-		if (files) {
-			for (const file of files) {
-				if (typeof file.name !== "string" || file.name.length === 0) {
-					throw new Error("Each file must have a non-empty name");
-				}
-				if (typeof file.type !== "string" || file.type.length === 0) {
-					throw new Error("Each file must have a non-empty type");
-				}
-				if (typeof file.size !== "number" || file.size < 0) {
-					throw new Error("Each file must have a valid size");
-				}
-				if (typeof file.base64 !== "string" || file.base64.length === 0) {
-					throw new Error("Each file must have a non-empty base64 payload");
-				}
-			}
-		}
-
-		return {
-			content,
-			payload,
-			visibility,
-			tags,
-			files: files ?? [],
-			createdAt,
-		};
-	})
+	.inputValidator(CreateMemoInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
 		if (!context.session) {
@@ -127,18 +78,6 @@ export const createMemoFn = createServerFn({ method: "POST" })
 				console.warn(
 					`File ${file.name} exceeds maximum size of 50MB, skipping`,
 				);
-				continue;
-			}
-			if (!file.name) {
-				console.warn("File has an empty name, skipping");
-				continue;
-			}
-			if (!file.type) {
-				console.warn(`File ${file.name} has an empty type, skipping`);
-				continue;
-			}
-			if (!file.base64) {
-				console.warn(`File ${file.name} has an empty base64 payload, skipping`);
 				continue;
 			}
 

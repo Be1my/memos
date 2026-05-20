@@ -2,14 +2,10 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { authMiddleware } from "@/middleware/auth";
 
+import { TogglePinInputSchema } from "../schemas/toggle-pin";
+
 export const togglePinFn = createServerFn({ method: "POST" })
-	.inputValidator((input: unknown) => {
-		const data = input as { memoId: string };
-		if (!data.memoId) {
-			throw new Error("memoId is required");
-		}
-		return data;
-	})
+	.inputValidator(TogglePinInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
 		if (!context.session) {

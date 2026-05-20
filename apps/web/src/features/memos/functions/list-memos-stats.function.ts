@@ -4,7 +4,6 @@ import { authMiddleware } from "@/middleware/auth";
 
 export const listMemosStatsFn = createServerFn({
 	method: "GET",
-	strict: false,
 }).middleware([authMiddleware])
 	.handler(async ({ context }) => {
 		if (!context.session) {

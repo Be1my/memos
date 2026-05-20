@@ -2,14 +2,10 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { authMiddleware } from "@/middleware/auth";
 
+import { ToggleReactionInputSchema } from "../schemas/toggle-reaction";
+
 export const toggleReactionFn = createServerFn({ method: "POST" })
-	.inputValidator((input: unknown) => {
-		const data = input as { contentId: string; reactionType: string };
-		if (!data.contentId || !data.reactionType) {
-			throw new Error("contentId and reactionType are required");
-		}
-		return data;
-	})
+	.inputValidator(ToggleReactionInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
 		if (!context.session) {
