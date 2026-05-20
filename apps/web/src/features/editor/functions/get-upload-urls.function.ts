@@ -32,7 +32,8 @@ export const getUploadPresignedUrlsFn = createServerFn({ method: "POST" })
 
 		const urls = await Promise.all(
 			data.files.map(async (file) => {
-				const key = `uploads/${crypto.randomUUID()}-${file.name}`;
+				const safeName = file.name.replace(/[/\\?&#%]/g, "_");
+				const key = `uploads/${crypto.randomUUID()}-${safeName}`;
 				const url = new URL(`${endpoint}/attachments/${key}`);
 				url.searchParams.set("X-Amz-Expires", "3600");
 

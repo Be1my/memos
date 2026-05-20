@@ -3,7 +3,7 @@ import { attachment } from "@memos/db/schema/attachment.table";
 import { user } from "@memos/db/schema/auth.table";
 import { memo } from "@memos/db/schema/memo.table";
 import { reaction } from "@memos/db/schema/reaction.table";
-import { addDays, format, parse } from "date-fns";
+import { addDays, format, isValid, parse } from "date-fns";
 import { and, desc, eq, inArray, like, type SQL, sql } from "drizzle-orm";
 import { z } from "zod";
 
@@ -28,6 +28,9 @@ export async function queryMemos(
 
 	if (filter?.date) {
 		const start = parse(filter.date, "yyyy-MM-dd", new Date());
+		if (!isValid(start)) {
+			throw new Error("Invalid date filter");
+		}
 		const end = addDays(start, 1);
 		conditions.push(
 			sql`${memo.createdAt} >= ${format(start, "yyyy-MM-dd")}::timestamptz AND ${memo.createdAt} < ${format(end, "yyyy-MM-dd")}::timestamptz`,

@@ -27,6 +27,7 @@ import {
 	XIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { editorTheme } from "../editor-theme";
 import type { FilePayload } from "../functions/create-memo.function";
 import { getUploadPresignedUrlsFn } from "../functions/get-upload-urls.function";
@@ -106,38 +107,44 @@ function Editor({
 			(m) => m[1],
 		);
 
-		// Upload files directly to R2 via presigned URLs
-		const filePayloads: FilePayload[] = [];
+		let filePayloads: FilePayload[] = [];
 		if (pendingFiles.length > 0) {
-			const { urls } = await getUploadPresignedUrlsFn({
-				data: {
-					files: pendingFiles.map((pf) => ({
-						name: pf.file.name,
-						type: pf.file.type,
-						size: pf.file.size,
-					})),
-				},
-			});
+			try {
+				const { urls } = await getUploadPresignedUrlsFn({
+					data: {
+						files: pendingFiles.map((pf) => ({
+							name: pf.file.name,
+							type: pf.file.type,
+							size: pf.file.size,
+						})),
+					},
+				});
 
-			await Promise.all(
-				urls.map(async (entry, i) => {
-					const pf = pendingFiles[i];
-					const res = await fetch(entry.url, {
-						method: "PUT",
-						body: pf.file,
-						headers: { "Content-Type": pf.file.type },
-					});
-					if (!res.ok) {
-						throw new Error(`Failed to upload ${pf.file.name}`);
-					}
-					filePayloads.push({
-						name: pf.file.name,
-						type: pf.file.type,
-						size: pf.file.size,
-						key: entry.key,
-					});
-				}),
-			);
+				filePayloads = await Promise.all(
+					urls.map(async (entry, i) => {
+						const pf = pendingFiles[i];
+						const res = await fetch(entry.url, {
+							method: "PUT",
+							body: pf.file,
+							headers: { "Content-Type": pf.file.type },
+						});
+						if (!res.ok) {
+							throw new Error(`Failed to upload ${pf.file.name}`);
+						}
+						return {
+							name: pf.file.name,
+							type: pf.file.type,
+							size: pf.file.size,
+							key: entry.key,
+						};
+					}),
+				);
+			} catch (err) {
+				toast.error(
+					err instanceof Error ? err.message : "文件上传失败",
+				);
+				return;
+			}
 		}
 
 		onSave?.({

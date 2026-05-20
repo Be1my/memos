@@ -31,7 +31,10 @@ function ReactionTrigger({ contentId, currentUserId }: ReactionTriggerProps) {
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
-			<PopoverTrigger className="inline-flex size-6 items-center justify-center rounded-full text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover/memo:opacity-100">
+			<PopoverTrigger
+				aria-label="添加表情"
+				className="inline-flex size-6 items-center justify-center rounded-full text-muted-foreground opacity-0 transition-opacity hover:bg-accent hover:text-foreground group-hover/memo:opacity-100"
+			>
 				<SmilePlusIcon className="size-4" />
 			</PopoverTrigger>
 			<PopoverContent

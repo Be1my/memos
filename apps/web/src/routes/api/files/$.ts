@@ -26,7 +26,7 @@ export const Route = createFileRoute("/api/files/$")({
 
 						const headers = new Headers();
 						object.writeHttpMetadata(headers);
-						headers.set("Cache-Control", "public, max-age=31536000");
+						headers.set("Cache-Control", "private, max-age=31536000");
 						return new Response(object.body, { headers });
 					},
 				},

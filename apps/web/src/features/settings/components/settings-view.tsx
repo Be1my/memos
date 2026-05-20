@@ -26,7 +26,7 @@ import {
 	Trash2Icon,
 	UsersIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { getUploadPresignedUrlsFn } from "@/features/editor/functions/get-upload-urls.function";
 import { authClient } from "@/lib/auth-client";
@@ -79,6 +79,7 @@ export function SettingsView() {
 function MyAccountSection() {
 	const session = authClient.useSession();
 	const user = session.data?.user;
+	const avatarInputRef = useRef<HTMLInputElement>(null);
 
 	const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
@@ -112,6 +113,9 @@ function MyAccountSection() {
 			);
 		} finally {
 			setIsUploadingAvatar(false);
+			if (avatarInputRef.current) {
+				avatarInputRef.current.value = "";
+			}
 		}
 	};
 
@@ -135,9 +139,11 @@ function MyAccountSection() {
 					</label>
 					<input
 						id="avatar-upload"
+						ref={avatarInputRef}
 						type="file"
 						accept="image/*"
 						className="hidden"
+						disabled={isUploadingAvatar}
 						onChange={handleAvatarChange}
 					/>
 				</div>
