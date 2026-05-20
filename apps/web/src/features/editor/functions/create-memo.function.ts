@@ -1,7 +1,6 @@
 import { createDb } from "@memos/db";
 import { attachment } from "@memos/db/schema/attachment.table";
 import { memo } from "@memos/db/schema/memo.table";
-import { env } from "@memos/env/server";
 import { createServerFn } from "@tanstack/react-start";
 import { setResponseStatus } from "@tanstack/react-start/server";
 import { internalError, unauthorized } from "@/lib/errors";
@@ -19,7 +18,7 @@ export interface FilePayload {
 	name: string;
 	type: string;
 	size: number;
-	base64: string;
+	key: string;
 }
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -55,7 +54,6 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			throw internalError("Failed to create memo");
 		}
 
-		const bucket = env.ATTACHMENTS_BUCKET;
 		const createdAttachments: Array<{
 			id: number;
 			uid: string;
@@ -74,17 +72,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 				continue;
 			}
 
-			const key = `uploads/${created.id}/${crypto.randomUUID()}-${file.name}`;
-
 			try {
-				const bytes = Uint8Array.from(atob(file.base64), (c) =>
-					c.charCodeAt(0),
-				);
-
-				await bucket.put(key, bytes.buffer, {
-					httpMetadata: { contentType: file.type },
-				});
-
 				const [att] = await db
 					.insert(attachment)
 					.values({
@@ -95,7 +83,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 						type: file.type,
 						size: file.size,
 						storageType: "R2",
-						reference: key,
+						reference: file.key,
 					})
 					.returning();
 
@@ -109,12 +97,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 					reference: att.reference,
 				});
 			} catch (error) {
-				console.error(`Failed to process file ${file.name}:`, error);
-				try {
-					await bucket.delete(key);
-				} catch (deleteError) {
-					console.error(`Failed to clean up R2 key ${key}:`, deleteError);
-				}
+				console.error(`Failed to record file ${file.name}:`, error);
 			}
 		}
 

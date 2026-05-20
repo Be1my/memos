@@ -4,7 +4,7 @@ export const FileSchema = z.object({
 	name: z.string().min(1),
 	type: z.string().min(1),
 	size: z.number().nonnegative(),
-	base64: z.string().min(1),
+	key: z.string().min(1),
 });
 
 export const CreateMemoInputSchema = z.object({
