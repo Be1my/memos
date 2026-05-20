@@ -29,6 +29,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from "react";
 import { editorTheme } from "../editor-theme";
 import type { FilePayload } from "../functions/create-memo.function";
+import { getUploadPresignedUrlsFn } from "../functions/get-upload-urls.function";
 import { FloatingToolbar } from "./floating-toolbar";
 import { MemoDatetime } from "./memo-datetime";
 import { TagAutocompletePlugin } from "./tag-autocomplete-plugin";
@@ -45,18 +46,6 @@ function formatSize(bytes: number): string {
 	const units = ["B", "KB", "MB", "GB"];
 	const i = Math.floor(Math.log(bytes) / Math.log(1024));
 	return `${(bytes / 1024 ** i).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
-}
-
-function fileToBase64(file: File): Promise<string> {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.onload = () => {
-			const result = reader.result as string;
-			resolve(result.split(",")[1]);
-		};
-		reader.onerror = reject;
-		reader.readAsDataURL(file);
-	});
 }
 
 function Editor({
@@ -117,21 +106,46 @@ function Editor({
 			(m) => m[1],
 		);
 
-		const files = await Promise.all(
-			pendingFiles.map(async (f) => ({
-				name: f.file.name,
-				type: f.file.type,
-				size: f.file.size,
-				base64: await fileToBase64(f.file),
-			})),
-		);
+		// Upload files directly to R2 via presigned URLs
+		const filePayloads: FilePayload[] = [];
+		if (pendingFiles.length > 0) {
+			const { urls } = await getUploadPresignedUrlsFn({
+				data: {
+					files: pendingFiles.map((pf) => ({
+						name: pf.file.name,
+						type: pf.file.type,
+						size: pf.file.size,
+					})),
+				},
+			});
+
+			await Promise.all(
+				urls.map(async (entry, i) => {
+					const pf = pendingFiles[i];
+					const res = await fetch(entry.url, {
+						method: "PUT",
+						body: pf.file,
+						headers: { "Content-Type": pf.file.type },
+					});
+					if (!res.ok) {
+						throw new Error(`Failed to upload ${pf.file.name}`);
+					}
+					filePayloads.push({
+						name: pf.file.name,
+						type: pf.file.type,
+						size: pf.file.size,
+						key: entry.key,
+					});
+				}),
+			);
+		}
 
 		onSave?.({
 			content,
 			payload: state.toJSON(),
 			visibility,
 			tags,
-			files,
+			files: filePayloads,
 			...(createdAt ? { createdAt } : {}),
 		});
 	}, [onSave, visibility, isSaving, pendingFiles, createdAt]);
