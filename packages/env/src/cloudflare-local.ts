@@ -1,11 +1,7 @@
-import { fileURLToPath } from "node:url";
-
-import { config } from "dotenv";
-
-config({ path: fileURLToPath(new URL("../../../.env", import.meta.url)) });
-config();
-
-const runtimeEnv = typeof process === "undefined" ? {} : process.env;
+const runtimeEnv: Record<string, string | undefined> =
+	typeof process !== "undefined" && process.env
+		? (process.env as Record<string, string | undefined>)
+		: {};
 
 export const env = new Proxy({} as Env, {
 	get(_target, prop) {
