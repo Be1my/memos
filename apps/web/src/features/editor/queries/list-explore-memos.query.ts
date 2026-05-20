@@ -3,7 +3,7 @@ import { listExploreMemosFn } from "../functions/list-explore-memos.function";
 import type { ListMemosFilter } from "../functions/list-memos.shared";
 
 const listExploreMemos = (filter?: ListMemosFilter) =>
-	listExploreMemosFn(filter as never);
+	listExploreMemosFn({ data: filter } as never);
 
 export const listExploreMemosQueryOptions = (filter?: ListMemosFilter) =>
 	queryOptions({

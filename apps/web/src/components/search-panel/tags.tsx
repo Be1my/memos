@@ -22,8 +22,6 @@ export function Tags({ tags }: TagsProps) {
 				search: (prev: Record<string, unknown>) => ({
 					...prev,
 					tag: prev.tag === name ? undefined : name,
-					date: undefined,
-					q: undefined,
 				}),
 				replace: true,
 			});

@@ -4,7 +4,7 @@ import {
 	listMemosFn,
 } from "../functions/list-memos.function";
 
-const listMemos = (filter?: ListMemosFilter) => listMemosFn(filter as never);
+const listMemos = (filter?: ListMemosFilter) => listMemosFn({ data: filter } as never);
 
 export const memosQueryOptions = (filter?: ListMemosFilter) =>
 	queryOptions({

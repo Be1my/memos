@@ -16,7 +16,7 @@ function MemoList({
 }) {
 	if (!memos.length) {
 		return (
-			<div className="mt-8 rounded-md border border-dashed px-3 py-8 text-center text-muted-foreground text-xs">
+			<div className="rounded-md border border-dashed px-3 py-8 text-center text-muted-foreground text-xs">
 				没有找到数据
 			</div>
 		);
@@ -24,7 +24,7 @@ function MemoList({
 
 	return (
 		<>
-			<div className="mt-8 space-y-3">
+			<div className="space-y-3">
 				{memos.map((memo) => (
 					<MemoCard
 						key={memo.uid}

@@ -56,7 +56,6 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 				search: (prev: Record<string, unknown>) => ({
 					...prev,
 					date: prev.date === dateKey ? undefined : dateKey,
-					tag: undefined,
 				}),
 				replace: true,
 			});
@@ -72,7 +71,6 @@ export function ActivityCalendar({ timestamps }: ActivityCalendarProps) {
 				search: (prev: Record<string, unknown>) => ({
 					...prev,
 					date: prev.date === dateKey ? undefined : dateKey,
-					tag: undefined,
 				}),
 				replace: true,
 			});

@@ -38,7 +38,7 @@ function RouteComponent() {
 	);
 
 	return (
-		<div className="mx-auto w-full max-w-2xl px-4 pt-8">
+		<div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-4 pt-8">
 			<ActiveFilters />
 			<MemoList memos={memos} userId={userId} />
 		</div>
