@@ -29,6 +29,12 @@ export const web = await TanStackStart("web", {
 		/* biome-ignore lint/style/noNonNullAssertion: env vars are defined at runtime */
 		ALLOWED_HOSTS: alchemy.env.ALLOWED_HOSTS!,
 		ATTACHMENTS_BUCKET: bucket,
+		/* biome-ignore lint/style/noNonNullAssertion: env vars are defined at runtime */
+		R2_ACCOUNT_ID: alchemy.env.R2_ACCOUNT_ID!,
+		/* biome-ignore lint/style/noNonNullAssertion: env vars are defined at runtime */
+		R2_ACCESS_KEY_ID: alchemy.secret.env.R2_ACCESS_KEY_ID!,
+		/* biome-ignore lint/style/noNonNullAssertion: env vars are defined at runtime */
+		R2_SECRET_ACCESS_KEY: alchemy.secret.env.R2_SECRET_ACCESS_KEY!,
 	},
 });
 
