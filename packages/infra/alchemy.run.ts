@@ -8,7 +8,6 @@ config({ path: "../../apps/web/.env" });
 const app = await alchemy("memos");
 
 const bucket = await R2Bucket("attachments", {
-	empty: true,
 	dev: {
 		remote: true,
 	},
