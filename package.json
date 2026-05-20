@@ -33,6 +33,7 @@
 	},
 	"dependencies": {
 		"@memos/env": "workspace:*",
+		"aws4fetch": "^1.0.4",
 		"dotenv": "catalog:",
 		"zod": "catalog:"
 	},
