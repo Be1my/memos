@@ -1,5 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { createDb } from "@memos/db";
+import { memo } from "@memos/db/schema/memo.table";
+import { attachment } from "@memos/db/schema/attachment.table";
+import { env } from "@memos/env/server";
+
 import { authMiddleware } from "@/middleware/auth";
 import { internalError, unauthorized } from "@/lib/errors";
 
@@ -28,18 +33,6 @@ export const createMemoFn = createServerFn({ method: "POST" })
 		if (!context.session) {
 			throw unauthorized();
 		}
-
-		const [
-			{ createDb },
-			{ memo },
-			{ attachment },
-			{ env },
-		] = await Promise.all([
-			import("@memos/db"),
-			import("@memos/db/schema/memo.table"),
-			import("@memos/db/schema/attachment.table"),
-			import("@memos/env/server"),
-		]);
 
 		const db = createDb();
 

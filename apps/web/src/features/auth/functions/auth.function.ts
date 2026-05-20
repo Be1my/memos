@@ -1,13 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { createDb } from "@memos/db";
+import { user } from "@memos/db/schema/auth.table";
+
 import { authMiddleware } from "@/middleware/auth";
 
 export const getIsFirstUserFn = createServerFn({ method: "GET" }).handler(
 	async () => {
-		const [{ createDb }, { user }] = await Promise.all([
-			import("@memos/db"),
-			import("@memos/db/schema/auth.table"),
-		]);
 		const db = createDb();
 		const count = await db.$count(user);
 		return { isFirstUser: count === 0 };

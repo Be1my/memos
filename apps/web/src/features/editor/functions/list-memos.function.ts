@@ -1,5 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { memo } from "@memos/db/schema/memo.table";
+import { eq } from "drizzle-orm";
+
 import { authMiddleware } from "@/middleware/auth";
 
 import { ListMemosFilterSchema, queryMemos } from "./list-memos.shared";
@@ -13,12 +16,6 @@ export const listMemosFn = createServerFn({ method: "GET" })
 	.inputValidator(ListMemosFilterSchema.optional().default({}))
 	.handler(async ({ data, context }) => {
 		const filter = data;
-
-		const [{ memo }, { eq }] =
-			await Promise.all([
-				import("@memos/db/schema/memo.table"),
-				import("drizzle-orm"),
-			]);
 
 		const conditions = [eq(memo.creatorId, context.session?.user.id ?? "")];
 

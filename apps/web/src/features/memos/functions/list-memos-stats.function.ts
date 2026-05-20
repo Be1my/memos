@@ -1,5 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { createDb } from "@memos/db";
+import { memo } from "@memos/db/schema/memo.table";
+import { eq } from "drizzle-orm";
+
 import { authMiddleware } from "@/middleware/auth";
 
 export const listMemosStatsFn = createServerFn({
@@ -9,16 +13,6 @@ export const listMemosStatsFn = createServerFn({
 		if (!context.session) {
 			return { timestamps: [], tags: [] };
 		}
-
-		const [
-			{ createDb },
-			{ memo },
-			{ eq },
-		] = await Promise.all([
-			import("@memos/db"),
-			import("@memos/db/schema/memo.table"),
-			import("drizzle-orm"),
-		]);
 
 		const db = createDb();
 

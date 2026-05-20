@@ -1,5 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { createDb } from "@memos/db";
+import { memo } from "@memos/db/schema/memo.table";
+import { eq, and } from "drizzle-orm";
+
 import { authMiddleware } from "@/middleware/auth";
 import { notFound, unauthorized } from "@/lib/errors";
 
@@ -16,16 +20,6 @@ export const updateMemoFn = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
 		if (!context.session) throw unauthorized();
-
-		const [
-			{ createDb },
-			{ memo },
-			{ eq, and },
-		] = await Promise.all([
-			import("@memos/db"),
-			import("@memos/db/schema/memo.table"),
-			import("drizzle-orm"),
-		]);
 
 		const db = createDb();
 

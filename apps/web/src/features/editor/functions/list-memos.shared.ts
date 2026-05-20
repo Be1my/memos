@@ -1,6 +1,12 @@
 import { addDays, format, parse } from "date-fns";
-import type { SQL } from "drizzle-orm";
+import { desc, eq, like, and, sql, inArray, type SQL } from "drizzle-orm";
 import { z } from "zod";
+
+import { createDb } from "@memos/db";
+import { memo } from "@memos/db/schema/memo.table";
+import { attachment } from "@memos/db/schema/attachment.table";
+import { reaction } from "@memos/db/schema/reaction.table";
+import { user } from "@memos/db/schema/auth.table";
 
 export const ListMemosFilterSchema = z.object({
 	q: z.string().optional(),
@@ -15,22 +21,6 @@ export async function queryMemos(
 	filter?: ListMemosFilter,
 	orderByPinned?: boolean,
 ) {
-	const [
-		{ createDb },
-		{ memo },
-		{ attachment },
-		{ reaction },
-		{ user },
-		{ desc, eq, like, and, sql, inArray },
-	] = await Promise.all([
-		import("@memos/db"),
-		import("@memos/db/schema/memo.table"),
-		import("@memos/db/schema/attachment.table"),
-		import("@memos/db/schema/reaction.table"),
-		import("@memos/db/schema/auth.table"),
-		import("drizzle-orm"),
-	]);
-
 	const db = createDb();
 
 	if (filter?.q) {

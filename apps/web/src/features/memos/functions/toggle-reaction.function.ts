@@ -1,5 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { createDb } from "@memos/db";
+import { reaction } from "@memos/db/schema/reaction.table";
+import { eq, and } from "drizzle-orm";
+
 import { authMiddleware } from "@/middleware/auth";
 import { unauthorized } from "@/lib/errors";
 
@@ -12,16 +16,6 @@ export const toggleReactionFn = createServerFn({ method: "POST" })
 		if (!context.session) {
 			throw unauthorized();
 		}
-
-		const [
-			{ createDb },
-			{ reaction },
-			{ eq, and },
-		] = await Promise.all([
-			import("@memos/db"),
-			import("@memos/db/schema/reaction.table"),
-			import("drizzle-orm"),
-		]);
 
 		const db = createDb();
 

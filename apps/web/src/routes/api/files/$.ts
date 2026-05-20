@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { env } from "@memos/env/server";
+
 import { authMiddleware } from "@/middleware/auth";
 import { jsonError } from "@/lib/errors";
 
@@ -19,10 +21,6 @@ export const Route = createFileRoute("/api/files/$")({
 						if (!key.startsWith("uploads/")) {
 							return jsonError("Invalid key", "BAD_REQUEST", 400);
 						}
-
-						const [{ env }] = await Promise.all([
-							import("@memos/env/server"),
-						]);
 
 						const object = await env.ATTACHMENTS_BUCKET.get(key);
 						if (!object) return jsonError("Not found", "NOT_FOUND", 404);
