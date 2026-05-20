@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getUploadPresignedUrlsFn } from "@/features/editor/functions/get-upload-urls.function";
 import { authClient } from "@/lib/auth-client";
 import { useTheme } from "@/lib/theme-provider";
 import { m } from "@/paraglide/messages";
@@ -84,16 +85,21 @@ function MyAccountSection() {
 		if (!file) return;
 
 		try {
-			const res = await fetch("/api/files/upload", {
-				method: "POST",
-				body: (() => {
-					const formData = new FormData();
-					formData.append("file", file);
-					return formData;
-				})(),
+			const { urls } = await getUploadPresignedUrlsFn({
+				data: {
+					files: [{ name: file.name, type: file.type, size: file.size }],
+				},
 			});
-			const { path } = (await res.json()) as { path: string };
-			await authClient.updateUser({ image: path });
+
+			const entry = urls[0];
+			const res = await fetch(entry.url, {
+				method: "PUT",
+				body: file,
+				headers: { "Content-Type": file.type },
+			});
+			if (!res.ok) throw new Error("Upload failed");
+
+			await authClient.updateUser({ image: entry.key });
 			toast.success(m.settings_avatar_updated());
 		} catch {
 			toast.error(m.settings_avatar_failed());
