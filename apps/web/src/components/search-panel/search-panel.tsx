@@ -19,9 +19,7 @@ export function SearchPanel() {
 				<h3 className="font-semibold text-[11px] text-muted-foreground uppercase tracking-wider">
 					活动日历
 				</h3>
-				<ActivityCalendar
-					timestamps={timestamps}
-				/>
+				<ActivityCalendar timestamps={timestamps} />
 			</div>
 			<SidebarSeparator className="mx-0" />
 			<div className="space-y-1">

@@ -26,8 +26,9 @@ import {
 	Trash2Icon,
 	UsersIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { getUploadPresignedUrlsFn } from "@/features/editor/functions/get-upload-urls.function";
 import { authClient } from "@/lib/auth-client";
 import { useTheme } from "@/lib/theme-provider";
 import { m } from "@/paraglide/messages";
@@ -78,25 +79,43 @@ export function SettingsView() {
 function MyAccountSection() {
 	const session = authClient.useSession();
 	const user = session.data?.user;
+	const avatarInputRef = useRef<HTMLInputElement>(null);
+
+	const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
 	const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
-		if (!file) return;
+		if (!file || isUploadingAvatar) return;
 
+		setIsUploadingAvatar(true);
 		try {
-			const res = await fetch("/api/files/upload", {
-				method: "POST",
-				body: (() => {
-					const formData = new FormData();
-					formData.append("file", file);
-					return formData;
-				})(),
+			const { urls } = await getUploadPresignedUrlsFn({
+				data: {
+					files: [{ name: file.name, type: file.type, size: file.size }],
+				},
 			});
-			const { path } = (await res.json()) as { path: string };
-			await authClient.updateUser({ image: path });
+
+			const entry = urls[0];
+			const res = await fetch(entry.url, {
+				method: "PUT",
+				body: file,
+				headers: { "Content-Type": file.type },
+			});
+			if (!res.ok) throw new Error("Upload failed");
+
+			await authClient.updateUser({
+			image: `/api/files?key=${encodeURIComponent(entry.key)}`,
+		});
 			toast.success(m.settings_avatar_updated());
-		} catch {
-			toast.error(m.settings_avatar_failed());
+		} catch (err) {
+			toast.error(
+				err instanceof Error ? err.message : m.settings_avatar_failed(),
+			);
+		} finally {
+			setIsUploadingAvatar(false);
+			if (avatarInputRef.current) {
+				avatarInputRef.current.value = "";
+			}
 		}
 	};
 
@@ -120,9 +139,11 @@ function MyAccountSection() {
 					</label>
 					<input
 						id="avatar-upload"
+						ref={avatarInputRef}
 						type="file"
 						accept="image/*"
 						className="hidden"
+						disabled={isUploadingAvatar}
 						onChange={handleAvatarChange}
 					/>
 				</div>

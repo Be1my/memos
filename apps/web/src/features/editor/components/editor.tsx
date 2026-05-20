@@ -14,7 +14,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@memos/ui/components/dropdown-menu";
-import type { EditorState } from "lexical";
+import type { EditorState, SerializedEditorState } from "lexical";
 import { $getRoot } from "lexical";
 import {
 	FileIcon,
@@ -27,9 +27,12 @@ import {
 	XIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { editorTheme } from "../editor-theme";
 import type { FilePayload } from "../functions/create-memo.function";
+import { getUploadPresignedUrlsFn } from "../functions/get-upload-urls.function";
 import { FloatingToolbar } from "./floating-toolbar";
+import { MemoDatetime } from "./memo-datetime";
 import { TagAutocompletePlugin } from "./tag-autocomplete-plugin";
 
 const placeholder = "Write something...";
@@ -46,36 +49,36 @@ function formatSize(bytes: number): string {
 	return `${(bytes / 1024 ** i).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 }
 
-function fileToBase64(file: File): Promise<string> {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.onload = () => {
-			const result = reader.result as string;
-			resolve(result.split(",")[1]);
-		};
-		reader.onerror = reject;
-		reader.readAsDataURL(file);
-	});
-}
-
 function Editor({
 	onSave,
 	isSaving,
+	dateSearch,
+	initialEditorState,
+	initialVisibility,
+	initialCreatedAt,
+	onCancel,
 }: {
 	onSave?: (data: {
 		content: string;
-		payload: Record<string, unknown>;
+		payload: SerializedEditorState;
 		visibility: string;
 		tags?: string[];
 		files?: FilePayload[];
+		createdAt?: string;
 	}) => void;
 	isSaving?: boolean;
+	dateSearch?: { date?: string };
+	initialEditorState?: SerializedEditorState;
+	initialVisibility?: string;
+	initialCreatedAt?: string;
+	onCancel?: () => void;
 }) {
-	const [visibility, setVisibility] = useState("private");
+	const [visibility, setVisibility] = useState(initialVisibility ?? "private");
 	const [hasContent, setHasContent] = useState(false);
 	const editorStateRef = useRef<EditorState | null>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [pendingFiles, setPendingFiles] = useState<PendingFile[]>([]);
+	const [createdAt, setCreatedAt] = useState<string | null>(null);
 	const mediaInputRef = useRef<HTMLInputElement>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -104,23 +107,55 @@ function Editor({
 			(m) => m[1],
 		);
 
-		const files = await Promise.all(
-			pendingFiles.map(async (f) => ({
-				name: f.file.name,
-				type: f.file.type,
-				size: f.file.size,
-				base64: await fileToBase64(f.file),
-			})),
-		);
+		let filePayloads: FilePayload[] = [];
+		if (pendingFiles.length > 0) {
+			try {
+				const { urls } = await getUploadPresignedUrlsFn({
+					data: {
+						files: pendingFiles.map((pf) => ({
+							name: pf.file.name,
+							type: pf.file.type,
+							size: pf.file.size,
+						})),
+					},
+				});
+
+				filePayloads = await Promise.all(
+					urls.map(async (entry, i) => {
+						const pf = pendingFiles[i];
+						const res = await fetch(entry.url, {
+							method: "PUT",
+							body: pf.file,
+							headers: { "Content-Type": pf.file.type },
+						});
+						if (!res.ok) {
+							throw new Error(`Failed to upload ${pf.file.name}`);
+						}
+						return {
+							name: pf.file.name,
+							type: pf.file.type,
+							size: pf.file.size,
+							key: entry.key,
+						};
+					}),
+				);
+			} catch (err) {
+				toast.error(
+					err instanceof Error ? err.message : "文件上传失败",
+				);
+				return;
+			}
+		}
 
 		onSave?.({
 			content,
-			payload: state.toJSON() as unknown as Record<string, unknown>,
+			payload: state.toJSON(),
 			visibility,
 			tags,
-			files,
+			files: filePayloads,
+			...(createdAt ? { createdAt } : {}),
 		});
-	}, [onSave, visibility, isSaving, pendingFiles]);
+	}, [onSave, visibility, isSaving, pendingFiles, createdAt]);
 
 	useEffect(() => {
 		const el = containerRef.current;
@@ -144,6 +179,9 @@ function Editor({
 		theme: editorTheme,
 		nodes: [HashtagNode],
 		onError: (error: Error) => console.error(error),
+		editorState: initialEditorState
+			? JSON.stringify(initialEditorState)
+			: undefined,
 	};
 
 	return (
@@ -151,6 +189,11 @@ function Editor({
 			ref={containerRef}
 			className="rounded-xl border bg-card ring-1 ring-foreground/10 focus-within:ring-2 focus-within:ring-ring"
 		>
+			<MemoDatetime
+				onChange={setCreatedAt}
+				dateSearch={dateSearch}
+				defaultDate={initialCreatedAt}
+			/>
 			<LexicalComposer initialConfig={initialConfig}>
 				<div className="relative max-h-[240px] min-h-[100px] overflow-y-auto px-3.5 py-3.5 text-sm">
 					<RichTextPlugin
@@ -290,6 +333,11 @@ function Editor({
 							))}
 						</DropdownMenuContent>
 					</DropdownMenu>
+					{onCancel && (
+						<Button size="sm" variant="ghost" onClick={onCancel}>
+							取消
+						</Button>
+					)}
 					<Button
 						size="sm"
 						disabled={!hasContent || isSaving}

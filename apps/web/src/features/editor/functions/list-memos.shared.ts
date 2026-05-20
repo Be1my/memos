@@ -1,33 +1,25 @@
-import { addDays, format, parse } from "date-fns";
-import type { SQL } from "drizzle-orm";
+import { createDb } from "@memos/db";
+import { attachment } from "@memos/db/schema/attachment.table";
+import { user } from "@memos/db/schema/auth.table";
+import { memo } from "@memos/db/schema/memo.table";
+import { reaction } from "@memos/db/schema/reaction.table";
+import { addDays, format, isValid, parse } from "date-fns";
+import { and, desc, eq, inArray, like, type SQL, sql } from "drizzle-orm";
+import { z } from "zod";
 
-export interface ListMemosFilter {
-	q?: string;
-	date?: string;
-	tag?: string;
-}
+export const ListMemosFilterSchema = z.object({
+	q: z.string().optional(),
+	date: z.string().optional(),
+	tag: z.string().optional(),
+});
+
+export type ListMemosFilter = z.infer<typeof ListMemosFilterSchema>;
 
 export async function queryMemos(
 	conditions: SQL[],
 	filter?: ListMemosFilter,
 	orderByPinned?: boolean,
 ) {
-	const [
-		{ createDb },
-		{ memo },
-		{ attachment },
-		{ reaction },
-		{ user },
-		{ desc, eq, like, and, sql, inArray },
-	] = await Promise.all([
-		import("@memos/db"),
-		import("@memos/db/schema/memo.table"),
-		import("@memos/db/schema/attachment.table"),
-		import("@memos/db/schema/reaction.table"),
-		import("@memos/db/schema/auth.table"),
-		import("drizzle-orm"),
-	]);
-
 	const db = createDb();
 
 	if (filter?.q) {
@@ -36,6 +28,9 @@ export async function queryMemos(
 
 	if (filter?.date) {
 		const start = parse(filter.date, "yyyy-MM-dd", new Date());
+		if (!isValid(start)) {
+			throw new Error("Invalid date filter");
+		}
 		const end = addDays(start, 1);
 		conditions.push(
 			sql`${memo.createdAt} >= ${format(start, "yyyy-MM-dd")}::timestamptz AND ${memo.createdAt} < ${format(end, "yyyy-MM-dd")}::timestamptz`,
@@ -103,7 +98,7 @@ export async function queryMemos(
 		id: m.id,
 		uid: m.uid,
 		content: m.content,
-		payload: m.payload,
+		payload: m.payload as Record<string, any>,
 		visibility: m.visibility,
 		tags: m.tags,
 		pinned: m.pinned,

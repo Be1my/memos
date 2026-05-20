@@ -25,9 +25,10 @@ import { useTogglePin } from "../queries/pin-memo.query";
 interface MemoCardActionsProps {
 	memoUid: string;
 	pinned: boolean;
+	onEdit?: () => void;
 }
 
-function MemoCardActions({ memoUid, pinned }: MemoCardActionsProps) {
+function MemoCardActions({ memoUid, pinned, onEdit }: MemoCardActionsProps) {
 	const togglePin = useTogglePin();
 
 	const handleTogglePin = () => {
@@ -43,7 +44,7 @@ function MemoCardActions({ memoUid, pinned }: MemoCardActionsProps) {
 					<PinIcon className="size-4" />
 					{pinned ? "取消固定" : "固定"}
 				</DropdownMenuItem>
-				<DropdownMenuItem>
+				<DropdownMenuItem onClick={onEdit}>
 					<PencilIcon className="size-4" />
 					编辑
 				</DropdownMenuItem>

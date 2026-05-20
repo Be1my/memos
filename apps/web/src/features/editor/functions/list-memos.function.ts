@@ -1,29 +1,22 @@
+import { memo } from "@memos/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
+import { eq } from "drizzle-orm";
+
+import { authMiddleware } from "@/middleware/auth";
 import type { ListMemosFilter } from "./list-memos.shared";
-import { queryMemos } from "./list-memos.shared";
+import { ListMemosFilterSchema, queryMemos } from "./list-memos.shared";
 
 export type { ListMemosFilter };
 export { queryMemos };
 
-export const listMemosFn = createServerFn({
-	method: "GET",
-	strict: false,
-}).handler(async (data: unknown) => {
-	const filter = (data ?? {}) as ListMemosFilter;
+export const listMemosFn = createServerFn({ method: "GET" })
+	.inputValidator(ListMemosFilterSchema.optional().default({}))
+	.middleware([authMiddleware])
+	.handler(async ({ data, context }) => {
+		const filter = data;
 
-	const [{ memo }, { createAuth }, { getRequestHeaders }, { eq }] =
-		await Promise.all([
-			import("@memos/db/schema/memo.table"),
-			import("@memos/auth"),
-			import("@tanstack/react-start/server"),
-			import("drizzle-orm"),
-		]);
+		const conditions = [eq(memo.creatorId, context.session?.user.id ?? "")];
 
-	const headers = getRequestHeaders();
-	const session = await createAuth().api.getSession({ headers });
-
-	const conditions = [eq(memo.creatorId, session?.user.id ?? "")];
-
-	const memos = await queryMemos(conditions, filter, true);
-	return memos;
-});
+		const memos = await queryMemos(conditions, filter, true);
+		return memos;
+	});

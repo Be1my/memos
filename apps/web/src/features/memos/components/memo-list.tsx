@@ -8,9 +8,11 @@ type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];
 function MemoList({
 	memos,
 	userId,
+	showVisibility = true,
 }: {
 	memos: Memo[];
 	userId?: string | null;
+	showVisibility?: boolean;
 }) {
 	if (!memos.length) {
 		return (
@@ -24,7 +26,12 @@ function MemoList({
 		<>
 			<div className="mt-8 space-y-3">
 				{memos.map((memo) => (
-					<MemoCard key={memo.uid} memo={memo} userId={userId} />
+					<MemoCard
+						key={memo.uid}
+						memo={memo}
+						userId={userId}
+						showVisibility={showVisibility}
+					/>
 				))}
 			</div>
 			<Button

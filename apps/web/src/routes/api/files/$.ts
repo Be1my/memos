@@ -1,35 +1,35 @@
+import { env } from "@memos/env/server";
 import { createFileRoute } from "@tanstack/react-router";
+import { jsonError } from "@/lib/errors";
+import { authMiddleware } from "@/middleware/auth";
 
 export const Route = createFileRoute("/api/files/$")({
 	server: {
-		handlers: {
-			GET: async ({ request }) => {
-				const url = new URL(request.url);
-				const key = url.searchParams.get("key");
-				if (!key) return new Response("Missing key", { status: 400 });
+		middleware: [authMiddleware],
+		handlers: ({ createHandlers }) =>
+			createHandlers({
+				GET: {
+					handler: async ({ request, context }) => {
+						if (!context.session)
+							return jsonError("Unauthorized", "UNAUTHORIZED", 401);
 
-				if (!key.startsWith("uploads/")) {
-					return new Response("Invalid key", { status: 400 });
-				}
+						const url = new URL(request.url);
+						const key = url.searchParams.get("key");
+						if (!key) return jsonError("Missing key", "BAD_REQUEST", 400);
 
-				const [{ createAuth }, { env }] = await Promise.all([
-					import("@memos/auth"),
-					import("@memos/env/server"),
-				]);
+						if (!key.startsWith("uploads/")) {
+							return jsonError("Invalid key", "BAD_REQUEST", 400);
+						}
 
-				const session = await createAuth().api.getSession({
-					headers: request.headers,
-				});
-				if (!session) return new Response("Unauthorized", { status: 401 });
+						const object = await env.ATTACHMENTS_BUCKET.get(key);
+						if (!object) return jsonError("Not found", "NOT_FOUND", 404);
 
-				const object = await env.ATTACHMENTS_BUCKET.get(key);
-				if (!object) return new Response("Not found", { status: 404 });
-
-				const headers = new Headers();
-				object.writeHttpMetadata(headers);
-				headers.set("Cache-Control", "public, max-age=31536000");
-				return new Response(object.body, { headers });
-			},
-		},
+						const headers = new Headers();
+						object.writeHttpMetadata(headers);
+						headers.set("Cache-Control", "private, max-age=31536000");
+						return new Response(object.body, { headers });
+					},
+				},
+			}),
 	},
 });
