@@ -7,10 +7,10 @@ import { jsonError } from "@/lib/errors";
 
 export const Route = createFileRoute("/api/files/$")({
 	server: {
+		middleware: [authMiddleware],
 		handlers: ({ createHandlers }) =>
 			createHandlers({
 				GET: {
-					middleware: [authMiddleware],
 					handler: async ({ request, context }) => {
 						if (!context.session) return jsonError("Unauthorized", "UNAUTHORIZED", 401);
 
