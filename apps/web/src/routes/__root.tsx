@@ -1,5 +1,6 @@
 import { Toaster } from "@memos/ui/components/sonner";
 import type { QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
 	createRootRouteWithContext,
 	HeadContent,
@@ -83,6 +84,7 @@ function RootDocument() {
 				</div>
 				<Toaster richColors />
 				<TanStackRouterDevtools position="bottom-right" />
+				<ReactQueryDevtools initialIsOpen={false} />
 				<Scripts />
 			</body>
 		</html>

@@ -286,11 +286,6 @@ function Editor({
 					</DropdownMenuContent>
 				</DropdownMenu>
 				<div className="flex items-center gap-2">
-					{onCancel && (
-						<Button size="sm" variant="ghost" onClick={onCancel}>
-							取消
-						</Button>
-					)}
 					<DropdownMenu>
 						<DropdownMenuTrigger
 							render={
@@ -317,6 +312,11 @@ function Editor({
 							))}
 						</DropdownMenuContent>
 					</DropdownMenu>
+					{onCancel && (
+						<Button size="sm" variant="ghost" onClick={onCancel}>
+							取消
+						</Button>
+					)}
 					<Button
 						size="sm"
 						disabled={!hasContent || isSaving}
