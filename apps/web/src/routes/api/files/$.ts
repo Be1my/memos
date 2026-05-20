@@ -1,9 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-
 import { env } from "@memos/env/server";
-
-import { authMiddleware } from "@/middleware/auth";
+import { createFileRoute } from "@tanstack/react-router";
 import { jsonError } from "@/lib/errors";
+import { authMiddleware } from "@/middleware/auth";
 
 export const Route = createFileRoute("/api/files/$")({
 	server: {
@@ -12,7 +10,8 @@ export const Route = createFileRoute("/api/files/$")({
 			createHandlers({
 				GET: {
 					handler: async ({ request, context }) => {
-						if (!context.session) return jsonError("Unauthorized", "UNAUTHORIZED", 401);
+						if (!context.session)
+							return jsonError("Unauthorized", "UNAUTHORIZED", 401);
 
 						const url = new URL(request.url);
 						const key = url.searchParams.get("key");

@@ -1,7 +1,6 @@
 import { createMiddleware } from "@tanstack/react-start";
 import { getCookies } from "@tanstack/react-start/server";
 
-
 export const localeTzMiddleware = createMiddleware().server(
 	async ({ next }) => {
 		const cookies = getCookies();

@@ -1,11 +1,9 @@
-import { createServerFn } from "@tanstack/react-start";
-
 import { createDb } from "@memos/db";
 import { reaction } from "@memos/db/schema/reaction.table";
-import { eq, and } from "drizzle-orm";
-
-import { authMiddleware } from "@/middleware/auth";
+import { createServerFn } from "@tanstack/react-start";
+import { and, eq } from "drizzle-orm";
 import { unauthorized } from "@/lib/errors";
+import { authMiddleware } from "@/middleware/auth";
 
 import { ToggleReactionInputSchema } from "../schemas/toggle-reaction";
 

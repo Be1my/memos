@@ -1,14 +1,14 @@
-import { createServerFn } from "@tanstack/react-start";
-
 import { createDb } from "@memos/db";
 import { memo } from "@memos/db/schema/memo.table";
+import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 
 import { authMiddleware } from "@/middleware/auth";
 
 export const listMemosStatsFn = createServerFn({
 	method: "GET",
-}).middleware([authMiddleware])
+})
+	.middleware([authMiddleware])
 	.handler(async ({ context }) => {
 		if (!context.session) {
 			return { timestamps: [], tags: [] };
@@ -37,4 +37,4 @@ export const listMemosStatsFn = createServerFn({
 			.sort((a, b) => b.count - a.count);
 
 		return { timestamps, tags };
-});
+	});

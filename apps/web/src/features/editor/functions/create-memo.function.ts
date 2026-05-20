@@ -1,12 +1,11 @@
-import { createServerFn } from "@tanstack/react-start";
-
 import { createDb } from "@memos/db";
-import { memo } from "@memos/db/schema/memo.table";
 import { attachment } from "@memos/db/schema/attachment.table";
+import { memo } from "@memos/db/schema/memo.table";
 import { env } from "@memos/env/server";
-
-import { authMiddleware } from "@/middleware/auth";
+import { createServerFn } from "@tanstack/react-start";
+import { setResponseStatus } from "@tanstack/react-start/server";
 import { internalError, unauthorized } from "@/lib/errors";
+import { authMiddleware } from "@/middleware/auth";
 
 import { CreateMemoInputSchema } from "../schemas/create-memo";
 
@@ -119,6 +118,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			}
 		}
 
+		setResponseStatus(201);
 		return {
 			id: created.id,
 			uid: created.uid,

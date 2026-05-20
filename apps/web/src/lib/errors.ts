@@ -2,7 +2,7 @@ export class ServerError extends Error {
 	readonly code: string;
 	readonly statusCode: number;
 
-	constructor(message: string, code: string, statusCode: number = 500) {
+	constructor(message: string, code: string, statusCode = 500) {
 		super(message);
 		this.name = "ServerError";
 		this.code = code;
@@ -10,11 +10,11 @@ export class ServerError extends Error {
 	}
 }
 
-export function unauthorized(message: string = "Not authenticated") {
+export function unauthorized(message = "Not authenticated") {
 	return new ServerError(message, "UNAUTHORIZED", 401);
 }
 
-export function notFound(message: string = "Resource not found") {
+export function notFound(message = "Resource not found") {
 	return new ServerError(message, "NOT_FOUND", 404);
 }
 
@@ -22,11 +22,15 @@ export function badRequest(message: string) {
 	return new ServerError(message, "BAD_REQUEST", 400);
 }
 
-export function internalError(message: string = "Internal server error") {
+export function internalError(message = "Internal server error") {
 	return new ServerError(message, "INTERNAL_ERROR", 500);
 }
 
-export function jsonError(message: string, code: string, status: number): Response {
+export function jsonError(
+	message: string,
+	code: string,
+	status: number,
+): Response {
 	return new Response(JSON.stringify({ error: message, code }), {
 		status,
 		headers: { "Content-Type": "application/json" },

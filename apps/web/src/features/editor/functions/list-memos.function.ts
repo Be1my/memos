@@ -1,12 +1,10 @@
-import { createServerFn } from "@tanstack/react-start";
-
 import { memo } from "@memos/db/schema/memo.table";
+import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
 
 import { authMiddleware } from "@/middleware/auth";
-
-import { ListMemosFilterSchema, queryMemos } from "./list-memos.shared";
 import type { ListMemosFilter } from "./list-memos.shared";
+import { ListMemosFilterSchema, queryMemos } from "./list-memos.shared";
 
 export type { ListMemosFilter };
 export { queryMemos };
@@ -21,4 +19,4 @@ export const listMemosFn = createServerFn({ method: "GET" })
 
 		const memos = await queryMemos(conditions, filter, true);
 		return memos;
-});
+	});

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_memos")({
 		const session = await queryClient.ensureQueryData(sessionQueryOptions());
 		return {
 			user: session?.user,
-		}
+		};
 	},
 	component: RouteComponent,
 });

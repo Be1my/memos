@@ -26,7 +26,12 @@ function MemoList({
 		<>
 			<div className="mt-8 space-y-3">
 				{memos.map((memo) => (
-					<MemoCard key={memo.uid} memo={memo} userId={userId} showVisibility={showVisibility} />
+					<MemoCard
+						key={memo.uid}
+						memo={memo}
+						userId={userId}
+						showVisibility={showVisibility}
+					/>
 				))}
 			</div>
 			<Button

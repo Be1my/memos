@@ -1,7 +1,6 @@
-import { createServerFn } from "@tanstack/react-start";
-
 import { createDb } from "@memos/db";
 import { user } from "@memos/db/schema/auth.table";
+import { createServerFn } from "@tanstack/react-start";
 
 import { authMiddleware } from "@/middleware/auth";
 
