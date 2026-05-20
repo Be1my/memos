@@ -89,6 +89,9 @@
 			}
 		}
 	],
+	"search_filter_search": "搜索: {query}",
+	"search_filter_tag": "标签: {tag}",
+	"search_filter_remove": "移除",
 	"time_last_updated": "最后更新于 {time}",
 	"time_created_tooltip": "创建时间：{time}",
 	"time_updated_tooltip": "最后更新：{time}"

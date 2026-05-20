@@ -48,7 +48,9 @@ export function useUpdateMemo() {
 							...memo,
 							content: variables.data.content,
 							payload: variables.data.payload,
-							visibility: visibilityMap[variables.data.visibility] ?? variables.data.visibility,
+							visibility:
+								visibilityMap[variables.data.visibility] ??
+								variables.data.visibility,
 							createdAt: variables.data.createdAt ?? memo.createdAt,
 							updatedAt: new Date().toISOString(),
 						};

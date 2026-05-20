@@ -104,8 +104,8 @@ function MyAccountSection() {
 			if (!res.ok) throw new Error("Upload failed");
 
 			await authClient.updateUser({
-			image: `/api/files?key=${encodeURIComponent(entry.key)}`,
-		});
+				image: `/api/files?key=${encodeURIComponent(entry.key)}`,
+			});
 			toast.success(m.settings_avatar_updated());
 		} catch (err) {
 			toast.error(

@@ -140,9 +140,7 @@ function Editor({
 					}),
 				);
 			} catch (err) {
-				toast.error(
-					err instanceof Error ? err.message : "文件上传失败",
-				);
+				toast.error(err instanceof Error ? err.message : "文件上传失败");
 				return;
 			}
 		}

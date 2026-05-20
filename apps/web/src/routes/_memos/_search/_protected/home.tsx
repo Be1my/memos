@@ -10,6 +10,7 @@ import { z } from "zod";
 import { Editor } from "@/features/editor/components/editor";
 import { createMemoFn } from "@/features/editor/functions/create-memo.function";
 import { memosQueryOptions } from "@/features/editor/queries/memos.query";
+import { ActiveFilters } from "@/components/active-filters";
 import { MemoList } from "@/features/memos/components/memo-list";
 
 const searchSchema = z.object({
@@ -63,6 +64,7 @@ function RouteComponent() {
 				onSave={(data) => mutation.mutate({ data })}
 				dateSearch={{ date: filter.date }}
 			/>
+			<ActiveFilters />
 			<MemoList memos={memos} userId={userId} showVisibility={false} />
 		</div>
 	);

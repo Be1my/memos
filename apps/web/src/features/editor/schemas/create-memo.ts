@@ -15,8 +15,10 @@ export const CreateMemoInputSchema = z.object({
 	visibility: z.enum(visibilityValues),
 	tags: z.array(z.string()).optional(),
 	files: z.array(FileSchema).optional().default([]),
-	createdAt: z.string().optional().refine(
-		(s) => s === undefined || !isNaN(Date.parse(s)),
-		{ message: "Invalid date format" },
-	),
+	createdAt: z
+		.string()
+		.optional()
+		.refine((s) => s === undefined || !isNaN(Date.parse(s)), {
+			message: "Invalid date format",
+		}),
 });
