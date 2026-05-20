@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { authMiddleware } from "@/middleware/auth";
+
 const visibilityMap: Record<string, "PRIVATE" | "PUBLIC" | "PROTECTED"> = {
 	private: "PRIVATE",
 	workspace: "PROTECTED",
@@ -29,24 +31,19 @@ export const updateMemoFn = createServerFn({ method: "POST" })
 		}
 		return data;
 	})
-	.handler(async ({ data }) => {
+	.middleware([authMiddleware])
+	.handler(async ({ data, context }) => {
+		if (!context.session) throw new Error("Not authenticated");
+
 		const [
 			{ createDb },
 			{ memo },
-			{ createAuth },
-			{ getRequestHeaders },
 			{ eq, and },
 		] = await Promise.all([
 			import("@memos/db"),
 			import("@memos/db/schema/memo.table"),
-			import("@memos/auth"),
-			import("@tanstack/react-start/server"),
 			import("drizzle-orm"),
 		]);
-
-		const headers = getRequestHeaders();
-		const session = await createAuth().api.getSession({ headers });
-		if (!session) throw new Error("Not authenticated");
 
 		const db = createDb();
 
@@ -65,7 +62,7 @@ export const updateMemoFn = createServerFn({ method: "POST" })
 			.update(memo)
 			.set(updateData)
 			.where(
-				and(eq(memo.uid, data.memoId), eq(memo.creatorId, session.user.id)),
+				and(eq(memo.uid, data.memoId), eq(memo.creatorId, context.session.user.id)),
 			)
 			.returning({
 				uid: memo.uid,

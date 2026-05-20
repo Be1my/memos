@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { authMiddleware } from "@/middleware/auth";
+
 const visibilityMap: Record<string, "PRIVATE" | "PUBLIC" | "PROTECTED"> = {
 	private: "PRIVATE",
 	workspace: "PROTECTED",
@@ -69,28 +71,23 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			createdAt,
 		};
 	})
-	.handler(async ({ data }) => {
+	.middleware([authMiddleware])
+	.handler(async ({ data, context }) => {
+		if (!context.session) {
+			throw new Error("Not authenticated");
+		}
+
 		const [
 			{ createDb },
 			{ memo },
 			{ attachment },
 			{ env },
-			{ createAuth },
-			{ getRequestHeaders },
 		] = await Promise.all([
 			import("@memos/db"),
 			import("@memos/db/schema/memo.table"),
 			import("@memos/db/schema/attachment.table"),
 			import("@memos/env/server"),
-			import("@memos/auth"),
-			import("@tanstack/react-start/server"),
 		]);
-
-		const headers = getRequestHeaders();
-		const session = await createAuth().api.getSession({ headers });
-		if (!session) {
-			throw new Error("Not authenticated");
-		}
 
 		const db = createDb();
 
@@ -98,7 +95,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 		try {
 			const insertData: typeof memo.$inferInsert = {
 				uid: crypto.randomUUID(),
-				creatorId: session.user.id,
+				creatorId: context.session.user.id,
 				content: data.content,
 				payload: data.payload ?? {},
 				visibility: visibilityMap[data.visibility] ?? "PRIVATE",
@@ -160,7 +157,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 					.insert(attachment)
 					.values({
 						uid: crypto.randomUUID(),
-						creatorId: session.user.id,
+						creatorId: context.session.user.id,
 						memoId: created.id,
 						filename: file.name,
 						type: file.type,

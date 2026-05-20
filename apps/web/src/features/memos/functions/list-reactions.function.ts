@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { authMiddleware } from "@/middleware/auth";
+
 export interface ReactionUser {
 	id: number;
 	creatorId: string;
@@ -15,28 +17,23 @@ export const listReactionsFn = createServerFn({ method: "GET" })
 		}
 		return data;
 	})
-	.handler(async ({ data }) => {
+	.middleware([authMiddleware])
+	.handler(async ({ data, context }) => {
+		if (!context.session) {
+			return [];
+		}
+
 		const [
 			{ createDb },
 			{ reaction },
 			{ user },
-			{ createAuth },
-			{ getRequestHeaders },
 			{ eq },
 		] = await Promise.all([
 			import("@memos/db"),
 			import("@memos/db/schema/reaction.table"),
 			import("@memos/db/schema/auth.table"),
-			import("@memos/auth"),
-			import("@tanstack/react-start/server"),
 			import("drizzle-orm"),
 		]);
-
-		const headers = getRequestHeaders();
-		const session = await createAuth().api.getSession({ headers });
-		if (!session) {
-			return [];
-		}
 
 		const db = createDb();
 

@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 
+import { authMiddleware } from "@/middleware/auth";
+
 export const togglePinFn = createServerFn({ method: "POST" })
 	.inputValidator((input: unknown) => {
 		const data = input as { memoId: string };
@@ -8,26 +10,21 @@ export const togglePinFn = createServerFn({ method: "POST" })
 		}
 		return data;
 	})
-	.handler(async ({ data }) => {
+	.middleware([authMiddleware])
+	.handler(async ({ data, context }) => {
+		if (!context.session) {
+			throw new Error("Not authenticated");
+		}
+
 		const [
 			{ createDb },
 			{ memo },
-			{ createAuth },
-			{ getRequestHeaders },
 			{ eq, and, sql },
 		] = await Promise.all([
 			import("@memos/db"),
 			import("@memos/db/schema/memo.table"),
-			import("@memos/auth"),
-			import("@tanstack/react-start/server"),
 			import("drizzle-orm"),
 		]);
-
-		const headers = getRequestHeaders();
-		const session = await createAuth().api.getSession({ headers });
-		if (!session) {
-			throw new Error("Not authenticated");
-		}
 
 		const db = createDb();
 
@@ -35,7 +32,7 @@ export const togglePinFn = createServerFn({ method: "POST" })
 			.update(memo)
 			.set({ pinned: sql`NOT ${memo.pinned}` })
 			.where(
-				and(eq(memo.uid, data.memoId), eq(memo.creatorId, session.user.id)),
+				and(eq(memo.uid, data.memoId), eq(memo.creatorId, context.session.user.id)),
 			)
 			.returning({ uid: memo.uid, pinned: memo.pinned });
 
