@@ -28,7 +28,8 @@
 			"!**/.source",
 			"!**/convex/_generated",
 			"!**/paraglide",
-			"!packages/ui"
+			"!packages/ui",
+			"!.superpowers"
 		]
 	},
 	"formatter": {

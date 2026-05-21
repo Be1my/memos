@@ -49,7 +49,7 @@ export const updateMemoFn = createServerFn({ method: "POST" })
 
 		return {
 			...updated,
-			payload: updated.payload as Record<string, any>,
+			payload: updated.payload as Record<string, unknown>,
 			createdAt: updated.createdAt.toISOString(),
 			updatedAt: updated.updatedAt.toISOString(),
 		};

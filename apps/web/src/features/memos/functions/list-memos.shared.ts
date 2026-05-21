@@ -98,7 +98,7 @@ export async function queryMemos(
 		id: m.id,
 		uid: m.uid,
 		content: m.content,
-		payload: m.payload as Record<string, any>,
+		payload: m.payload as Record<string, unknown>,
 		visibility: m.visibility,
 		tags: m.tags,
 		pinned: m.pinned,

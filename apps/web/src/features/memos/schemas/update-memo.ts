@@ -9,7 +9,7 @@ export const UpdateMemoInputSchema = z.object({
 	createdAt: z
 		.string()
 		.optional()
-		.refine((s) => s === undefined || !isNaN(Date.parse(s)), {
+		.refine((s) => s === undefined || !Number.isNaN(Date.parse(s)), {
 			message: "Invalid date format",
 		}),
 });

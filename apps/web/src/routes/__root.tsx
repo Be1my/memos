@@ -68,6 +68,7 @@ function RootDocument() {
 	useEffect(() => {
 		if (document.cookie.includes("memos-tz")) return;
 		const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		// biome-ignore lint/suspicious/noDocumentCookie: Cookie Store API not widely supported
 		document.cookie = `memos-tz=${tz}; path=/; maxAge=${60 * 60 * 24 * 365}`;
 	}, []);
 

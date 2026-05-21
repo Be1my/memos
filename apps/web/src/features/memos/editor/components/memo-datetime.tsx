@@ -46,12 +46,12 @@ export function MemoDatetime({
 				now.getMinutes(),
 				now.getSeconds(),
 			);
-			if (isNaN(date.getTime())) return;
+			if (Number.isNaN(date.getTime())) return;
 			setSelectedDate(date);
 			onChange(date.toISOString());
 		} else if (defaultDate) {
 			const date = new Date(defaultDate);
-			if (isNaN(date.getTime())) return;
+			if (Number.isNaN(date.getTime())) return;
 			setSelectedDate(date);
 			onChange(date.toISOString());
 		} else {
