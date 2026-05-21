@@ -1,6 +1,6 @@
 import { Button } from "@memos/ui/components/button";
 import { ArrowUpIcon } from "lucide-react";
-import type { listMemosFn } from "../editor/functions/list-memos.function";
+import type { listMemosFn } from "../functions/list-memos.function";
 import { MemoCard } from "./memo-card";
 
 type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];
