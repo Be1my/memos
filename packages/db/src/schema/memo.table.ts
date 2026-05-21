@@ -10,6 +10,16 @@ import {
 import { user } from "./auth.table";
 import { memoVisibilityEnum, rowStatusEnum } from "./enums";
 
+export type JsonValue =
+	| string
+	| number
+	| boolean
+	| null
+	| JsonValue[]
+	| { [key: string]: JsonValue | undefined };
+
+export type JsonObject = { [key: string]: JsonValue | undefined };
+
 export const memo = pgTable(
 	"memo",
 	{
@@ -30,7 +40,7 @@ export const memo = pgTable(
 		pinned: boolean("pinned").notNull().default(false),
 		tags: text("tags").array().notNull().default([]),
 		payload: jsonb("payload")
-			.$type<Record<string, unknown>>()
+			.$type<JsonObject>()
 			.notNull()
 			.default({}),
 	},

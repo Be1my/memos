@@ -1,7 +1,7 @@
 import { createDb } from "@memos/db";
 import { attachment } from "@memos/db/schema/attachment.table";
 import { VISIBILITY_MAP } from "@memos/db/schema/enums";
-import { memo } from "@memos/db/schema/memo.table";
+import { memo, type JsonObject } from "@memos/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { setResponseStatus } from "@tanstack/react-start/server";
 import { internalError, unauthorized } from "@/lib/errors";
@@ -30,7 +30,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 				uid: crypto.randomUUID(),
 				creatorId: context.session.user.id,
 				content: data.content,
-				payload: data.payload ?? {},
+				payload: (data.payload ?? {}) as JsonObject,
 				visibility: VISIBILITY_MAP[data.visibility] ?? "PRIVATE",
 				tags: data.tags ?? [],
 			};

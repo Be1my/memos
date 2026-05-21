@@ -61,7 +61,7 @@ function Editor({
 	onSave?: (data: {
 		content: string;
 		payload: SerializedEditorState;
-		visibility: string;
+		visibility: "private" | "workspace" | "public";
 		tags?: string[];
 		files?: FilePayload[];
 		createdAt?: string;
@@ -148,7 +148,7 @@ function Editor({
 		onSave?.({
 			content,
 			payload: state.toJSON(),
-			visibility,
+			visibility: visibility as "private" | "workspace" | "public",
 			tags,
 			files: filePayloads,
 			...(createdAt ? { createdAt } : {}),

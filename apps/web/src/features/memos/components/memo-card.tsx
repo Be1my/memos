@@ -9,6 +9,7 @@ import { GlobeIcon, LockIcon, PinIcon, UsersIcon } from "lucide-react";
 import { useState } from "react";
 import { Editor, LexicalRenderer } from "../editor";
 import type { listMemosFn } from "../functions/list-memos.function";
+import type { JsonObject } from "@memos/db/schema/memo.table";
 import { useTogglePin } from "../queries/pin-memo.query";
 import { useUpdateMemo } from "../queries/update-memo.query";
 import { AttachmentGrid } from "./attachment-grid";
@@ -53,7 +54,7 @@ function MemoCard({
 	const handleEditSave = (data: {
 		content: string;
 		payload: SerializedEditorState;
-		visibility: string;
+		visibility: "private" | "workspace" | "public";
 		tags?: string[];
 		files?: { name: string; type: string; size: number; key: string }[];
 		createdAt?: string;
@@ -63,7 +64,7 @@ function MemoCard({
 				data: {
 					memoId: memo.uid,
 					content: data.content,
-					payload: data.payload as unknown as Record<string, unknown>,
+					payload: data.payload as unknown as JsonObject,
 					visibility: data.visibility,
 					createdAt: data.createdAt,
 				},
@@ -84,7 +85,7 @@ function MemoCard({
 			<Editor
 				onSave={handleEditSave}
 				isSaving={updateMemo.isPending}
-				initialEditorState={memo.payload}
+				initialEditorState={memo.payload as unknown as SerializedEditorState}
 				initialVisibility={visibilityReverseMap[memo.visibility] ?? "private"}
 				initialCreatedAt={memo.createdAt}
 				onCancel={handleEditCancel}
@@ -144,7 +145,7 @@ function MemoCard({
 				</div>
 			</div>
 			<div className="leading-relaxed">
-				<LexicalRenderer payload={memo.payload} />
+				<LexicalRenderer payload={memo.payload as unknown as SerializedEditorState} />
 			</div>
 			{memo.attachments && memo.attachments.length > 0 && (
 				<AttachmentGrid attachments={memo.attachments} />

@@ -1,4 +1,5 @@
-import { VISIBILITY_MAP } from "@memos/db/schema/enums";
+import { VISIBILITY_MAP, VISIBILITY_VALUES } from "@memos/db/schema/enums";
+import { type JsonObject } from "@memos/db/schema/memo.table";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { updateMemoFn } from "../functions/update-memo.function";
@@ -6,7 +7,7 @@ import { updateMemoFn } from "../functions/update-memo.function";
 interface MemoData {
 	uid: string;
 	content: string;
-	payload: Record<string, unknown>;
+	payload: JsonObject;
 	visibility: string;
 	createdAt: string;
 	updatedAt: string;
@@ -22,8 +23,8 @@ export function useUpdateMemo() {
 			data: {
 				memoId: string;
 				content: string;
-				payload: Record<string, unknown>;
-				visibility: string;
+				payload: JsonObject;
+				visibility: (typeof VISIBILITY_VALUES)[number];
 				createdAt?: string;
 			};
 		}) => {

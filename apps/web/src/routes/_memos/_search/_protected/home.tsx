@@ -8,6 +8,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ActiveFilters } from "@/components/active-filters";
+import type { JsonObject } from "@memos/db/schema/memo.table";
 import {
 	createMemoFn,
 	Editor,
@@ -63,7 +64,14 @@ function RouteComponent() {
 			<Editor
 				key={resetKey}
 				isSaving={mutation.isPending}
-				onSave={(data) => mutation.mutate({ data })}
+				onSave={(data) =>
+					mutation.mutate({
+						data: {
+							...data,
+							payload: data.payload as unknown as JsonObject,
+						},
+					})
+				}
 				dateSearch={{ date: filter.date }}
 			/>
 			<ActiveFilters />
