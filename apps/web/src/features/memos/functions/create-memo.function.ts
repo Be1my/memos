@@ -1,18 +1,13 @@
 import { createDb } from "@memos/db";
 import { attachment } from "@memos/db/schema/attachment.table";
 import { memo } from "@memos/db/schema/memo.table";
+import { VISIBILITY_MAP } from "@memos/db/schema/enums";
 import { createServerFn } from "@tanstack/react-start";
 import { setResponseStatus } from "@tanstack/react-start/server";
 import { internalError, unauthorized } from "@/lib/errors";
 import { authMiddleware } from "@/middleware/auth";
 
 import { CreateMemoInputSchema } from "../schemas/create-memo";
-
-const visibilityMap: Record<string, "PRIVATE" | "PUBLIC" | "PROTECTED"> = {
-	private: "PRIVATE",
-	workspace: "PROTECTED",
-	public: "PUBLIC",
-};
 
 export interface FilePayload {
 	name: string;
@@ -41,7 +36,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 				creatorId: context.session.user.id,
 				content: data.content,
 				payload: data.payload ?? {},
-				visibility: visibilityMap[data.visibility] ?? "PRIVATE",
+				visibility: VISIBILITY_MAP[data.visibility] ?? "PRIVATE",
 				tags: data.tags ?? [],
 			};
 			if (data.createdAt) {

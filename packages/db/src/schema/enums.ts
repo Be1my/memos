@@ -19,3 +19,11 @@ export const storageTypeEnum = pgEnum("storage_type", [
 	"GCS",
 	"LOCAL",
 ]);
+
+export const VISIBILITY_MAP = {
+	private: "PRIVATE",
+	workspace: "PROTECTED",
+	public: "PUBLIC",
+} as const satisfies Record<string, "PRIVATE" | "PUBLIC" | "PROTECTED">;
+
+export const VISIBILITY_VALUES = ["private", "workspace", "public"] as const;

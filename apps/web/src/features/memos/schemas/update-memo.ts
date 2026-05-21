@@ -1,12 +1,11 @@
+import { VISIBILITY_VALUES } from "@memos/db/schema/enums";
 import { z } from "zod";
-
-const visibilityValues = ["private", "workspace", "public"] as const;
 
 export const UpdateMemoInputSchema = z.object({
 	memoId: z.string().min(1),
 	content: z.string().trim().min(1),
 	payload: z.record(z.string(), z.unknown()).optional(),
-	visibility: z.enum(visibilityValues),
+	visibility: z.enum(VISIBILITY_VALUES),
 	createdAt: z
 		.string()
 		.optional()

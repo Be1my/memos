@@ -1,12 +1,7 @@
+import { VISIBILITY_MAP } from "@memos/db/schema/enums";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { updateMemoFn } from "../functions/update-memo.function";
-
-const visibilityMap: Record<string, string> = {
-	private: "PRIVATE",
-	workspace: "PROTECTED",
-	public: "PUBLIC",
-};
 
 interface MemoData {
 	uid: string;
@@ -49,7 +44,7 @@ export function useUpdateMemo() {
 							content: variables.data.content,
 							payload: variables.data.payload,
 							visibility:
-								visibilityMap[variables.data.visibility] ??
+								VISIBILITY_MAP[variables.data.visibility] ??
 								variables.data.visibility,
 							createdAt: variables.data.createdAt ?? memo.createdAt,
 							updatedAt: new Date().toISOString(),

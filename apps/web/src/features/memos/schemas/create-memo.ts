@@ -1,3 +1,4 @@
+import { VISIBILITY_VALUES } from "@memos/db/schema/enums";
 import { z } from "zod";
 
 export const FileSchema = z.object({
@@ -7,12 +8,10 @@ export const FileSchema = z.object({
 	key: z.string().min(1),
 });
 
-const visibilityValues = ["private", "workspace", "public"] as const;
-
 export const CreateMemoInputSchema = z.object({
 	content: z.string().trim().min(1),
 	payload: z.record(z.string(), z.unknown()).optional(),
-	visibility: z.enum(visibilityValues),
+	visibility: z.enum(VISIBILITY_VALUES),
 	tags: z.array(z.string()).optional(),
 	files: z.array(FileSchema).optional().default([]),
 	createdAt: z
