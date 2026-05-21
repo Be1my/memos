@@ -11,9 +11,9 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useEffect } from "react";
 import { firstUserQueryOptions } from "@/features/auth";
+import { startClock, stopClock } from "@/features/memos";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { getLocale } from "@/paraglide/runtime";
-import { startClock, stopClock } from "@/features/memos";
 import appCss from "../index.css?url";
 
 export interface RouterAppContext {

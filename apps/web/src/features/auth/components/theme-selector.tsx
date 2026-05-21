@@ -5,8 +5,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@memos/ui/components/select";
-import { type UserTheme, useTheme } from "@/lib/theme-provider";
 import { getThemeConfig } from "@/lib/theme-config";
+import { type UserTheme, useTheme } from "@/lib/theme-provider";
 
 const themeOptions = ["light", "dark", "paper", "system"] as UserTheme[];
 

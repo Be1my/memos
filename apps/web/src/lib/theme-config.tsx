@@ -1,6 +1,6 @@
-import { Monitor, Moon, Palette, Sun, type LucideIcon } from "lucide-react";
-import { m } from "@/paraglide/messages";
+import { type LucideIcon, Monitor, Moon, Palette, Sun } from "lucide-react";
 import type { UserTheme } from "@/lib/theme-provider";
+import { m } from "@/paraglide/messages";
 
 export type { UserTheme };
 
@@ -18,7 +18,10 @@ export function getThemeConfig(): Record<
 	UserTheme,
 	{ icon: React.ReactNode; label: string }
 > {
-	const entries = Object.entries(themeMeta) as [UserTheme, (typeof themeMeta)[UserTheme]][];
+	const entries = Object.entries(themeMeta) as [
+		UserTheme,
+		(typeof themeMeta)[UserTheme],
+	][];
 	return Object.fromEntries(
 		entries.map(([key, meta]) => [
 			key,

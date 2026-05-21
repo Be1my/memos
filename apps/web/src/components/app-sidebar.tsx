@@ -40,10 +40,10 @@ import {
 	SettingsIcon,
 	UserIcon,
 } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 import { localeLabels } from "@/lib/locale-config";
 import { getThemeConfig } from "@/lib/theme-config";
 import { useTheme } from "@/lib/theme-provider";
-import { authClient } from "@/lib/auth-client";
 import { m } from "@/paraglide/messages";
 import { getLocale, locales } from "@/paraglide/runtime";
 import type { FileRouteTypes } from "@/routeTree.gen";
@@ -175,9 +175,7 @@ function LanguageSubmenu() {
 			<DropdownMenuSubContent>
 				{locales.map((locale) => (
 					<DropdownMenuItem key={locale} onClick={() => loadLocale(locale)}>
-						<span className="flex-1">
-							{localeLabels[locale] ?? locale}
-						</span>
+						<span className="flex-1">{localeLabels[locale] ?? locale}</span>
 						{currentLocale === locale && <CheckIcon className="size-4" />}
 					</DropdownMenuItem>
 				))}

@@ -2,8 +2,8 @@ import { env } from "@memos/env/server";
 import { createServerFn } from "@tanstack/react-start";
 import { AwsClient } from "aws4fetch";
 import { z } from "zod";
-import { FileInfoSchema } from "@/lib/schemas/file";
 import { unauthorized } from "@/lib/errors";
+import { FileInfoSchema } from "@/lib/schemas/file";
 import { authMiddleware } from "@/middleware/auth";
 
 const FileUrlRequestSchema = z.object({

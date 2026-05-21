@@ -40,7 +40,7 @@ export function ActiveFilters() {
 				return (
 					<span
 						key={f.key}
-						className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-sm text-primary transition-colors hover:bg-primary/20"
+						className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-primary text-sm transition-colors hover:bg-primary/20"
 					>
 						<Icon className="size-3.5" />
 						{f.label}
