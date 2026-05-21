@@ -10,10 +10,10 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { useEffect } from "react";
-import { firstUserQueryOptions } from "@/features/auth/queries/auth.query";
+import { firstUserQueryOptions } from "@/features/auth";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { getLocale } from "@/paraglide/runtime";
-import { startClock, stopClock } from "@/stores/clock";
+import { startClock, stopClock } from "@/features/memos";
 import appCss from "../index.css?url";
 
 export interface RouterAppContext {

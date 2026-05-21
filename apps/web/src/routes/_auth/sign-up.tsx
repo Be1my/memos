@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import SignUpForm from "@/features/auth/components/sign-up-form";
-import { firstUserQueryOptions } from "@/features/auth/queries/auth.query";
+import { SignUpForm, firstUserQueryOptions } from "@/features/auth";
 
 export const Route = createFileRoute("/_auth/sign-up")({
 	loader: async ({ context }) => {

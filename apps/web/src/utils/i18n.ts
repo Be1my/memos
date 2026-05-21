@@ -1,4 +1,4 @@
-import type { Locale } from "@/features/i18n/schemas";
+import type { Locale } from "@/lib/locale";
 import { locales, setLocale } from "@/paraglide/runtime";
 
 const LOCALE_STORAGE_KEY = "memos-locale";

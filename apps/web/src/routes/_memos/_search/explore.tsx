@@ -1,9 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { listExploreMemosQueryOptions } from "@/features/memos/editor/queries/list-explore-memos.query";
+import { listExploreMemosQueryOptions, MemoList } from "@/features/memos";
 import { ActiveFilters } from "@/components/active-filters";
-import { MemoList } from "@/features/memos/components/memo-list";
 
 const searchSchema = z.object({
 	q: z.string().optional(),

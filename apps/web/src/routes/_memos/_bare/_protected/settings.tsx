@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SettingsView } from "@/features/settings/components/settings-view";
+import { SettingsView } from "@/features/settings";
 
 export const Route = createFileRoute("/_memos/_bare/_protected/settings")({
 	component: RouteComponent,

@@ -6,7 +6,7 @@ import {
 	SelectValue,
 } from "@memos/ui/components/select";
 import { Globe } from "lucide-react";
-import type { Locale } from "@/features/i18n/schemas";
+import type { Locale } from "@/lib/locale";
 import { getLocale, locales } from "@/paraglide/runtime";
 import { loadLocale } from "@/utils/i18n";
 
