@@ -31,7 +31,6 @@ const TimePickerInput = forwardRef<HTMLInputElement, TimePickerInputProps>(
 		ref,
 	) => {
 		const [flag, setFlag] = useState(false);
-		const [_prevIntKey, setPrevIntKey] = useState("0");
 
 		useEffect(() => {
 			if (flag) {
@@ -62,7 +61,6 @@ const TimePickerInput = forwardRef<HTMLInputElement, TimePickerInputProps>(
 				setDate(setDateByType(tempDate, newValue, picker));
 			}
 			if (e.key >= "0" && e.key <= "9") {
-				if (picker === "12hours") setPrevIntKey(e.key);
 				const newValue = calculateNewValue(e.key);
 				if (flag) onRightFocus?.();
 				setFlag((prev) => !prev);

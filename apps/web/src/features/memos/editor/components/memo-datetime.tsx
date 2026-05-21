@@ -129,7 +129,7 @@ export function MemoDatetime({
 									<TimePickerInput
 										picker="hours"
 										date={selectedDate}
-										setDate={setSelectedDate}
+										setDate={(date) => setSelectedDate(date ?? null)}
 									/>
 								</div>
 								<span className="mt-5 self-start font-thin text-muted-foreground/30 text-xl">
@@ -142,7 +142,7 @@ export function MemoDatetime({
 									<TimePickerInput
 										picker="minutes"
 										date={selectedDate}
-										setDate={setSelectedDate}
+										setDate={(date) => setSelectedDate(date ?? null)}
 									/>
 								</div>
 								<span className="mt-5 self-start font-thin text-muted-foreground/30 text-xl">
@@ -155,7 +155,7 @@ export function MemoDatetime({
 									<TimePickerInput
 										picker="seconds"
 										date={selectedDate}
-										setDate={setSelectedDate}
+										setDate={(date) => setSelectedDate(date ?? null)}
 									/>
 								</div>
 							</div>
