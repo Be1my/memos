@@ -3,6 +3,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { eq, sql } from "drizzle-orm";
 
 import { authMiddleware } from "@/middleware/auth";
+import { localeTzMiddleware } from "@/middleware/locale-tz";
 import type { ListMemosFilter } from "./list-memos.shared";
 import { ListMemosFilterSchema, queryMemos } from "./list-memos.shared";
 
@@ -10,7 +11,7 @@ export type { ListMemosFilter };
 
 export const listExploreMemosFn = createServerFn({ method: "GET" })
 	.inputValidator(ListMemosFilterSchema.optional().default({}))
-	.middleware([authMiddleware])
+	.middleware([authMiddleware, localeTzMiddleware])
 	.handler(async ({ data, context }) => {
 		const filter = data;
 
@@ -20,6 +21,6 @@ export const listExploreMemosFn = createServerFn({ method: "GET" })
 				]
 			: [eq(memo.visibility, "PUBLIC")];
 
-		const memos = await queryMemos(conditions, filter);
+		const memos = await queryMemos(conditions, filter, false, context.timeZone);
 		return memos;
 	});

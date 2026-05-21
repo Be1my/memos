@@ -3,7 +3,8 @@ import { attachment } from "@memos/db/schema/attachment.table";
 import { user } from "@memos/db/schema/auth.table";
 import { memo } from "@memos/db/schema/memo.table";
 import { reaction } from "@memos/db/schema/reaction.table";
-import { addDays, format, isValid, parse } from "date-fns";
+import { TZDate } from "@date-fns/tz";
+import { addDays } from "date-fns";
 import { and, desc, eq, inArray, like, type SQL, sql } from "drizzle-orm";
 import { z } from "zod";
 
@@ -19,6 +20,7 @@ export async function queryMemos(
 	conditions: SQL[],
 	filter?: ListMemosFilter,
 	orderByPinned?: boolean,
+	timeZone?: string,
 ) {
 	const db = createDb();
 
@@ -27,13 +29,11 @@ export async function queryMemos(
 	}
 
 	if (filter?.date) {
-		const start = parse(filter.date, "yyyy-MM-dd", new Date());
-		if (!isValid(start)) {
-			throw new Error("Invalid date filter");
-		}
+		const [y, m, d] = filter.date.split("-").map(Number);
+		const start = TZDate.tz(timeZone ?? "UTC", y, m - 1, d);
 		const end = addDays(start, 1);
 		conditions.push(
-			sql`${memo.createdAt} >= ${format(start, "yyyy-MM-dd")}::timestamptz AND ${memo.createdAt} < ${format(end, "yyyy-MM-dd")}::timestamptz`,
+			sql`${memo.createdAt} >= ${start.toISOString()}::timestamptz AND ${memo.createdAt} < ${end.toISOString()}::timestamptz`,
 		);
 	}
 
