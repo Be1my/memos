@@ -1,3 +1,4 @@
+import type { JsonObject } from "@memos/db/schema/memo.table";
 import {
 	Tooltip,
 	TooltipContent,
@@ -9,7 +10,6 @@ import { GlobeIcon, LockIcon, PinIcon, UsersIcon } from "lucide-react";
 import { useState } from "react";
 import { Editor, LexicalRenderer } from "../editor";
 import type { listMemosFn } from "../functions/list-memos.function";
-import type { JsonObject } from "@memos/db/schema/memo.table";
 import { useTogglePin } from "../queries/pin-memo.query";
 import { useUpdateMemo } from "../queries/update-memo.query";
 import { AttachmentGrid } from "./attachment-grid";
@@ -145,7 +145,9 @@ function MemoCard({
 				</div>
 			</div>
 			<div className="leading-relaxed">
-				<LexicalRenderer payload={memo.payload as unknown as SerializedEditorState} />
+				<LexicalRenderer
+					payload={memo.payload as unknown as SerializedEditorState}
+				/>
 			</div>
 			{memo.attachments && memo.attachments.length > 0 && (
 				<AttachmentGrid attachments={memo.attachments} />

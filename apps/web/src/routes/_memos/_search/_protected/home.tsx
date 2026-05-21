@@ -1,3 +1,4 @@
+import type { JsonObject } from "@memos/db/schema/memo.table";
 import {
 	useMutation,
 	useQueryClient,
@@ -8,7 +9,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ActiveFilters } from "@/components/active-filters";
-import type { JsonObject } from "@memos/db/schema/memo.table";
 import {
 	createMemoFn,
 	Editor,

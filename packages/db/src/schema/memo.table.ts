@@ -39,10 +39,7 @@ export const memo = pgTable(
 		visibility: memoVisibilityEnum("visibility").notNull().default("PRIVATE"),
 		pinned: boolean("pinned").notNull().default(false),
 		tags: text("tags").array().notNull().default([]),
-		payload: jsonb("payload")
-			.$type<JsonObject>()
-			.notNull()
-			.default({}),
+		payload: jsonb("payload").$type<JsonObject>().notNull().default({}),
 	},
 	(table) => [
 		index("memo_creator_id_idx").on(table.creatorId),

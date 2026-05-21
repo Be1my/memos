@@ -1,5 +1,5 @@
-import { VISIBILITY_MAP, VISIBILITY_VALUES } from "@memos/db/schema/enums";
-import { type JsonObject } from "@memos/db/schema/memo.table";
+import { VISIBILITY_MAP, type VISIBILITY_VALUES } from "@memos/db/schema/enums";
+import type { JsonObject } from "@memos/db/schema/memo.table";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { updateMemoFn } from "../functions/update-memo.function";

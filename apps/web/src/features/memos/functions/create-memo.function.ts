@@ -1,7 +1,7 @@
 import { createDb } from "@memos/db";
 import { attachment } from "@memos/db/schema/attachment.table";
 import { VISIBILITY_MAP } from "@memos/db/schema/enums";
-import { memo, type JsonObject } from "@memos/db/schema/memo.table";
+import { type JsonObject, memo } from "@memos/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { setResponseStatus } from "@tanstack/react-start/server";
 import { internalError, unauthorized } from "@/lib/errors";

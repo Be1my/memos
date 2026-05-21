@@ -1,6 +1,6 @@
 import { createDb } from "@memos/db";
 import { VISIBILITY_MAP } from "@memos/db/schema/enums";
-import { memo, type JsonObject } from "@memos/db/schema/memo.table";
+import { type JsonObject, memo } from "@memos/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
 import { notFound, unauthorized } from "@/lib/errors";

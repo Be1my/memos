@@ -1,0 +1,5 @@
+# 根目录的 lefthook.yml
+pre-commit:
+  commands:
+    global-check:
+      run: bun run check
