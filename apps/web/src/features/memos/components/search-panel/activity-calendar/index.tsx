@@ -11,7 +11,7 @@ import {
 } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
-import { calendarInfoQueryOptions } from "@/features/memos/queries/calendar-info.query";
+import { calendarInfoQueryOptions } from "../../../queries/calendar-info.query";
 import { MONTHS } from "./calendar-utils";
 import { MonthGrid } from "./month-grid";
 import { useHeatmap } from "./use-heatmap";

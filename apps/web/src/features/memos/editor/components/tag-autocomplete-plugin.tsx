@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { TextNode } from "lexical";
 import { useCallback, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { memosStatsQueryOptions } from "@/features/memos/queries/memos-stats.query";
+import { memosStatsQueryOptions } from "../../queries/memos-stats.query";
 
 class TagOption extends MenuOption {
 	name: string;

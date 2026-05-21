@@ -1,7 +1,7 @@
 import { SidebarSeparator } from "@memos/ui/components/sidebar";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { calendarInfoQueryOptions } from "@/features/memos/queries/calendar-info.query";
-import { memosStatsQueryOptions } from "@/features/memos/queries/memos-stats.query";
+import { calendarInfoQueryOptions } from "../../queries/calendar-info.query";
+import { memosStatsQueryOptions } from "../../queries/memos-stats.query";
 import { ActivityCalendar } from "./activity-calendar";
 import { SearchBox } from "./search-box";
 import { Tags } from "./tags";

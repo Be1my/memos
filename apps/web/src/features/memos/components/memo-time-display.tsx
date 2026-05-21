@@ -6,7 +6,7 @@ import {
 } from "@memos/ui/components/tooltip";
 import { m } from "@/paraglide/messages";
 import { getLocale } from "@/paraglide/runtime";
-import { useClockStore } from "@/features/memos/stores/clock";
+import { useClockStore } from "../stores/clock";
 
 function toDeltaSeconds(isoString: string, now: number) {
 	const date = new Date(isoString);

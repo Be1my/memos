@@ -30,7 +30,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { editorTheme } from "../editor-theme";
 import type { FilePayload } from "../functions/create-memo.function";
-import { getUploadPresignedUrlsFn } from "../functions/get-upload-urls.function";
+import { getUploadPresignedUrlsFn } from "@/lib/get-upload-urls.function";
 import { FloatingToolbar } from "./floating-toolbar";
 import { MemoDatetime } from "./memo-datetime";
 import { TagAutocompletePlugin } from "./tag-autocomplete-plugin";

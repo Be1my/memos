@@ -7,7 +7,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Editor, createMemoFn, memosQueryOptions, MemoList } from "@/features/memos";
+import { ActiveFilters } from "@/components/active-filters";
+import {
+	createMemoFn,
+	Editor,
+	MemoList,
+	memosQueryOptions,
+} from "@/features/memos";
 
 const searchSchema = z.object({
 	q: z.string().optional(),
