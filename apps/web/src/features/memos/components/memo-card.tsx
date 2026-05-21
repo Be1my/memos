@@ -7,10 +7,10 @@ import {
 import type { SerializedEditorState } from "lexical";
 import { GlobeIcon, LockIcon, PinIcon, UsersIcon } from "lucide-react";
 import { useState } from "react";
-import { Editor } from "../../editor/components/editor";
-import { LexicalRenderer } from "../../editor/components/lexical-renderer";
-import type { listMemosFn } from "../../editor/functions/list-memos.function";
-import { useUpdateMemo } from "../../editor/queries/update-memo.query";
+import { Editor } from "../editor/components/editor";
+import { LexicalRenderer } from "../editor/components/lexical-renderer";
+import type { listMemosFn } from "../editor/functions/list-memos.function";
+import { useUpdateMemo } from "../editor/queries/update-memo.query";
 import { useTogglePin } from "../queries/pin-memo.query";
 import { AttachmentGrid } from "./attachment-grid";
 import { MemoCardActions } from "./memo-card-actions";

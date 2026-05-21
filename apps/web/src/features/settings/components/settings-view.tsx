@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { getUploadPresignedUrlsFn } from "@/features/editor/functions/get-upload-urls.function";
+import { getUploadPresignedUrlsFn } from "@/features/memos/editor/functions/get-upload-urls.function";
 import { authClient } from "@/lib/auth-client";
 import { useTheme } from "@/lib/theme-provider";
 import { m } from "@/paraglide/messages";

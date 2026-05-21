@@ -4,7 +4,7 @@ import {
 	DialogTrigger,
 } from "@memos/ui/components/dialog";
 import { FileIcon, ImageIcon } from "lucide-react";
-import type { listMemosFn } from "../../editor/functions/list-memos.function";
+import type { listMemosFn } from "../editor/functions/list-memos.function";
 
 type Attachment = Awaited<
 	ReturnType<typeof listMemosFn>
