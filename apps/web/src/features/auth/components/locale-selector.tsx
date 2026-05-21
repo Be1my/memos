@@ -6,14 +6,10 @@ import {
 	SelectValue,
 } from "@memos/ui/components/select";
 import { Globe } from "lucide-react";
+import { localeLabels } from "@/lib/locale-config";
 import type { Locale } from "@/lib/locale";
 import { getLocale, locales } from "@/paraglide/runtime";
 import { loadLocale } from "@/utils/i18n";
-
-const localeConfig: Record<Locale, { label: string }> = {
-	"zh-Hans": { label: "简体中文" },
-	en: { label: "English" },
-};
 
 export default function LocaleSelector() {
 	const currentLocale = getLocale();
@@ -29,14 +25,14 @@ export default function LocaleSelector() {
 				<div className="flex items-center gap-2">
 					<Globe className="h-auto w-4" />
 					<SelectValue placeholder="Select language">
-						{localeConfig[currentLocale].label}
+						{localeLabels[currentLocale]}
 					</SelectValue>
 				</div>
 			</SelectTrigger>
 			<SelectContent>
 				{locales.map((locale) => (
 					<SelectItem key={locale} value={locale}>
-						{localeConfig[locale].label}
+						{localeLabels[locale]}
 					</SelectItem>
 				))}
 			</SelectContent>

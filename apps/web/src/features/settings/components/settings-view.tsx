@@ -30,6 +30,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { getUploadPresignedUrlsFn } from "@/lib/get-upload-urls.function";
 import { authClient } from "@/lib/auth-client";
+import { localeLabels } from "@/lib/locale-config";
 import { useTheme } from "@/lib/theme-provider";
 import { m } from "@/paraglide/messages";
 import { getLocale, locales } from "@/paraglide/runtime";
@@ -337,7 +338,7 @@ function LanguageSelect() {
 				<SelectContent>
 					{locales.map((locale) => (
 						<SelectItem key={locale} value={locale}>
-							{locale === "zh-Hans" ? "简体中文" : "English"}
+							{localeLabels[locale]}
 						</SelectItem>
 					))}
 				</SelectContent>

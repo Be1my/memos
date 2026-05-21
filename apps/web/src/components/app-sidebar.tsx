@@ -35,16 +35,15 @@ import {
 	LogInIcon,
 	LogOutIcon,
 	type LucideIcon,
-	MonitorIcon,
-	MoonIcon,
 	PaletteIcon,
 	PaperclipIcon,
 	SettingsIcon,
-	SunIcon,
 	UserIcon,
 } from "lucide-react";
+import { localeLabels } from "@/lib/locale-config";
+import { getThemeConfig } from "@/lib/theme-config";
+import { useTheme } from "@/lib/theme-provider";
 import { authClient } from "@/lib/auth-client";
-import { type UserTheme, useTheme } from "@/lib/theme-provider";
 import { m } from "@/paraglide/messages";
 import { getLocale, locales } from "@/paraglide/runtime";
 import type { FileRouteTypes } from "@/routeTree.gen";
@@ -142,28 +141,10 @@ function NavItems({ items }: { items: NavItem[] }) {
 	));
 }
 
-function getThemeConfig(): Record<
-	UserTheme,
-	{ icon: React.ReactNode; label: string }
-> {
-	return {
-		light: { icon: <SunIcon className="size-4" />, label: m.sidebar_light() },
-		dark: { icon: <MoonIcon className="size-4" />, label: m.sidebar_dark() },
-		paper: {
-			icon: <PaletteIcon className="size-4" />,
-			label: m.sidebar_paper(),
-		},
-		system: {
-			icon: <MonitorIcon className="size-4" />,
-			label: m.sidebar_system(),
-		},
-	};
-}
-
 function ThemeSubmenu() {
 	const { userTheme, setTheme } = useTheme();
+	const themeOptions = ["light", "dark", "paper", "system"] as const;
 	const themeConfig = getThemeConfig();
-	const themeOptions = Object.keys(themeConfig) as UserTheme[];
 	return (
 		<DropdownMenuSub>
 			<DropdownMenuSubTrigger>
@@ -183,11 +164,6 @@ function ThemeSubmenu() {
 	);
 }
 
-const localeConfig: Record<string, { label: string }> = {
-	"zh-Hans": { label: "简体中文" },
-	en: { label: "English" },
-};
-
 function LanguageSubmenu() {
 	const currentLocale = getLocale();
 	return (
@@ -200,7 +176,7 @@ function LanguageSubmenu() {
 				{locales.map((locale) => (
 					<DropdownMenuItem key={locale} onClick={() => loadLocale(locale)}>
 						<span className="flex-1">
-							{localeConfig[locale]?.label ?? locale}
+							{localeLabels[locale] ?? locale}
 						</span>
 						{currentLocale === locale && <CheckIcon className="size-4" />}
 					</DropdownMenuItem>

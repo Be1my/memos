@@ -44,7 +44,7 @@ export function useUpdateMemo() {
 							content: variables.data.content,
 							payload: variables.data.payload,
 							visibility:
-								VISIBILITY_MAP[variables.data.visibility] ??
+								VISIBILITY_MAP[variables.data.visibility as keyof typeof VISIBILITY_MAP] ??
 								variables.data.visibility,
 							createdAt: variables.data.createdAt ?? memo.createdAt,
 							updatedAt: new Date().toISOString(),

@@ -5,18 +5,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@memos/ui/components/select";
-import { Monitor, Moon, Palette, Sun } from "lucide-react";
 import { type UserTheme, useTheme } from "@/lib/theme-provider";
+import { getThemeConfig } from "@/lib/theme-config";
 
-const themeConfig: Record<UserTheme, { icon: React.ReactNode; label: string }> =
-	{
-		light: { icon: <Sun className="h-auto w-4" />, label: "Light" },
-		dark: { icon: <Moon className="h-auto w-4" />, label: "Dark" },
-		paper: { icon: <Palette className="h-auto w-4" />, label: "Paper" },
-		system: { icon: <Monitor className="h-auto w-4" />, label: "System" },
-	};
-
-const themeOptions = Object.keys(themeConfig) as UserTheme[];
+const themeOptions = ["light", "dark", "paper", "system"] as UserTheme[];
 
 const themeCssClass: Record<UserTheme, string> = {
 	light: "[html.light:not(.system)_&]:flex",
@@ -27,6 +19,7 @@ const themeCssClass: Record<UserTheme, string> = {
 
 export default function ThemeSelector() {
 	const { userTheme, setTheme } = useTheme();
+	const themeConfig = getThemeConfig();
 
 	return (
 		<Select
