@@ -7,14 +7,9 @@ import { setResponseStatus } from "@tanstack/react-start/server";
 import { internalError, unauthorized } from "@/lib/errors";
 import { authMiddleware } from "@/middleware/auth";
 
-import { CreateMemoInputSchema } from "../schemas/create-memo";
+import { CreateMemoInputSchema, type FileData } from "../schemas/create-memo";
 
-export interface FilePayload {
-	name: string;
-	type: string;
-	size: number;
-	key: string;
-}
+export type FilePayload = FileData;
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 

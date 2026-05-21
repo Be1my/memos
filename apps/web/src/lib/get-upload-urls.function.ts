@@ -2,17 +2,12 @@ import { env } from "@memos/env/server";
 import { createServerFn } from "@tanstack/react-start";
 import { AwsClient } from "aws4fetch";
 import { z } from "zod";
+import { FileInfoSchema } from "@/lib/schemas/file";
 import { unauthorized } from "@/lib/errors";
 import { authMiddleware } from "@/middleware/auth";
 
 const FileUrlRequestSchema = z.object({
-	files: z.array(
-		z.object({
-			name: z.string().min(1),
-			type: z.string().min(1),
-			size: z.number().nonnegative(),
-		}),
-	),
+	files: z.array(FileInfoSchema),
 });
 
 export const getUploadPresignedUrlsFn = createServerFn({ method: "POST" })
