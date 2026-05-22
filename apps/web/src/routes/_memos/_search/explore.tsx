@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_memos/_search/explore")({
 		return {
 			memos,
 			filter,
-			userId: (user as { id?: string } | null)?.id ?? null,
+			userId: user?.id ?? null,
 		};
 	},
 	component: RouteComponent,

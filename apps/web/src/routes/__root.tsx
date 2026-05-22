@@ -1,3 +1,4 @@
+import type { AuthUser } from "@memos/auth";
 import { Toaster } from "@memos/ui/components/sonner";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -18,6 +19,7 @@ import appCss from "../index.css?url";
 
 export interface RouterAppContext {
 	queryClient: QueryClient;
+	user?: AuthUser | null;
 }
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
