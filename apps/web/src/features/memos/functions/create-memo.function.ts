@@ -2,10 +2,8 @@ import { createDb } from "@memos/db";
 import { attachment } from "@memos/db/schema/attachment.table";
 import { VISIBILITY_MAP } from "@memos/db/schema/enums";
 import { memo } from "@memos/db/schema/memo.table";
-import { env } from "@memos/env/server";
 import { createServerFn } from "@tanstack/react-start";
 import { setResponseStatus } from "@tanstack/react-start/server";
-import { AwsClient } from "aws4fetch";
 import { eq } from "drizzle-orm";
 import { authMiddleware } from "@/middleware/auth";
 
@@ -84,7 +82,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 				}));
 			} catch (error) {
 				await db.delete(memo).where(eq(memo.id, created.id));
-				await deleteFromR2(data.files);
+				await context.deleteFromR2(data.files.map((f) => f.key));
 				throw error;
 			}
 		}
@@ -104,18 +102,3 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			createdAttachments,
 		};
 	});
-
-async function deleteFromR2(files: FileData[]) {
-	const endpoint = `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`;
-	const r2 = new AwsClient({
-		accessKeyId: env.R2_ACCESS_KEY_ID,
-		secretAccessKey: env.R2_SECRET_ACCESS_KEY,
-	});
-
-	await Promise.allSettled(
-		files.map((file) => {
-			const url = new URL(`${endpoint}/attachments/${file.key}`);
-			return r2.fetch(new Request(url, { method: "DELETE" }));
-		}),
-	);
-}

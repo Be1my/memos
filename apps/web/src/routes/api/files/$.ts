@@ -1,4 +1,3 @@
-import { env } from "@memos/env/server";
 import { createFileRoute } from "@tanstack/react-router";
 import { jsonError } from "@/lib/errors";
 import { authMiddleware } from "@/middleware/auth";
@@ -10,6 +9,8 @@ export const Route = createFileRoute("/api/files/$")({
 			createHandlers({
 				GET: {
 					handler: async ({ request, context }) => {
+						const { env } = await import("@memos/env/server");
+
 						if (!context.session)
 							return jsonError("Unauthorized", "UNAUTHORIZED", 401);
 

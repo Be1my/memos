@@ -12,6 +12,19 @@ const bucket = await R2Bucket("attachments", {
 		remote: true,
 	},
 	adopt: true,
+	cors: [
+		{
+			allowed: {
+				origins: [
+					alchemy.env.CORS_ORIGIN ?? "http://localhost:3001",
+					"https://*.chuno.xyz",
+				],
+				methods: ["GET", "PUT", "HEAD", "DELETE"],
+				headers: ["*"],
+			},
+			maxAgeSeconds: 3600,
+		},
+	],
 });
 
 export const web = await TanStackStart("web", {

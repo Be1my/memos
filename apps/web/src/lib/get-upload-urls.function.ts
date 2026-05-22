@@ -1,4 +1,3 @@
-import { env } from "@memos/env/server";
 import { createServerFn } from "@tanstack/react-start";
 import { AwsClient } from "aws4fetch";
 import { z } from "zod";
@@ -13,6 +12,7 @@ export const getUploadPresignedUrlsFn = createServerFn({ method: "POST" })
 	.inputValidator(FileUrlRequestSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data }) => {
+		const { env } = await import("@memos/env/server");
 		const r2 = new AwsClient({
 			accessKeyId: env.R2_ACCESS_KEY_ID,
 			secretAccessKey: env.R2_SECRET_ACCESS_KEY,
