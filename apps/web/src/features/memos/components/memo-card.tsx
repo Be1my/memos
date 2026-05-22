@@ -17,18 +17,16 @@ import { MemoReactions } from "./memo-reactions";
 import { MemoTimeDisplay } from "./memo-time-display";
 import { ReactionTrigger } from "./reaction-trigger";
 
-const LexicalRenderer = lazy(
-	() =>
-		import("../editor/components/lexical-renderer").then((m) => ({
-			default: m.LexicalRenderer,
-		})),
+const LexicalRenderer = lazy(() =>
+	import("../editor/components/lexical-renderer").then((m) => ({
+		default: m.LexicalRenderer,
+	})),
 );
 
-const MemoEditor = lazy(
-	() =>
-		import("../editor/components/editor").then((m) => ({
-			default: m.Editor,
-		})),
+const MemoEditor = lazy(() =>
+	import("../editor/components/editor").then((m) => ({
+		default: m.Editor,
+	})),
 );
 
 type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];

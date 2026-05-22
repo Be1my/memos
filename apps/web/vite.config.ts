@@ -52,9 +52,7 @@ export default defineConfig({
 	build: {
 		chunkSizeWarningLimit: 1200,
 		rolldownOptions: {
-			...(shouldUseAlchemy
-				? { external: ["cloudflare:workers"] }
-				: {}),
+			...(shouldUseAlchemy ? { external: ["cloudflare:workers"] } : {}),
 			output: {
 				codeSplitting: {
 					groups: [

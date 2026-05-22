@@ -1,15 +1,14 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { z } from "zod";
 import { lazy, Suspense } from "react";
+import { z } from "zod";
 import { ActiveFilters } from "@/components/active-filters";
 import { listExploreMemosQueryOptions } from "@/features/memos/queries/list-explore-memos.query";
 
-const MemoList = lazy(
-	() =>
-		import("@/features/memos/components/memo-list").then((m) => ({
-			default: m.MemoList,
-		})),
+const MemoList = lazy(() =>
+	import("@/features/memos/components/memo-list").then((m) => ({
+		default: m.MemoList,
+	})),
 );
 
 const searchSchema = z.object({

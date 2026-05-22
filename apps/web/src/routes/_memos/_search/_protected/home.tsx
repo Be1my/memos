@@ -12,18 +12,16 @@ import { ActiveFilters } from "@/components/active-filters";
 import { createMemoFn } from "@/features/memos/functions/create-memo.function";
 import { memosQueryOptions } from "@/features/memos/queries/memos.query";
 
-const Editor = lazy(
-	() =>
-		import("@/features/memos/editor/components/editor").then((m) => ({
-			default: m.Editor,
-		})),
+const Editor = lazy(() =>
+	import("@/features/memos/editor/components/editor").then((m) => ({
+		default: m.Editor,
+	})),
 );
 
-const MemoList = lazy(
-	() =>
-		import("@/features/memos/components/memo-list").then((m) => ({
-			default: m.MemoList,
-		})),
+const MemoList = lazy(() =>
+	import("@/features/memos/components/memo-list").then((m) => ({
+		default: m.MemoList,
+	})),
 );
 
 const searchSchema = z.object({
