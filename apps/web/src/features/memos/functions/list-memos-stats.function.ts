@@ -10,10 +10,6 @@ export const listMemosStatsFn = createServerFn({
 })
 	.middleware([authMiddleware])
 	.handler(async ({ context }) => {
-		if (!context.session) {
-			return { timestamps: [], tags: [] };
-		}
-
 		const db = createDb();
 
 		const memos = await db

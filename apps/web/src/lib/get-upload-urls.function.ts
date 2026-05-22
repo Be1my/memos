@@ -2,7 +2,6 @@ import { env } from "@memos/env/server";
 import { createServerFn } from "@tanstack/react-start";
 import { AwsClient } from "aws4fetch";
 import { z } from "zod";
-import { unauthorized } from "@/lib/errors";
 import { FileInfoSchema } from "@/lib/schemas/file";
 import { authMiddleware } from "@/middleware/auth";
 
@@ -13,11 +12,7 @@ const FileUrlRequestSchema = z.object({
 export const getUploadPresignedUrlsFn = createServerFn({ method: "POST" })
 	.inputValidator(FileUrlRequestSchema)
 	.middleware([authMiddleware])
-	.handler(async ({ data, context }) => {
-		if (!context.session) {
-			throw unauthorized();
-		}
-
+	.handler(async ({ data }) => {
 		const r2 = new AwsClient({
 			accessKeyId: env.R2_ACCESS_KEY_ID,
 			secretAccessKey: env.R2_SECRET_ACCESS_KEY,

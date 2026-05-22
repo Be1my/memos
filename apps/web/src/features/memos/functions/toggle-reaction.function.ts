@@ -2,7 +2,6 @@ import { createDb } from "@memos/db";
 import { reaction } from "@memos/db/schema/reaction.table";
 import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
-import { unauthorized } from "@/lib/errors";
 import { authMiddleware } from "@/middleware/auth";
 
 import { ToggleReactionInputSchema } from "../schemas/toggle-reaction";
@@ -11,10 +10,6 @@ export const toggleReactionFn = createServerFn({ method: "POST" })
 	.inputValidator(ToggleReactionInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
-		if (!context.session) {
-			throw unauthorized();
-		}
-
 		const db = createDb();
 
 		const existing = await db

@@ -4,7 +4,6 @@ import { VISIBILITY_MAP } from "@memos/db/schema/enums";
 import { type JsonObject, memo } from "@memos/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { setResponseStatus } from "@tanstack/react-start/server";
-import { internalError, unauthorized } from "@/lib/errors";
 import { authMiddleware } from "@/middleware/auth";
 
 import { CreateMemoInputSchema, type FileData } from "../schemas/create-memo";
@@ -18,17 +17,13 @@ export const createMemoFn = createServerFn({ method: "POST" })
 	.inputValidator(CreateMemoInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
-		if (!context.session) {
-			throw unauthorized();
-		}
-
+		const { user } = context.session;
 		const db = createDb();
 
-		let created: typeof memo.$inferSelect;
-		try {
+		const result = await db.transaction(async (tx) => {
 			const insertData: typeof memo.$inferInsert = {
 				uid: crypto.randomUUID(),
-				creatorId: context.session.user.id,
+				creatorId: user.id,
 				content: data.content,
 				payload: (data.payload ?? {}) as JsonObject,
 				visibility: VISIBILITY_MAP[data.visibility] ?? "PRIVATE",
@@ -38,36 +33,30 @@ export const createMemoFn = createServerFn({ method: "POST" })
 				insertData.createdAt = new Date(data.createdAt);
 				insertData.updatedAt = new Date(data.createdAt);
 			}
-			[created] = await db.insert(memo).values(insertData).returning();
-		} catch (error) {
-			console.error("Failed to create memo:", error);
-			throw internalError("Failed to create memo");
-		}
+			const [created] = await tx.insert(memo).values(insertData).returning();
 
-		const createdAttachments: Array<{
-			id: number;
-			uid: string;
-			filename: string;
-			type: string;
-			size: number;
-			storageType: string;
-			reference: string;
-		}> = [];
+			const createdAttachments: Array<{
+				id: number;
+				uid: string;
+				filename: string;
+				type: string;
+				size: number;
+				storageType: string;
+				reference: string;
+			}> = [];
 
-		for (const file of data.files) {
-			if (file.size > MAX_FILE_SIZE) {
-				console.warn(
-					`File ${file.name} exceeds maximum size of 50MB, skipping`,
-				);
-				continue;
-			}
+			for (const file of data.files) {
+				if (file.size > MAX_FILE_SIZE) {
+					throw new Error(
+						`File ${file.name} (${file.size} bytes) exceeds maximum size of 50MB`,
+					);
+				}
 
-			try {
-				const [att] = await db
+				const [att] = await tx
 					.insert(attachment)
 					.values({
 						uid: crypto.randomUUID(),
-						creatorId: context.session.user.id,
+						creatorId: user.id,
 						memoId: created.id,
 						filename: file.name,
 						type: file.type,
@@ -86,23 +75,23 @@ export const createMemoFn = createServerFn({ method: "POST" })
 					storageType: att.storageType,
 					reference: att.reference,
 				});
-			} catch (error) {
-				console.error(`Failed to record file ${file.name}:`, error);
 			}
-		}
+
+			return { created, createdAttachments };
+		});
 
 		setResponseStatus(201);
 		return {
-			id: created.id,
-			uid: created.uid,
-			creatorId: created.creatorId,
-			content: created.content,
-			visibility: created.visibility,
-			rowStatus: created.rowStatus,
-			pinned: created.pinned,
-			tags: created.tags,
-			createdAt: created.createdAt.toISOString(),
-			updatedAt: created.updatedAt.toISOString(),
-			createdAttachments,
+			id: result.created.id,
+			uid: result.created.uid,
+			creatorId: result.created.creatorId,
+			content: result.created.content,
+			visibility: result.created.visibility,
+			rowStatus: result.created.rowStatus,
+			pinned: result.created.pinned,
+			tags: result.created.tags,
+			createdAt: result.created.createdAt.toISOString(),
+			updatedAt: result.created.updatedAt.toISOString(),
+			createdAttachments: result.createdAttachments,
 		};
 	});

@@ -3,7 +3,7 @@ import { VISIBILITY_MAP } from "@memos/db/schema/enums";
 import { type JsonObject, memo } from "@memos/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
-import { notFound, unauthorized } from "@/lib/errors";
+import { notFound } from "@/lib/errors";
 import { authMiddleware } from "@/middleware/auth";
 
 import { UpdateMemoInputSchema } from "../schemas/update-memo";
@@ -12,8 +12,6 @@ export const updateMemoFn = createServerFn({ method: "POST" })
 	.inputValidator(UpdateMemoInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
-		if (!context.session) throw unauthorized();
-
 		const db = createDb();
 
 		const updateData: Partial<typeof memo.$inferInsert> = {
