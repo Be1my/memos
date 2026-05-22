@@ -1,6 +1,6 @@
 import { createDb } from "@memos/db";
 import { VISIBILITY_MAP } from "@memos/db/schema/enums";
-import { type JsonObject, memo } from "@memos/db/schema/memo.table";
+import { memo } from "@memos/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
 import { notFound } from "@/lib/errors";
@@ -16,7 +16,7 @@ export const updateMemoFn = createServerFn({ method: "POST" })
 
 		const updateData: Partial<typeof memo.$inferInsert> = {
 			content: data.content,
-			payload: data.payload as JsonObject | undefined,
+			payload: data.payload,
 			visibility: VISIBILITY_MAP[data.visibility] ?? "PRIVATE",
 			updatedAt: new Date(),
 		};

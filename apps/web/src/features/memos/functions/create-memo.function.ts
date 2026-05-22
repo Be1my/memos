@@ -1,9 +1,12 @@
 import { createDb } from "@memos/db";
 import { attachment } from "@memos/db/schema/attachment.table";
 import { VISIBILITY_MAP } from "@memos/db/schema/enums";
-import { type JsonObject, memo } from "@memos/db/schema/memo.table";
+import { memo } from "@memos/db/schema/memo.table";
+import { env } from "@memos/env/server";
 import { createServerFn } from "@tanstack/react-start";
 import { setResponseStatus } from "@tanstack/react-start/server";
+import { AwsClient } from "aws4fetch";
+import { eq } from "drizzle-orm";
 import { authMiddleware } from "@/middleware/auth";
 
 import { CreateMemoInputSchema, type FileData } from "../schemas/create-memo";
@@ -12,61 +15,67 @@ export type FilePayload = FileData;
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
+const R2_ENDPOINT = `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`;
+
 export const createMemoFn = createServerFn({ method: "POST" })
 
 	.inputValidator(CreateMemoInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
+		for (const file of data.files) {
+			if (file.size > MAX_FILE_SIZE) {
+				throw new Error(
+					`File ${file.name} (${file.size} bytes) exceeds maximum size of 50MB`,
+				);
+			}
+		}
+
 		const { user } = context.session;
 		const db = createDb();
 
-		const result = await db.transaction(async (tx) => {
-			const insertData: typeof memo.$inferInsert = {
-				uid: crypto.randomUUID(),
-				creatorId: user.id,
-				content: data.content,
-				payload: (data.payload ?? {}) as JsonObject,
-				visibility: VISIBILITY_MAP[data.visibility] ?? "PRIVATE",
-				tags: data.tags ?? [],
-			};
-			if (data.createdAt) {
-				insertData.createdAt = new Date(data.createdAt);
-				insertData.updatedAt = new Date(data.createdAt);
-			}
-			const [created] = await tx.insert(memo).values(insertData).returning();
+		const insertData: typeof memo.$inferInsert = {
+			uid: crypto.randomUUID(),
+			creatorId: user.id,
+			content: data.content,
+			payload: data.payload ?? {},
+			visibility: VISIBILITY_MAP[data.visibility] ?? "PRIVATE",
+			tags: data.tags ?? [],
+		};
+		if (data.createdAt) {
+			insertData.createdAt = new Date(data.createdAt);
+			insertData.updatedAt = new Date(data.createdAt);
+		}
+		const [created] = await db.insert(memo).values(insertData).returning();
 
-			const createdAttachments: Array<{
-				id: number;
-				uid: string;
-				filename: string;
-				type: string;
-				size: number;
-				storageType: string;
-				reference: string;
-			}> = [];
+		let createdAttachments: Array<{
+			id: number;
+			uid: string;
+			filename: string;
+			type: string;
+			size: number;
+			storageType: string;
+			reference: string;
+		}> = [];
 
-			for (const file of data.files) {
-				if (file.size > MAX_FILE_SIZE) {
-					throw new Error(
-						`File ${file.name} (${file.size} bytes) exceeds maximum size of 50MB`,
-					);
-				}
-
-				const [att] = await tx
+		if (data.files.length > 0) {
+			try {
+				const atts = await db
 					.insert(attachment)
-					.values({
-						uid: crypto.randomUUID(),
-						creatorId: user.id,
-						memoId: created.id,
-						filename: file.name,
-						type: file.type,
-						size: file.size,
-						storageType: "R2",
-						reference: file.key,
-					})
+					.values(
+						data.files.map((file) => ({
+							uid: crypto.randomUUID(),
+							creatorId: user.id,
+							memoId: created.id,
+							filename: file.name,
+							type: file.type,
+							size: file.size,
+							storageType: "R2" as const,
+							reference: file.key,
+						})),
+					)
 					.returning();
 
-				createdAttachments.push({
+				createdAttachments = atts.map((att) => ({
 					id: att.id,
 					uid: att.uid,
 					filename: att.filename,
@@ -74,24 +83,40 @@ export const createMemoFn = createServerFn({ method: "POST" })
 					size: att.size,
 					storageType: att.storageType,
 					reference: att.reference,
-				});
+				}));
+			} catch (error) {
+				await db.delete(memo).where(eq(memo.id, created.id));
+				await deleteFromR2(data.files);
+				throw error;
 			}
-
-			return { created, createdAttachments };
-		});
+		}
 
 		setResponseStatus(201);
 		return {
-			id: result.created.id,
-			uid: result.created.uid,
-			creatorId: result.created.creatorId,
-			content: result.created.content,
-			visibility: result.created.visibility,
-			rowStatus: result.created.rowStatus,
-			pinned: result.created.pinned,
-			tags: result.created.tags,
-			createdAt: result.created.createdAt.toISOString(),
-			updatedAt: result.created.updatedAt.toISOString(),
-			createdAttachments: result.createdAttachments,
+			id: created.id,
+			uid: created.uid,
+			creatorId: created.creatorId,
+			content: created.content,
+			visibility: created.visibility,
+			rowStatus: created.rowStatus,
+			pinned: created.pinned,
+			tags: created.tags,
+			createdAt: created.createdAt.toISOString(),
+			updatedAt: created.updatedAt.toISOString(),
+			createdAttachments,
 		};
 	});
+
+async function deleteFromR2(files: FileData[]) {
+	const r2 = new AwsClient({
+		accessKeyId: env.R2_ACCESS_KEY_ID,
+		secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+	});
+
+	await Promise.allSettled(
+		files.map((file) => {
+			const url = new URL(`${R2_ENDPOINT}/attachments/${file.key}`);
+			return r2.fetch(new Request(url, { method: "DELETE" }));
+		}),
+	);
+}

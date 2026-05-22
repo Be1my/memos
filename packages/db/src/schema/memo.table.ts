@@ -7,6 +7,7 @@ import {
 	text,
 	timestamp,
 } from "drizzle-orm/pg-core";
+import { z } from "zod";
 import { user } from "./auth.table";
 import { memoVisibilityEnum, rowStatusEnum } from "./enums";
 
@@ -16,9 +17,11 @@ export type JsonValue =
 	| boolean
 	| null
 	| JsonValue[]
-	| { [key: string]: JsonValue | undefined };
+	| { [key: string]: JsonValue };
 
-export type JsonObject = { [key: string]: JsonValue | undefined };
+export type JsonObject = { [key: string]: JsonValue };
+
+export const JsonObjectSchema = z.record(z.string(), z.json());
 
 export const memo = pgTable(
 	"memo",

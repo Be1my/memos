@@ -1,4 +1,5 @@
 import { VISIBILITY_VALUES } from "@memos/db/schema/enums";
+import { JsonObjectSchema } from "@memos/db/schema/memo.table";
 import { z } from "zod";
 import { FileSchema } from "@/lib/schemas/file";
 
@@ -7,7 +8,7 @@ export { FileSchema };
 
 export const CreateMemoInputSchema = z.object({
 	content: z.string().trim().min(1),
-	payload: z.record(z.string(), z.unknown()).optional(),
+	payload: JsonObjectSchema.optional(),
 	visibility: z.enum(VISIBILITY_VALUES),
 	tags: z.array(z.string()).optional(),
 	files: z.array(FileSchema).optional().default([]),
