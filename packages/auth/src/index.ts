@@ -5,7 +5,9 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
-type _GetSessionResult = Awaited<ReturnType<ReturnType<typeof createAuth>["api"]["getSession"]>>;
+type _GetSessionResult = Awaited<
+	ReturnType<ReturnType<typeof createAuth>["api"]["getSession"]>
+>;
 export type AuthUser = NonNullable<_GetSessionResult>["user"];
 
 export function createAuth() {
