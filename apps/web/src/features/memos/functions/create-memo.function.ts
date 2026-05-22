@@ -15,8 +15,6 @@ export type FilePayload = FileData;
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
-const R2_ENDPOINT = `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`;
-
 export const createMemoFn = createServerFn({ method: "POST" })
 
 	.inputValidator(CreateMemoInputSchema)
@@ -108,6 +106,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 	});
 
 async function deleteFromR2(files: FileData[]) {
+	const endpoint = `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`;
 	const r2 = new AwsClient({
 		accessKeyId: env.R2_ACCESS_KEY_ID,
 		secretAccessKey: env.R2_SECRET_ACCESS_KEY,
@@ -115,7 +114,7 @@ async function deleteFromR2(files: FileData[]) {
 
 	await Promise.allSettled(
 		files.map((file) => {
-			const url = new URL(`${R2_ENDPOINT}/attachments/${file.key}`);
+			const url = new URL(`${endpoint}/attachments/${file.key}`);
 			return r2.fetch(new Request(url, { method: "DELETE" }));
 		}),
 	);
