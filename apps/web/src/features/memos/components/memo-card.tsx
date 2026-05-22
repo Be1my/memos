@@ -7,8 +7,7 @@ import {
 } from "@memos/ui/components/tooltip";
 import type { SerializedEditorState } from "lexical";
 import { GlobeIcon, LockIcon, PinIcon, UsersIcon } from "lucide-react";
-import { useState } from "react";
-import { Editor, LexicalRenderer } from "../editor";
+import { lazy, Suspense, useState } from "react";
 import type { listMemosFn } from "../functions/list-memos.function";
 import { useTogglePin } from "../queries/pin-memo.query";
 import { useUpdateMemo } from "../queries/update-memo.query";
@@ -17,6 +16,20 @@ import { MemoCardActions } from "./memo-card-actions";
 import { MemoReactions } from "./memo-reactions";
 import { MemoTimeDisplay } from "./memo-time-display";
 import { ReactionTrigger } from "./reaction-trigger";
+
+const LexicalRenderer = lazy(
+	() =>
+		import("../editor/components/lexical-renderer").then((m) => ({
+			default: m.LexicalRenderer,
+		})),
+);
+
+const MemoEditor = lazy(
+	() =>
+		import("../editor/components/editor").then((m) => ({
+			default: m.Editor,
+		})),
+);
 
 type Memo = Awaited<ReturnType<typeof listMemosFn>>[number];
 
@@ -82,14 +95,16 @@ function MemoCard({
 
 	if (isEditing) {
 		return (
-			<Editor
-				onSave={handleEditSave}
-				isSaving={updateMemo.isPending}
-				initialEditorState={memo.payload as unknown as SerializedEditorState}
-				initialVisibility={visibilityReverseMap[memo.visibility] ?? "private"}
-				initialCreatedAt={memo.createdAt}
-				onCancel={handleEditCancel}
-			/>
+			<Suspense>
+				<MemoEditor
+					onSave={handleEditSave}
+					isSaving={updateMemo.isPending}
+					initialEditorState={memo.payload as unknown as SerializedEditorState}
+					initialVisibility={visibilityReverseMap[memo.visibility] ?? "private"}
+					initialCreatedAt={memo.createdAt}
+					onCancel={handleEditCancel}
+				/>
+			</Suspense>
 		);
 	}
 
@@ -145,9 +160,11 @@ function MemoCard({
 				</div>
 			</div>
 			<div className="leading-relaxed">
-				<LexicalRenderer
-					payload={memo.payload as unknown as SerializedEditorState}
-				/>
+				<Suspense>
+					<LexicalRenderer
+						payload={memo.payload as unknown as SerializedEditorState}
+					/>
+				</Suspense>
 			</div>
 			{memo.attachments && memo.attachments.length > 0 && (
 				<AttachmentGrid attachments={memo.attachments} />

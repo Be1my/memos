@@ -5,16 +5,26 @@ import {
 	useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ActiveFilters } from "@/components/active-filters";
-import {
-	createMemoFn,
-	Editor,
-	MemoList,
-	memosQueryOptions,
-} from "@/features/memos";
+import { createMemoFn } from "@/features/memos/functions/create-memo.function";
+import { memosQueryOptions } from "@/features/memos/queries/memos.query";
+
+const Editor = lazy(
+	() =>
+		import("@/features/memos/editor/components/editor").then((m) => ({
+			default: m.Editor,
+		})),
+);
+
+const MemoList = lazy(
+	() =>
+		import("@/features/memos/components/memo-list").then((m) => ({
+			default: m.MemoList,
+		})),
+);
 
 const searchSchema = z.object({
 	q: z.string().optional(),
@@ -61,21 +71,25 @@ function RouteComponent() {
 
 	return (
 		<div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-4 pt-8">
-			<Editor
-				key={resetKey}
-				isSaving={mutation.isPending}
-				onSave={(data) =>
-					mutation.mutate({
-						data: {
-							...data,
-							payload: data.payload as unknown as JsonObject,
-						},
-					})
-				}
-				dateSearch={{ date: filter.date }}
-			/>
+			<Suspense>
+				<Editor
+					key={resetKey}
+					isSaving={mutation.isPending}
+					onSave={(data) =>
+						mutation.mutate({
+							data: {
+								...data,
+								payload: data.payload as unknown as JsonObject,
+							},
+						})
+					}
+					dateSearch={{ date: filter.date }}
+				/>
+			</Suspense>
 			<ActiveFilters />
-			<MemoList memos={memos} userId={userId} showVisibility={false} />
+			<Suspense>
+				<MemoList memos={memos} userId={userId} showVisibility={false} />
+			</Suspense>
 		</div>
 	);
 }

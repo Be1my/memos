@@ -50,9 +50,49 @@ export default defineConfig({
 			: { "cloudflare:workers": cloudflareWorkersShimPath },
 	},
 	build: {
-		rolldownOptions: shouldUseAlchemy
-			? { external: ["cloudflare:workers"] }
-			: undefined,
+		chunkSizeWarningLimit: 1200,
+		rolldownOptions: {
+			...(shouldUseAlchemy
+				? { external: ["cloudflare:workers"] }
+				: {}),
+			output: {
+				codeSplitting: {
+					groups: [
+						{
+							name: "react-vendor",
+							test: /node_modules[\\/](react[\\/]|react-dom[\\/]|scheduler[\\/])/,
+							priority: 30,
+						},
+						{
+							name: "tanstack-router",
+							test: /node_modules[\\/]@tanstack[\\/]react-router/,
+							priority: 25,
+						},
+						{
+							name: "tanstack-query",
+							test: /node_modules[\\/]@tanstack[\\/]react-query/,
+							priority: 25,
+						},
+						{
+							name: "tanstack-start",
+							test: /node_modules[\\/]@tanstack[\\/]react-start/,
+							priority: 25,
+						},
+						{
+							name: "base-ui",
+							test: /node_modules[\\/]@base-ui[\\/]/,
+							priority: 20,
+						},
+						{
+							name: "vendor",
+							test: /node_modules[\\/]/,
+							minSize: 20000,
+							priority: 5,
+						},
+					],
+				},
+			},
+		},
 	},
 	plugins: [
 		tailwindcss(),

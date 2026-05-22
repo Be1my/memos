@@ -1,10 +1,15 @@
 import { SidebarInset } from "@memos/ui/components/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import {
-	calendarInfoQueryOptions,
-	memosStatsQueryOptions,
-	SearchPanel,
-} from "@/features/memos";
+import { lazy, Suspense } from "react";
+import { calendarInfoQueryOptions } from "@/features/memos/queries/calendar-info.query";
+import { memosStatsQueryOptions } from "@/features/memos/queries/memos-stats.query";
+
+const SearchPanel = lazy(
+	() =>
+		import("@/features/memos/components/search-panel/search-panel").then(
+			(m) => ({ default: m.SearchPanel }),
+		),
+);
 
 export const Route = createFileRoute("/_memos/_search")({
 	loader: async ({ context: { queryClient } }) => {
@@ -18,7 +23,9 @@ export const Route = createFileRoute("/_memos/_search")({
 function RouteComponent() {
 	return (
 		<>
-			<SearchPanel />
+			<Suspense>
+				<SearchPanel />
+			</Suspense>
 			<SidebarInset className="overflow-y-auto">
 				<Outlet />
 			</SidebarInset>

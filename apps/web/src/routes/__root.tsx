@@ -1,7 +1,6 @@
 import type { AuthUser } from "@memos/auth";
 import { Toaster } from "@memos/ui/components/sonner";
 import type { QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
 	createRootRouteWithContext,
 	HeadContent,
@@ -9,13 +8,28 @@ import {
 	redirect,
 	Scripts,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { useEffect } from "react";
-import { firstUserQueryOptions } from "@/features/auth";
-import { startClock, stopClock } from "@/features/memos";
+import { lazy, Suspense, useEffect } from "react";
+import { firstUserQueryOptions } from "@/features/auth/queries/auth.query";
+import { startClock, stopClock } from "@/features/memos/stores/clock";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { getLocale } from "@/paraglide/runtime";
 import appCss from "../index.css?url";
+
+const TanStackRouterDevtools = import.meta.env.DEV
+	? lazy(() =>
+			import("@tanstack/react-router-devtools").then((m) => ({
+				default: m.TanStackRouterDevtools,
+			})),
+		)
+	: () => null;
+
+const ReactQueryDevtools = import.meta.env.DEV
+	? lazy(() =>
+			import("@tanstack/react-query-devtools").then((m) => ({
+				default: m.ReactQueryDevtools,
+			})),
+		)
+	: () => null;
 
 export interface RouterAppContext {
 	queryClient: QueryClient;
@@ -86,8 +100,12 @@ function RootDocument() {
 					</ThemeProvider>
 				</div>
 				<Toaster richColors />
-				<TanStackRouterDevtools position="bottom-right" />
-				<ReactQueryDevtools initialIsOpen={false} />
+				{import.meta.env.DEV && (
+					<Suspense>
+						<TanStackRouterDevtools position="bottom-right" />
+						<ReactQueryDevtools initialIsOpen={false} />
+					</Suspense>
+				)}
 				<Scripts />
 			</body>
 		</html>

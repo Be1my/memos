@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@memos/ui/components/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { AppSidebar } from "@/components/app-sidebar";
-import { sessionQueryOptions } from "@/features/auth";
+import { sessionQueryOptions } from "@/features/auth/queries/auth.query";
 
 export const Route = createFileRoute("/_memos")({
 	beforeLoad: async ({ context: { queryClient } }) => {
