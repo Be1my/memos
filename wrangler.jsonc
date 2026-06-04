@@ -1,0 +1,16 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "memos",
+	"compatibility_date": "2026-01-01",
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"main": "./src/server.ts",
+	"observability": {
+		"enabled": true
+	},
+	"keep_vars": true,
+	"alias": {
+		"#tanstack-start-entry": "node_modules/@tanstack/start-server-core/dist/esm/start.js",
+		"#tanstack-router-entry": "node_modules/@tanstack/router-core/dist/esm/index.js",
+		"#tanstack-start-plugin-adapters": "node_modules/@tanstack/start-server-core/dist/esm/plugin-adapters.js"
+	}
+}
