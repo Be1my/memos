@@ -1,6 +1,6 @@
 import { createDb } from "@/db";
 import * as schema from "@/db/schema/auth.table";
-import { env } from "@/lib/env";
+import { serverEnv } from "@/lib/env/server.env";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
@@ -10,8 +10,9 @@ type _GetSessionResult = Awaited<
 >;
 export type AuthUser = NonNullable<_GetSessionResult>["user"];
 
-export function createAuth() {
-	const db = createDb();
+export function createAuth(env: Env) {
+	const db = createDb(env);
+	const validEnv = serverEnv(env);
 
 	return betterAuth({
 		database: drizzleAdapter(db, {
@@ -19,15 +20,15 @@ export function createAuth() {
 
 			schema: schema,
 		}),
-		trustedOrigins: [env.CORS_ORIGIN],
+		trustedOrigins: [validEnv.CORS_ORIGIN],
 		emailAndPassword: {
 			enabled: true,
 		},
-		secret: env.BETTER_AUTH_SECRET,
+		secret: validEnv.BETTER_AUTH_SECRET,
 		baseURL: {
 			allowedHosts: [
-				env.BETTER_AUTH_URL,
-				...env.ALLOWED_HOSTS.split(",")
+				validEnv.BETTER_AUTH_URL,
+				...validEnv.ALLOWED_HOSTS.split(",")
 					.map((h) => h.trim())
 					.filter(Boolean),
 			],
@@ -48,7 +49,7 @@ export function createAuth() {
 			user: {
 				create: {
 					before: async (user) => {
-						const db = createDb();
+						const db = createDb(env);
 						const count = await db.$count(schema.user);
 						if (count === 0) {
 							return { data: { ...user, role: "ADMIN" } };

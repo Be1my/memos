@@ -1,16 +1,14 @@
-import { createDb } from "@/db";
 import { memo } from "@/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
-
-import { authMiddleware } from "@/middleware/auth";
+import { authMiddleware } from "@/middleware";
 
 export const listMemosStatsFn = createServerFn({
 	method: "GET",
 })
 	.middleware([authMiddleware])
 	.handler(async ({ context }) => {
-		const db = createDb();
+		const db = context.db;
 
 		const memos = await db
 			.select({
@@ -18,7 +16,7 @@ export const listMemosStatsFn = createServerFn({
 				tags: memo.tags,
 			})
 			.from(memo)
-			.where(eq(memo.creatorId, context.session.user.id));
+			.where(eq(memo.creatorId, context.user.id));
 
 		const timestamps = memos.map((m) => m.createdAt.toISOString());
 

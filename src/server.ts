@@ -1,10 +1,18 @@
 import handler from "@tanstack/react-start/server-entry";
 import { paraglideMiddleware } from "./paraglide/server";
-import { initEnv } from "@/lib/env";
+
+declare module "@tanstack/react-router" {
+	interface Register {
+		server: {
+			requestContext: {
+				env: Env;
+			};
+		};
+	}
+}
 
 export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
-		initEnv(env);
-		return paraglideMiddleware(request, () => handler.fetch(request));
+		return paraglideMiddleware(request, () => handler.fetch(request, { context: { env } }));
 	},
 };

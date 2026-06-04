@@ -1,8 +1,7 @@
 import { memo } from "@/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { eq, sql } from "drizzle-orm";
-
-import { authMiddleware } from "@/middleware/auth";
+import { authMiddleware } from "@/middleware";
 import { localeTzMiddleware } from "@/middleware/locale-tz";
 import type { ListMemosFilter } from "./list-memos.shared";
 import { ListMemosFilterSchema, queryMemos } from "./list-memos.shared";
@@ -21,6 +20,6 @@ export const listExploreMemosFn = createServerFn({ method: "GET" })
 				]
 			: [eq(memo.visibility, "PUBLIC")];
 
-		const memos = await queryMemos(conditions, filter, false, context.timeZone);
+		const memos = await queryMemos(conditions, filter, false, context.timeZone, context.db);
 		return memos;
 	});

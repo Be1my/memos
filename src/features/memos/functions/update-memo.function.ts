@@ -1,10 +1,9 @@
-import { createDb } from "@/db";
 import { VISIBILITY_MAP } from "@/db/schema/enums";
 import { memo } from "@/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
 import { notFound } from "@/lib/errors";
-import { authMiddleware } from "@/middleware/auth";
+import { authMiddleware } from "@/middleware";
 
 import { UpdateMemoInputSchema } from "../schemas/update-memo";
 
@@ -12,7 +11,7 @@ export const updateMemoFn = createServerFn({ method: "POST" })
 	.inputValidator(UpdateMemoInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
-		const db = createDb();
+		const db = context.db;
 
 		const updateData: Partial<typeof memo.$inferInsert> = {
 			content: data.content,
@@ -31,7 +30,7 @@ export const updateMemoFn = createServerFn({ method: "POST" })
 			.where(
 				and(
 					eq(memo.uid, data.memoId),
-					eq(memo.creatorId, context.session.user.id),
+					eq(memo.creatorId, context.user.id),
 				),
 			)
 			.returning({

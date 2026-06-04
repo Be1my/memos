@@ -1,20 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { dbMiddleware } from "@/middleware";
 
 export const Route = createFileRoute("/api/auth/$")({
 	server: {
 		handlers: ({ createHandlers }) =>
 			createHandlers({
 				GET: {
-					handler: async ({ request }) => {
+					middleware: [dbMiddleware],
+					handler: async ({ request, context }) => {
 						const { createAuth } = await import("@/auth");
-						const auth = createAuth();
+						const auth = createAuth(context.env);
 						return auth.handler(request);
 					},
 				},
 				POST: {
-					handler: async ({ request }) => {
+					middleware: [dbMiddleware],
+					handler: async ({ request, context }) => {
 						const { createAuth } = await import("@/auth");
-						const auth = createAuth();
+						const auth = createAuth(context.env);
 						return auth.handler(request);
 					},
 				},

@@ -1,5 +1,4 @@
 import { TZDate } from "@date-fns/tz";
-import { createDb } from "@/db";
 import { attachment } from "@/db/schema/attachment.table";
 import { user } from "@/db/schema/auth.table";
 import { memo } from "@/db/schema/memo.table";
@@ -21,8 +20,11 @@ export async function queryMemos(
 	filter?: ListMemosFilter,
 	orderByPinned?: boolean,
 	timeZone?: string,
+	db?: ReturnType<typeof import("@/db").createDb>,
 ) {
-	const db = createDb();
+	if (!db) {
+		throw new Error("db is required");
+	}
 
 	if (filter?.q) {
 		conditions.push(like(memo.content, `%${filter.q}%`));

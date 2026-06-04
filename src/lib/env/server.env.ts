@@ -8,8 +8,6 @@ const serverEnvSchema = z.object({
 	ALLOWED_HOSTS: z.string(),
 });
 
-let _env: z.infer<typeof serverEnvSchema> | null = null;
-
 export function serverEnv(env: Env) {
 	const result = serverEnvSchema.safeParse(env);
 
@@ -25,24 +23,3 @@ export function serverEnv(env: Env) {
 
 	return result.data;
 }
-
-export function initEnv(env: Env) {
-	_env = serverEnv(env);
-	return _env;
-}
-
-export function getEnv() {
-	if (!_env) {
-		throw new Error("Env not initialized. Call initEnv first.");
-	}
-	return _env;
-}
-
-export const env = new Proxy({} as z.infer<typeof serverEnvSchema>, {
-	get(_target, prop) {
-		if (!_env) {
-			throw new Error("Env not initialized. Call initEnv first.");
-		}
-		return _env[prop as keyof typeof _env];
-	},
-});

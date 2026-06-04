@@ -1,12 +1,10 @@
-import { createDb } from "@/db";
 import { attachment } from "@/db/schema/attachment.table";
 import { VISIBILITY_MAP } from "@/db/schema/enums";
 import { memo } from "@/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { setResponseStatus } from "@tanstack/react-start/server";
 import { eq } from "drizzle-orm";
-import { authMiddleware } from "@/middleware/auth";
-
+import { authMiddleware } from "@/middleware";
 import { CreateMemoInputSchema, type FileData } from "../schemas/create-memo";
 
 export type FilePayload = FileData;
@@ -14,7 +12,6 @@ export type FilePayload = FileData;
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 export const createMemoFn = createServerFn({ method: "POST" })
-
 	.inputValidator(CreateMemoInputSchema)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
@@ -26,8 +23,8 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			}
 		}
 
-		const { user } = context.session;
-		const db = createDb();
+		const { user } = context;
+		const db = context.db;
 
 		const insertData: typeof memo.$inferInsert = {
 			uid: crypto.randomUUID(),
