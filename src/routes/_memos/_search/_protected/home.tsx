@@ -1,28 +1,14 @@
 import type { JsonObject } from "@/db/schema/memo.table";
-import {
-	useMutation,
-	useQueryClient,
-	useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { lazy, Suspense, useState } from "react";
+import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ActiveFilters } from "@/components/active-filters";
 import { createMemoFn } from "@/features/memos/functions/create-memo.function";
 import { memosQueryOptions } from "@/features/memos/queries/memos.query";
-
-const Editor = lazy(() =>
-	import("@/features/memos/editor/components/editor").then((m) => ({
-		default: m.Editor,
-	})),
-);
-
-const MemoList = lazy(() =>
-	import("@/features/memos/components/memo-list").then((m) => ({
-		default: m.MemoList,
-	})),
-);
+import { MemoList } from "@/features/memos/components/memo-list";
+import { Editor } from "@/features/memos/editor/components/editor";
 
 const searchSchema = z.object({
 	q: z.string().optional(),

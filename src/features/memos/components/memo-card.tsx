@@ -7,8 +7,9 @@ import {
 } from "@/components/tooltip";
 import type { SerializedEditorState } from "lexical";
 import { GlobeIcon, LockIcon, PinIcon, UsersIcon } from "lucide-react";
-import { lazy, Suspense, useState } from "react";
+import { Suspense, lazy, useState } from "react";
 import type { listMemosFn } from "../functions/list-memos.function";
+import { LexicalRenderer } from "../editor/components/lexical-renderer";
 import { useTogglePin } from "../queries/pin-memo.query";
 import { useUpdateMemo } from "../queries/update-memo.query";
 import { AttachmentGrid } from "./attachment-grid";
@@ -16,12 +17,6 @@ import { MemoCardActions } from "./memo-card-actions";
 import { MemoReactions } from "./memo-reactions";
 import { MemoTimeDisplay } from "./memo-time-display";
 import { ReactionTrigger } from "./reaction-trigger";
-
-const LexicalRenderer = lazy(() =>
-	import("../editor/components/lexical-renderer").then((m) => ({
-		default: m.LexicalRenderer,
-	})),
-);
 
 const MemoEditor = lazy(() =>
 	import("../editor/components/editor").then((m) => ({
