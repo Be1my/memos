@@ -1,7 +1,0 @@
-/// <reference types="@cloudflare/workers-types" />
-/// <reference path="../env.d.ts" />
-// For Cloudflare Workers, env is accessed via cloudflare:workers module
-// Types are defined in env.d.ts based on your alchemy.run.ts bindings
-import { env as _env } from "cloudflare:workers";
-
-export { _env as env };
