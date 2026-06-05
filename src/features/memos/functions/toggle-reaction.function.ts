@@ -1,14 +1,18 @@
 import { reaction } from "@/db/schema/reaction.table";
 import { createServerFn } from "@tanstack/react-start";
 import { and, eq } from "drizzle-orm";
-import { authMiddleware } from "@/middleware";
+import { coreMiddleware } from "@/middleware";
+import { UnauthorizedError } from "@/lib/errors";
 
 import { ToggleReactionInputSchema } from "../schemas/toggle-reaction";
 
 export const toggleReactionFn = createServerFn({ method: "POST" })
 	.inputValidator(ToggleReactionInputSchema)
-	.middleware([authMiddleware])
+	.middleware([coreMiddleware])
 	.handler(async ({ data, context }) => {
+		if (!context.session) {
+			throw new UnauthorizedError();
+		}
 		const db = context.db;
 
 		const existing = await db
@@ -16,7 +20,7 @@ export const toggleReactionFn = createServerFn({ method: "POST" })
 			.from(reaction)
 			.where(
 				and(
-					eq(reaction.creatorId, context.user.id),
+					eq(reaction.creatorId, context.session.user.id),
 					eq(reaction.contentId, data.contentId),
 					eq(reaction.reactionType, data.reactionType),
 				),
@@ -28,7 +32,7 @@ export const toggleReactionFn = createServerFn({ method: "POST" })
 				.delete(reaction)
 				.where(
 					and(
-						eq(reaction.creatorId, context.user.id),
+						eq(reaction.creatorId, context.session.user.id),
 						eq(reaction.contentId, data.contentId),
 						eq(reaction.reactionType, data.reactionType),
 					),
@@ -39,7 +43,7 @@ export const toggleReactionFn = createServerFn({ method: "POST" })
 		await db
 			.insert(reaction)
 			.values({
-				creatorId: context.user.id,
+				creatorId: context.session.user.id,
 				contentId: data.contentId,
 				reactionType: data.reactionType,
 			})

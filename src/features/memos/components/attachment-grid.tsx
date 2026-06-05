@@ -11,7 +11,7 @@ type Attachment = Awaited<
 >[number]["attachments"][number];
 
 function attachmentUrl(att: Attachment) {
-	return `/api/files?key=${encodeURIComponent(att.reference)}`;
+	return `/api/files/${att.reference}`;
 }
 
 function AttachmentGrid({ attachments }: { attachments: Attachment[] }) {

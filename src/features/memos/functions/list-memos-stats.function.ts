@@ -1,13 +1,17 @@
 import { memo } from "@/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
-import { authMiddleware } from "@/middleware";
+import { UnauthorizedError } from "@/lib/errors";
+import { coreMiddleware } from "@/middleware";
 
 export const listMemosStatsFn = createServerFn({
 	method: "GET",
 })
-	.middleware([authMiddleware])
+	.middleware([coreMiddleware])
 	.handler(async ({ context }) => {
+		if (!context.session) {
+			throw new UnauthorizedError();
+		}
 		const db = context.db;
 
 		const memos = await db
@@ -16,7 +20,7 @@ export const listMemosStatsFn = createServerFn({
 				tags: memo.tags,
 			})
 			.from(memo)
-			.where(eq(memo.creatorId, context.user.id));
+			.where(eq(memo.creatorId, context.session.user.id));
 
 		const timestamps = memos.map((m) => m.createdAt.toISOString());
 

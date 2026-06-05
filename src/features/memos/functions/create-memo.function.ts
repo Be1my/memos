@@ -4,7 +4,8 @@ import { memo } from "@/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { setResponseStatus } from "@tanstack/react-start/server";
 import { eq } from "drizzle-orm";
-import { authMiddleware } from "@/middleware";
+import { coreMiddleware } from "@/middleware";
+import { UnauthorizedError } from "@/lib/errors";
 import { CreateMemoInputSchema, type FileData } from "../schemas/create-memo";
 
 export type FilePayload = FileData;
@@ -13,8 +14,11 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024;
 
 export const createMemoFn = createServerFn({ method: "POST" })
 	.inputValidator(CreateMemoInputSchema)
-	.middleware([authMiddleware])
+	.middleware([coreMiddleware])
 	.handler(async ({ data, context }) => {
+		if (!context.session) {
+			throw new UnauthorizedError();
+		}
 		for (const file of data.files) {
 			if (file.size > MAX_FILE_SIZE) {
 				throw new Error(
@@ -23,7 +27,7 @@ export const createMemoFn = createServerFn({ method: "POST" })
 			}
 		}
 
-		const { user } = context;
+		const user = context.session.user;
 		const db = context.db;
 
 		const insertData: typeof memo.$inferInsert = {

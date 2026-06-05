@@ -10,8 +10,20 @@ export class ServerError extends Error {
 	}
 }
 
+export class UnauthorizedError extends Error {
+	constructor() {
+		super("UNAUTHORIZED");
+		this.name = "UnauthorizedError";
+	}
+}
+
 export function unauthorized(message = "Not authenticated") {
-	return new ServerError(message, "UNAUTHORIZED", 401);
+	return new Response(null, {
+		status: 302,
+		headers: {
+			Location: "/sign-in",
+		},
+	});
 }
 
 export function notFound(message = "Resource not found") {

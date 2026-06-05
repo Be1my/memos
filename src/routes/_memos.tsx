@@ -5,9 +5,9 @@ import { sessionQueryOptions } from "@/features/auth/queries/auth.query";
 
 export const Route = createFileRoute("/_memos")({
 	beforeLoad: async ({ context: { queryClient } }) => {
-		const session = await queryClient.ensureQueryData(sessionQueryOptions());
+		const { session } = await queryClient.ensureQueryData(sessionQueryOptions());
 		return {
-			user: session?.user,
+			user: session?.user ?? null,
 		};
 	},
 	component: RouteComponent,

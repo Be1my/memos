@@ -1,6 +1,8 @@
 import { user } from "@/db/schema/auth.table";
 import { createServerFn } from "@tanstack/react-start";
-import { dbMiddleware, sessionMiddleware } from "@/middleware";
+import { getRequestHeaders } from "@tanstack/react-start/server";
+import { createAuth } from "@/auth";
+import { dbMiddleware } from "@/middleware";
 
 export const getIsFirstUserFn = createServerFn({ method: "GET" })
 	.middleware([dbMiddleware])
@@ -11,7 +13,15 @@ export const getIsFirstUserFn = createServerFn({ method: "GET" })
 	});
 
 export const getSessionFn = createServerFn({ method: "GET" })
-	.middleware([sessionMiddleware])
+	.middleware([dbMiddleware])
 	.handler(async ({ context }) => {
-		return context.session;
+		try {
+			const auth = createAuth(context.env as Env);
+			const session = await auth.api.getSession({
+				headers: getRequestHeaders(),
+			});
+			return { session, user: session?.user ?? null };
+		} catch {
+			return { session: null, user: null };
+		}
 	});

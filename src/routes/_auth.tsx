@@ -3,7 +3,7 @@ import { AuthFooter, sessionQueryOptions } from "@/features/auth";
 
 export const Route = createFileRoute("/_auth")({
 	beforeLoad: async ({ context }) => {
-		const session = await context.queryClient.ensureQueryData(
+		const { session } = await context.queryClient.ensureQueryData(
 			sessionQueryOptions(),
 		);
 		if (session) {

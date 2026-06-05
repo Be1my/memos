@@ -6,6 +6,9 @@ const serverEnvSchema = z.object({
 	BETTER_AUTH_URL: z.string().url(),
 	CORS_ORIGIN: z.string().url(),
 	ALLOWED_HOSTS: z.string(),
+	R2_ACCOUNT_ID: z.string(),
+	R2_ACCESS_KEY_ID: z.string(),
+	R2_SECRET_ACCESS_KEY: z.string(),
 });
 
 export function serverEnv(env: Env) {

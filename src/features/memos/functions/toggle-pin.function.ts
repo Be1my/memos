@@ -2,14 +2,18 @@ import { memo } from "@/db/schema/memo.table";
 import { createServerFn } from "@tanstack/react-start";
 import { and, eq, sql } from "drizzle-orm";
 import { notFound } from "@/lib/errors";
-import { authMiddleware } from "@/middleware";
+import { coreMiddleware } from "@/middleware";
+import { UnauthorizedError } from "@/lib/errors";
 
 import { TogglePinInputSchema } from "../schemas/toggle-pin";
 
 export const togglePinFn = createServerFn({ method: "POST" })
 	.inputValidator(TogglePinInputSchema)
-	.middleware([authMiddleware])
+	.middleware([coreMiddleware])
 	.handler(async ({ data, context }) => {
+		if (!context.session) {
+			throw new UnauthorizedError();
+		}
 		const db = context.db;
 
 		const [updated] = await db
@@ -18,7 +22,7 @@ export const togglePinFn = createServerFn({ method: "POST" })
 			.where(
 				and(
 					eq(memo.uid, data.memoId),
-					eq(memo.creatorId, context.user.id),
+					eq(memo.creatorId, context.session.user.id),
 				),
 			)
 			.returning({ uid: memo.uid, pinned: memo.pinned });

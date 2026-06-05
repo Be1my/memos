@@ -16,6 +16,7 @@ import { Route as MemosSearchRouteImport } from './routes/_memos/_search'
 import { Route as MemosBareRouteImport } from './routes/_memos/_bare'
 import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
 import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
+import { Route as ApiFilesSplatRouteImport } from './routes/api/files/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as MemosSearchExploreRouteImport } from './routes/_memos/_search/explore'
 import { Route as MemosSearchProtectedRouteImport } from './routes/_memos/_search/_protected'
@@ -58,6 +59,11 @@ const AuthSignInRoute = AuthSignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
   getParentRoute: () => AuthRoute,
+} as any)
+const ApiFilesSplatRoute = ApiFilesSplatRouteImport.update({
+  id: '/api/files/$',
+  path: '/api/files/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof MemosBareAboutRoute
   '/explore': typeof MemosSearchExploreRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/files/$': typeof ApiFilesSplatRoute
   '/attachments': typeof MemosBareProtectedAttachmentsRoute
   '/inbox': typeof MemosBareProtectedInboxRoute
   '/settings': typeof MemosBareProtectedSettingsRoute
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/about': typeof MemosBareAboutRoute
   '/explore': typeof MemosSearchExploreRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/files/$': typeof ApiFilesSplatRoute
   '/attachments': typeof MemosBareProtectedAttachmentsRoute
   '/inbox': typeof MemosBareProtectedInboxRoute
   '/settings': typeof MemosBareProtectedSettingsRoute
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/_memos/_search/_protected': typeof MemosSearchProtectedRouteWithChildren
   '/_memos/_search/explore': typeof MemosSearchExploreRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/files/$': typeof ApiFilesSplatRoute
   '/_memos/_bare/_protected/attachments': typeof MemosBareProtectedAttachmentsRoute
   '/_memos/_bare/_protected/inbox': typeof MemosBareProtectedInboxRoute
   '/_memos/_bare/_protected/settings': typeof MemosBareProtectedSettingsRoute
@@ -175,6 +184,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/explore'
     | '/api/auth/$'
+    | '/api/files/$'
     | '/attachments'
     | '/inbox'
     | '/settings'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/explore'
     | '/api/auth/$'
+    | '/api/files/$'
     | '/attachments'
     | '/inbox'
     | '/settings'
@@ -209,6 +220,7 @@ export interface FileRouteTypes {
     | '/_memos/_search/_protected'
     | '/_memos/_search/explore'
     | '/api/auth/$'
+    | '/api/files/$'
     | '/_memos/_bare/_protected/attachments'
     | '/_memos/_bare/_protected/inbox'
     | '/_memos/_bare/_protected/settings'
@@ -221,6 +233,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   MemosRoute: typeof MemosRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiFilesSplatRoute: typeof ApiFilesSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -273,6 +286,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/sign-in'
       preLoaderRoute: typeof AuthSignInRouteImport
       parentRoute: typeof AuthRoute
+    }
+    '/api/files/$': {
+      id: '/api/files/$'
+      path: '/api/files/$'
+      fullPath: '/api/files/$'
+      preLoaderRoute: typeof ApiFilesSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -442,6 +462,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   MemosRoute: MemosRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiFilesSplatRoute: ApiFilesSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

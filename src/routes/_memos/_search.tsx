@@ -1,6 +1,7 @@
 import { SidebarInset } from "@/components/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
+import { sessionQueryOptions } from "@/features/auth/queries/auth.query";
 import { calendarInfoQueryOptions } from "@/features/memos/queries/calendar-info.query";
 import { memosStatsQueryOptions } from "@/features/memos/queries/memos-stats.query";
 
@@ -13,7 +14,10 @@ const SearchPanel = lazy(() =>
 export const Route = createFileRoute("/_memos/_search")({
 	loader: async ({ context: { queryClient } }) => {
 		await queryClient.ensureQueryData(calendarInfoQueryOptions());
-		await queryClient.ensureQueryData(memosStatsQueryOptions());
+		const { session } = await queryClient.ensureQueryData(sessionQueryOptions());
+		if (session) {
+			await queryClient.ensureQueryData(memosStatsQueryOptions());
+		}
 	},
 
 	component: RouteComponent,
