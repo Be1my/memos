@@ -14,6 +14,26 @@ const config = defineConfig(({ mode }) => {
 			},
 			tsconfigPaths: true,
 		},
+		build: {
+			rollupOptions: {
+				output: {
+					manualChunks: (id) => {
+						if (id.includes("node_modules")) {
+							if (id.includes("@tanstack")) {
+								return "vendor-tanstack";
+							}
+							if (id.includes("react")) {
+								return "vendor-react";
+							}
+							if (id.includes("lexical")) {
+								return "vendor-lexical";
+							}
+							return "vendor";
+						}
+					},
+				},
+			},
+		},
 		plugins: [
 			paraglideVitePlugin({
 				project: "./project.inlang",
