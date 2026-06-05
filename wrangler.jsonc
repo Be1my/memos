@@ -1,17 +1,24 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "memos",
-	"compatibility_date": "2026-01-01",
-	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-	"main": "./src/server.ts",
-	"observability": {
-		"enabled": true
-	},
-	"keep_vars": true,
-	"r2_buckets": [
-		{
-			"binding": "ATTACHMENTS_BUCKET",
-			"bucket_name": "memos-attachments-eimy"
-		}
-	]
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "memos",
+  "compatibility_date": "2026-01-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "main": "./src/server.ts",
+
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+    },
+    "traces": {
+      "enabled": false,
+    },
+  },
+  "keep_vars": true,
+  "r2_buckets": [
+    {
+      "binding": "ATTACHMENTS_BUCKET",
+      "bucket_name": "memos-attachments-eimy",
+    },
+  ],
 }
